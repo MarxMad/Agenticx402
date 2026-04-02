@@ -54,41 +54,79 @@ flowchart LR
 
 ## Plan de implementación
 
+Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables. Checklist paso a paso de la Fase 0: [`docs/setup-fase-0.md`](./docs/setup-fase-0.md).
+
+Modelo de negocio y pricing orientativo: [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.md).
+
 ### Fase 0 — Aterrizaje (0.5–1 día)
 
-- [ ] Fijar alcance: ¿solo testnet? ¿USDC únicamente?
-- [ ] Clonar y correr [stellar/x402-stellar](https://github.com/stellar/x402-stellar) + [quickstart](https://developers.stellar.org/docs/build/agentic-payments/x402/quickstart-guide) localmente.
-- [ ] Billetera de prueba en [Lab](https://developers.stellar.org/docs/tools/lab) o Freighter; fondos testnet.
-- [ ] Probar un servicio existente ([xlm402.com](https://xlm402.com)) para validar el flujo end-to-end.
+**Objetivo:** mismo lenguaje técnico que el jurado (402, facilitator, firma); wallet testnet lista; un flujo real completado.
+
+| Tarea | Detalle |
+|-------|---------|
+| Alcance | Por defecto: **solo testnet**; activo principal **USDC** donde aplique; XLM si el ejemplo lo requiere. |
+| x402-stellar / quickstart | Clonar [stellar/x402-stellar](https://github.com/stellar/x402-stellar) en carpeta hermana; seguir [quickstart](https://developers.stellar.org/docs/build/agentic-payments/x402/quickstart-guide) hasta respuesta exitosa tras pago. |
+| Wallet | [Lab](https://developers.stellar.org/docs/tools/lab) o Freighter (desktop); fondos testnet; **no** subir claves al repo. |
+| Servicio externo | Probar al menos un flujo contra [xlm402.com](https://xlm402.com) (o otro endpoint público documentado). |
+
+**Criterios de hecho:** (1) nota interna o issue con endpoint probado y red; (2) screenshot o log de éxito **sin secretos**; (3) `.env` local ignorado por git.
+
+**Artefacto en repo:** guía [`docs/setup-fase-0.md`](./docs/setup-fase-0.md) + este README actualizado.
 
 ### Fase 1 — Cimientos del hub (1–2 días)
 
-- [ ] **Modelo de datos** del catálogo: `id`, `name`, `baseUrl`, `price`, `asset`, `network`, `description`, `tags`, `openapiUrl` (opcional).
-- [ ] **API read-only** del catálogo (JSON) + página estática o SPA mínima que liste servicios.
-- [ ] **Seed** con 1 servicio “dummy” pagado y documentación de cómo alta un servicio nuevo.
+**Objetivo:** el catálogo es **dato versionado** + **API** consumible; cualquier agente puede *descubrir* servicios sin conocer URLs sueltas.
+
+| Tarea | Detalle |
+|-------|---------|
+| Modelo de datos | Campos mínimos por servicio: `id`, `name`, `baseUrl`, `description`, `tags`, `status`, `network` (o `networkDefault` global), `source`; opcion `paths[]`, `pricingNote` o objeto `price`, `docsUrl`, `openapiUrl`. Ver semilla en [`catalog/services.json`](./catalog/services.json). |
+| API read-only | `GET /services`, `GET /services/:id` sirviendo JSON (Express/Fastify o estático + edge si basta para el demo). |
+| UI mínima | Una página que liste nombre, tags, red y enlace a docs; opcional filtro por tag. |
+| Alta de servicios | Documento `catalog/README.md`: cómo añadir entrada + PR; validar JSON con script o schema (opcional en esta fase). |
+
+**Criterios de hecho:** `curl` a la API devuelve la misma información que el archivo de catálogo; README del catálogo permite a un tercero añadir un servicio en menos de diez minutos.
 
 ### Fase 2 — Cliente x402 reusable (1–2 días)
 
-- [ ] Extraer/reutilizar lógica de pago con [`x402-stellar` (npm)](https://www.npmjs.com/package/x402-stellar) o patrones del monorepo oficial.
-- [ ] **CLI o función única**: `agenticx402 call <service-id> --path ...` que resuelva URL desde el catálogo y complete el flujo 402.
-- [ ] Tests de integración contra testnet (sin claves en repo; usar env).
+**Objetivo:** una sola herramienta ejecuta **402 → pago → retry** contra cualquier `baseUrl` definido en el catálogo.
+
+| Tarea | Detalle |
+|-------|---------|
+| Dependencias | [`x402-stellar`](https://www.npmjs.com/package/x402-stellar) y/o patrones de [coinbase/x402](https://github.com/coinbase/x402) según encaje con Stellar. |
+| CLI | Comando tipo `agenticx402 call <service-id> --path /ruta --method GET` que resuelva URL desde catálogo local o desde la API de Fase 1. |
+| Config | `.env.example` con variables documentadas; lectura de `STELLAR_SECRET_KEY` solo desde entorno. |
+| Pruebas | Al menos un test de integración *opcional* (skipped en CI sin claves) o script manual documentado. |
+
+**Criterios de hecho:** desde CLI, una llamada a un servicio de testnet devuelve cuerpo 200 tras el flujo de pago; documentación de “cómo correrlo” en README.
 
 ### Fase 3 — Cara de agente (1 día)
 
-- [ ] **MCP server** delgado: herramientas `list_services`, `call_service` que usen el cliente de Fase 2 (referencia: [x402-mcp-stellar](https://github.com/jamesbachini/x402-mcp-stellar), [Stellar Observatory](https://github.com/elliotfriend/stellar-observatory)).
-- [ ] O alternativa: **skill** / prompt pack con ejemplos copy-paste para Claude Code / Cursor.
+**Objetivo:** demostrar consumo desde un **agente** (MCP o skill), no solo desde terminal humana.
+
+| Tarea | Detalle |
+|-------|---------|
+| MCP | Servidor delgado: tools `list_services` (lee API/catálogo) y `call_service` (delega en CLI o librería de Fase 2). Referencias: [x402-mcp-stellar](https://github.com/jamesbachini/x402-mcp-stellar), [Stellar Observatory](https://github.com/elliotfriend/stellar-observatory). |
+| Alternativa | Skill Markdown + prompts reproducibles en Cursor/Claude Code si el tiempo apremia. |
+
+**Criterios de hecho:** un flujo grabado o script donde el LLM elige un servicio del catálogo y obtiene respuesta pagada.
 
 ### Fase 4 — Pulido para demo (0.5–1 día)
 
-- [ ] README de contribución para **registrar un servicio** en el catálogo (PR o formulario estático).
-- [ ] Grabación o GIF del flujo: agente → pago → respuesta.
-- [ ] **Deploy** del catálogo + cliente (ej. Vercel, Railway, Fly) — testnet only para el hackathon.
+**Objetivo:** entrega presentable al jurado: onboarding claro + deploy + storytelling.
+
+| Tarea | Detalle |
+|-------|---------|
+| Contribución | `CONTRIBUTING.md` o sección: PR al catálogo + requisitos (testnet, política de precios honestos). |
+| Demo | Video corto o GIF: agente → listado → pago → resultado; narrar diferencia vs usar solo xlm402 sin orquestación. |
+| Deploy | Catálogo + API + UI en Vercel/Railway/Fly; **testnet only**; variables solo en panel del hosting. |
+
+**Criterios de hecho:** URL pública del hub + enlace al repo; cualquier miembro del equipo puede repetir la demo en máquina limpia siguiendo docs.
 
 ### Post-hackathon (opcional)
 
-- [ ] Soporte mainnet tras revisar límites y compliance.
-- [ ] Registro/onboarding de proveedores con verificación mínima.
-- [ ] Explorar [MPP](https://developers.stellar.org/docs/build/agentic-payments/mpp) para cargas altas (canales) donde el coste por tx importe.
+- [ ] Mainnet tras revisar compliance y límites.
+- [ ] Onboarding de proveedores con verificación mínima y analytics (alineado a [BUSINESS_MODEL.md](./BUSINESS_MODEL.md)).
+- [ ] [MPP](https://developers.stellar.org/docs/build/agentic-payments/mpp) / canales si el volumen por request lo justifica.
 
 ## Stack sugerido
 
@@ -98,6 +136,10 @@ flowchart LR
 | x402 | [coinbase/x402](https://github.com/coinbase/x402), [stellar/x402-stellar](https://github.com/stellar/x402-stellar) |
 | Red | Stellar testnet; facilitator según [docs Built on Stellar](https://developers.stellar.org/docs/build/agentic-payments/x402/built-on-stellar) |
 | Catálogo | JSON estático al inicio → SQLite/Postgres si crece |
+
+## Catálogo (en evolución)
+
+Semilla de servicios: [`catalog/services.json`](./catalog/services.json). La API de Fase 1 expondrá este contenido (o una vista derivada).
 
 ## Recursos que estamos usando
 
@@ -120,7 +162,7 @@ git push -u origin main
 
 ## Estado del repositorio
 
-> El remoto puede estar vacío al inicio; este README define **north star** y **checklist** para la primera ola de commits.
+En progreso: **Fase 0** (setup local y validación x402). Commits siguientes: API catálogo (Fase 1), paquete CLI (Fase 2), MCP (Fase 3).
 
 ## Licencia
 

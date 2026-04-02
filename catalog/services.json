@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "networkDefault": "stellar:testnet",
+  "services": [
+    {
+      "id": "xlm402-ecosystem",
+      "name": "Servicios de referencia (xlm402.com)",
+      "description": "Catálogo público de prueba con varios endpoints x402 en testnet. Usar como fuente de integración y benchmark.",
+      "baseUrl": "https://xlm402.com",
+      "paths": [],
+      "pricingNote": "Varía por endpoint; consultar documentación del sitio.",
+      "tags": ["community", "reference", "multi-service"],
+      "status": "active",
+      "source": "external",
+      "docsUrl": "https://xlm402.com"
+    }
+  ]
+}
