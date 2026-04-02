@@ -1,0 +1,12 @@
+{
+  "name": "agenticx402",
+  "private": true,
+  "description": "Hub de servicios x402 para agentes (Stellar)",
+  "type": "module",
+  "scripts": {
+    "catalog:dev": "node apps/catalog-api/server.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

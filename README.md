@@ -80,7 +80,7 @@ Modelo de negocio y pricing orientativo: [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.
 | Tarea | Detalle |
 |-------|---------|
 | Modelo de datos | Campos mínimos por servicio: `id`, `name`, `baseUrl`, `description`, `tags`, `status`, `network` (o `networkDefault` global), `source`; opcion `paths[]`, `pricingNote` o objeto `price`, `docsUrl`, `openapiUrl`. Ver semilla en [`catalog/services.json`](./catalog/services.json). |
-| API read-only | `GET /services`, `GET /services/:id` sirviendo JSON (Express/Fastify o estático + edge si basta para el demo). |
+| API read-only | `GET /services`, `GET /services/:id` sirviendo JSON — **implementado** vía `npm run catalog:dev` ([`apps/catalog-api/server.mjs`](./apps/catalog-api/server.mjs)); sustituir por Express/Fastify si hace falta middleware. |
 | UI mínima | Una página que liste nombre, tags, red y enlace a docs; opcional filtro por tag. |
 | Alta de servicios | Documento `catalog/README.md`: cómo añadir entrada + PR; validar JSON con script o schema (opcional en esta fase). |
 
@@ -139,7 +139,13 @@ Modelo de negocio y pricing orientativo: [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.
 
 ## Catálogo (en evolución)
 
-Semilla de servicios: [`catalog/services.json`](./catalog/services.json). La API de Fase 1 expondrá este contenido (o una vista derivada).
+Semilla de servicios: [`catalog/services.json`](./catalog/services.json).
+
+API mínima (Fase 1 en curso): con Node 20+ ejecuta `npm run catalog:dev` (puerto **3840** por defecto; sobreescribe con `PORT`).
+
+- `GET /services` — documento completo del catálogo  
+- `GET /services/:id` — un servicio  
+- `GET /health` — comprobación rápida
 
 ## Recursos que estamos usando
 
