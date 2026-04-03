@@ -54,9 +54,12 @@ flowchart LR
 
 ## Plan de implementación
 
-Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables. Checklist paso a paso de la Fase 0: [`docs/setup-fase-0.md`](./docs/setup-fase-0.md).
+Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables.
 
-Modelo de negocio y pricing orientativo: [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.md).
+- **Avance y tareas para el equipo:** [`docs/PROGRESS.md`](./docs/PROGRESS.md) (actualizar al cerrar trabajo).
+- **Cómo contribuir:** [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+- **Fase 0 (checklist local):** [`docs/setup-fase-0.md`](./docs/setup-fase-0.md).
+- **Modelo de negocio:** [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.md).
 
 ### Fase 0 — Aterrizaje (0.5–1 día)
 
@@ -80,11 +83,13 @@ Modelo de negocio y pricing orientativo: [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.
 | Tarea | Detalle |
 |-------|---------|
 | Modelo de datos | Campos mínimos por servicio: `id`, `name`, `baseUrl`, `description`, `tags`, `status`, `network` (o `networkDefault` global), `source`; opcion `paths[]`, `pricingNote` o objeto `price`, `docsUrl`, `openapiUrl`. Ver semilla en [`catalog/services.json`](./catalog/services.json). |
-| API read-only | `GET /services`, `GET /services/:id` sirviendo JSON — **implementado** vía `npm run catalog:dev` ([`apps/catalog-api/server.mjs`](./apps/catalog-api/server.mjs)); sustituir por Express/Fastify si hace falta middleware. |
-| UI mínima | Una página que liste nombre, tags, red y enlace a docs; opcional filtro por tag. |
-| Alta de servicios | Documento `catalog/README.md`: cómo añadir entrada + PR; validar JSON con script o schema (opcional en esta fase). |
+| API read-only | `GET /services`, `GET /services/:id` — [`apps/catalog-api/server.mjs`](./apps/catalog-api/server.mjs). |
+| UI mínima | **Hecha:** [`apps/catalog-web/index.html`](./apps/catalog-web/index.html) — lista, filtro por texto, filtro por tag, enlaces a sitio/docs/JSON. Sirve en `GET /` con `npm run catalog:dev`. |
+| Alta de servicios | [`catalog/README.md`](./catalog/README.md) + validación **`npm run catalog:validate`** ([`scripts/validate-catalog.mjs`](./scripts/validate-catalog.mjs)). |
 
-**Criterios de hecho:** `curl` a la API devuelve la misma información que el archivo de catálogo; README del catálogo permite a un tercero añadir un servicio en menos de diez minutos.
+**Criterios de hecho:** ✅ API alineada con `catalog/services.json`; ✅ UI usable en `/`; ✅ alta documentada y validable en CI/local.
+
+**Estado:** Fase 1 **cerrada en repo**. Siguiente: **Fase 2** (CLI x402).
 
 ### Fase 2 — Cliente x402 reusable (1–2 días)
 
@@ -116,7 +121,7 @@ Modelo de negocio y pricing orientativo: [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.
 
 | Tarea | Detalle |
 |-------|---------|
-| Contribución | `CONTRIBUTING.md` o sección: PR al catálogo + requisitos (testnet, política de precios honestos). |
+| Contribución | Ampliar [`CONTRIBUTING.md`](./CONTRIBUTING.md) si aparecen reglas nuevas (deploy, branches). Base ya lista. |
 | Demo | Video corto o GIF: agente → listado → pago → resultado; narrar diferencia vs usar solo xlm402 sin orquestación. |
 | Deploy | Catálogo + API + UI en Vercel/Railway/Fly; **testnet only**; variables solo en panel del hosting. |
 
@@ -139,13 +144,16 @@ Modelo de negocio y pricing orientativo: [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.
 
 ## Catálogo (en evolución)
 
-Semilla de servicios: [`catalog/services.json`](./catalog/services.json).
+Datos: [`catalog/services.json`](./catalog/services.json). Validar antes de PR: `npm run catalog:validate`.
 
-API mínima (Fase 1 en curso): con Node 20+ ejecuta `npm run catalog:dev` (puerto **3840** por defecto; sobreescribe con `PORT`).
+Con Node 20+: `npm run catalog:dev` (puerto **3840**, o `PORT`).
 
-- `GET /services` — documento completo del catálogo  
-- `GET /services/:id` — un servicio  
-- `GET /health` — comprobación rápida
+| Ruta | Uso |
+|------|-----|
+| `GET /` | Interfaz del hub (listado + filtros) |
+| `GET /services` | JSON del catálogo completo |
+| `GET /services/:id` | Un servicio |
+| `GET /health` | Salud del proceso (JSON) |
 
 ## Recursos que estamos usando
 
@@ -168,7 +176,7 @@ git push -u origin main
 
 ## Estado del repositorio
 
-En progreso: **Fase 0** (setup local y validación x402). Commits siguientes: API catálogo (Fase 1), paquete CLI (Fase 2), MCP (Fase 3).
+**Fase 1 (hub catálogo + API + UI)** lista en repo. **Fase 0** sigue siendo obligatoria **por desarrollador** (wallet + flujo x402 local) — ver [`docs/PROGRESS.md`](./docs/PROGRESS.md). Siguiente hito de código: **Fase 2** (CLI / cliente x402).
 
 ## Licencia
 

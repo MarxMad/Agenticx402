@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agenticx402 — Catálogo</title>
+  <style>
+    :root {
+      --bg: #0c0d12;
+      --surface: #14161f;
+      --border: #2a2e3d;
+      --text: #e8eaef;
+      --muted: #8b92a8;
+      --accent: #7c3aed;
+      --accent-dim: #5b21b6;
+      --tag: #1e293b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    header p {
+      margin: 0.35rem 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    header a { color: var(--accent); }
+    main { max-width: 56rem; margin: 0 auto; padding: 1.5rem; }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+    .toolbar label { color: var(--muted); font-size: 0.85rem; }
+    input[type="search"] {
+      flex: 1;
+      min-width: 12rem;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    input[type="search"]:focus {
+      outline: 2px solid var(--accent-dim);
+      border-color: var(--accent);
+    }
+    .meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .error {
+      padding: 1rem;
+      border-radius: 8px;
+      background: #3f1d1d;
+      border: 1px solid #7f1d1d;
+      color: #fecaca;
+    }
+    ul.services {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+      background: var(--surface);
+      transition: border-color 0.15s ease;
+    }
+    .card:hover { border-color: #3d4458; }
+    .card h2 {
+      margin: 0 0 0.35rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    .card .id {
+      font-family: ui-monospace, monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .card p.desc {
+      margin: 0 0 0.75rem;
+      color: #b8bfd4;
+      font-size: 0.9rem;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 0.65rem;
+    }
+    .tag {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: var(--tag);
+      color: #94a3b8;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+    .tag:hover, .tag:focus { color: var(--text); outline: none; }
+    .tag.active {
+      background: var(--accent-dim);
+      color: #ede9fe;
+    }
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.88rem;
+    }
+    .links a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .links a:hover { text-decoration: underline; }
+    .status {
+      display: inline-block;
+      font-size: 0.72rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    .status-active { background: #14532d; color: #bbf7d0; }
+    .status-draft { background: #422006; color: #fde68a; }
+    .status-deprecated { background: #450a0a; color: #fecaca; }
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Agenticx402 <span class="meta">catálogo</span></h1>
+    <p>
+      Servicios x402 en Stellar (descubrimiento). API:
+      <a href="/services"><code>/services</code></a>
+      · <a href="https://github.com/MarxMad/Agenticx402">GitHub</a>
+    </p>
+  </header>
+  <main>
+    <div class="toolbar">
+      <label for="q">Filtrar</label>
+      <input type="search" id="q" placeholder="Nombre, id, descripción o tag…" autocomplete="off" />
+      <span class="meta" id="count"></span>
+    </div>
+    <div id="banner"></div>
+    <ul class="services" id="list"></ul>
+    <footer>
+      Red por defecto del catálogo: <code id="network">—</code>.
+      Documentación del equipo: <a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/PROGRESS.md">docs/PROGRESS.md</a>
+    </footer>
+  </main>
+  <script>
+    const listEl = document.getElementById("list");
+    const bannerEl = document.getElementById("banner");
+    const countEl = document.getElementById("count");
+    const networkEl = document.getElementById("network");
+    const input = document.getElementById("q");
+    let catalog = { services: [], networkDefault: "" };
+    let tagFilter = "";
+
+    function statusClass(s) {
+      if (s === "active") return "status-active";
+      if (s === "deprecated") return "status-deprecated";
+      return "status-draft";
+    }
+
+    function matches(s, q) {
+      if (!q && !tagFilter) return true;
+      const hay = [
+        s.id, s.name, s.description || "", (s.tags || []).join(" "),
+        s.baseUrl || "", s.pricingNote || ""
+      ].join(" ").toLowerCase();
+      const words = q.toLowerCase().trim().split(/\s+/).filter(Boolean);
+      const tagOk = !tagFilter || (s.tags || []).includes(tagFilter);
+      const textOk = words.length === 0 || words.every((w) => hay.includes(w));
+      return tagOk && textOk;
+    }
+
+    function render() {
+      const q = input.value;
+      const filtered = catalog.services.filter((s) => matches(s, q));
+      countEl.textContent = filtered.length + " / " + catalog.services.length + " servicios";
+      listEl.innerHTML = "";
+      for (const s of filtered) {
+        const li = document.createElement("li");
+        li.className = "card";
+        const st = s.status || "draft";
+        li.innerHTML =
+          "<h2>" +
+          escapeHtml(s.name) +
+          '<span class="status ' +
+          statusClass(st) +
+          '">' +
+          escapeHtml(st) +
+          "</span></h2>" +
+          '<div class="id">' +
+          escapeHtml(s.id) +
+          "</div>" +
+          (s.description ? '<p class="desc">' + escapeHtml(s.description) + "</p>" : "") +
+          '<div class="tags"></div>' +
+          '<div class="links"></div>';
+        const tagsWrap = li.querySelector(".tags");
+        for (const t of s.tags || []) {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "tag" + (tagFilter === t ? " active" : "");
+          b.textContent = t;
+          b.addEventListener("click", () => {
+            tagFilter = tagFilter === t ? "" : t;
+            render();
+          });
+          tagsWrap.appendChild(b);
+        }
+        const links = li.querySelector(".links");
+        if (s.baseUrl) {
+          const a = document.createElement("a");
+          a.href = s.baseUrl;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = "Sitio / API";
+          links.appendChild(a);
+        }
+        if (s.docsUrl) {
+          const a = document.createElement("a");
+          a.href = s.docsUrl;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = "Documentación";
+          links.appendChild(a);
+        }
+        const jsonA = document.createElement("a");
+        jsonA.href = "/services/" + encodeURIComponent(s.id);
+        jsonA.textContent = "JSON";
+        links.appendChild(jsonA);
+        listEl.appendChild(li);
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    async function load() {
+      try {
+        const r = await fetch("/services");
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        catalog = await r.json();
+        if (!Array.isArray(catalog.services)) throw new Error("Formato inválido");
+        networkEl.textContent = catalog.networkDefault || "no definida";
+        bannerEl.innerHTML = "";
+        render();
+        input.addEventListener("input", render);
+      } catch (e) {
+        bannerEl.innerHTML =
+          '<div class="error">No se pudo cargar el catálogo. ¿Corre <code>npm run catalog:dev</code>?<br/>' +
+          escapeHtml(String(e.message)) +
+          "</div>";
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>

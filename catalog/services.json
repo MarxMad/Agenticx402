@@ -13,6 +13,18 @@
       "status": "active",
       "source": "external",
       "docsUrl": "https://xlm402.com"
+    },
+    {
+      "id": "stellar-observatory",
+      "name": "Stellar Observatory",
+      "description": "Condiciones espaciales y datos expuestos con x402 en Stellar; el repositorio incluye servidor MCP.",
+      "baseUrl": "https://stellar-observatory.vercel.app",
+      "paths": [],
+      "pricingNote": "Según configuración del servicio en testnet/mainnet.",
+      "tags": ["community", "weather", "mcp"],
+      "status": "active",
+      "source": "external",
+      "docsUrl": "https://github.com/elliotfriend/stellar-observatory"
     }
   ]
 }

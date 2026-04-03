@@ -4,7 +4,8 @@
   "description": "Hub de servicios x402 para agentes (Stellar)",
   "type": "module",
   "scripts": {
-    "catalog:dev": "node apps/catalog-api/server.mjs"
+    "catalog:dev": "node apps/catalog-api/server.mjs",
+    "catalog:validate": "node scripts/validate-catalog.mjs"
   },
   "engines": {
     "node": ">=20"
