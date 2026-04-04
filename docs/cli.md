@@ -16,6 +16,14 @@ O con bin global tras `npm link` (opcional):
 agenticx402 list
 ```
 
+## Banner visual (terminal)
+
+Al ejecutar `npm run cli -- -h` o `list`, el CLI muestra un bloque **tipo pixel** con colores ANSI (inspiración tipo Claude / herramientas retro).
+
+- **Quitar el dibujo por completo:** `AGENTICX402_NO_BANNER=1`.
+- **Solo sin colores:** `NO_COLOR=1` mantiene el arte ASCII en blanco y negro (útil en terminales o CI que no soportan ANSI).
+- **`fetch` / `call`:** no imprimen el banner grande para no mezclar con JSON en stdout; solo `list` y la ayuda.
+
 ## Variables de entorno
 
 Ver [`.env.example`](../.env.example). Mínimo para pagar un 402:

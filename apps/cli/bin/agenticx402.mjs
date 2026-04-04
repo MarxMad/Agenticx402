@@ -2,11 +2,11 @@
 import { parseArgs } from "node:util";
 import { loadCatalog, findService, resolveServiceUrl } from "../lib/catalog-load.mjs";
 import { createPaywallHttpClient, paywallFetch } from "../lib/x402-fetch.mjs";
+import { printBannerFull, printBannerMini } from "../lib/banner.mjs";
 
 function printHelp() {
-  console.log(`agenticx402 — CLI Fase 2 (x402 + Stellar)
-
-Uso:
+  printBannerFull();
+  console.log(`Uso:
   agenticx402 list
       Lista servicios del catálogo (archivo o AGENTICX402_CATALOG_URL).
 
@@ -22,6 +22,7 @@ Variables de entorno:
   STELLAR_SOROBAN_RPC_URL  Opcional; RPC Soroban personalizado
   AGENTICX402_CATALOG_URL  Opcional; p. ej. http://127.0.0.1:3840/services
   AGENTICX402_CATALOG_FILE Ruta absoluta a services.json si no usas URL
+  AGENTICX402_NO_BANNER   1 = sin arte ASCII al inicio (útil en CI / logs)
 
 Ejemplos:
   npm run cli -- list
@@ -31,6 +32,7 @@ Ejemplos:
 }
 
 async function cmdList() {
+  printBannerMini();
   const catalog = await loadCatalog();
   const net = catalog.networkDefault || "—";
   console.log(`Catálogo v${catalog.version} · red por defecto: ${net}\n`);
