@@ -24,6 +24,18 @@ Al ejecutar `npm run cli -- -h` o `list`, el CLI muestra un **medallón** en tex
 - **Solo sin colores:** `NO_COLOR=1` mantiene el arte ASCII en blanco y negro (útil en terminales o CI que no soportan ANSI).
 - **`fetch` / `call`:** no imprimen el banner grande para no mezclar con JSON en stdout; solo `list` y la ayuda.
 
+## Pantalla “consola PUMA” (splash)
+
+Vista completa inspirada en mockups tipo **PUMA SYSTEM CLI**: barra de título `==== [ … ] ====`, menú `File | Network | Stellar`, separadores, **campo de constelaciones** (caracteres que cambian), medallón con puma + x402 y un bloque de **prompt simulado** (`puma@stellar-testnet:~$ …`).
+
+```bash
+npm run cli -- splash
+npm run cli -- splash --animate   # o -a
+```
+
+- **Dinámico (`--animate`):** en una **TTY** y **sin** `NO_COLOR`, limpia la pantalla unas veces y **redibuja** las filas de constelación (semilla distinta por frame) + oculta el cursor durante ~3 s. No es un motor gráfico: es ANSI + texto; para UI tipo Ink/blessed haría falta otra dependencia.
+- En **CI**, **pipes** o `NO_COLOR=1` solo se imprime la versión **estática** (sin animación ni `clear`).
+
 ## Variables de entorno
 
 Ver [`.env.example`](../.env.example). Mínimo para pagar un 402:
@@ -36,6 +48,7 @@ Sin `STELLAR_SECRET_KEY`, `fetch` y `call` solo hacen una petición normal; si l
 
 | Comando | Descripción |
 |---------|-------------|
+| `splash` | Pantalla completa estilo consola; `--animate` / `-a` para constelación viva (TTY). |
 | `list` | Imprime servicios del catálogo (archivo local o `AGENTICX402_CATALOG_URL`). |
 | `fetch <url>` | GET (o `--method`) a una URL completa. |
 | `call <id> --path /ruta` | Construye URL con `baseUrl` del servicio `id` en el catálogo + `path`. |

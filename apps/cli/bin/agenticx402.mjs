@@ -3,10 +3,15 @@ import { parseArgs } from "node:util";
 import { loadCatalog, findService, resolveServiceUrl } from "../lib/catalog-load.mjs";
 import { createPaywallHttpClient, paywallFetch } from "../lib/x402-fetch.mjs";
 import { printBannerFull, printBannerMini } from "../lib/banner.mjs";
+import { runSplash } from "../lib/splash-chrome.mjs";
 
 function printHelp() {
   printBannerFull();
   console.log(`Uso:
+  agenticx402 splash [--animate]
+      Pantalla completa estilo consola PUMA/x402 (oro/azul). --animate redibuja
+      constelaciones en terminal interactiva (TTY, sin NO_COLOR).
+
   agenticx402 list
       Lista servicios del catálogo (archivo o AGENTICX402_CATALOG_URL).
 
@@ -25,10 +30,16 @@ Variables de entorno:
   AGENTICX402_NO_BANNER   1 = sin arte ASCII al inicio (útil en CI / logs)
 
 Ejemplos:
+  npm run cli -- splash
+  npm run cli -- splash --animate
   npm run cli -- list
   npm run cli -- fetch "https://…" --method GET
   npm run cli -- call stellar-observatory --path /api/foo --method GET
 `);
+}
+
+async function cmdSplash(values) {
+  await runSplash({ animate: Boolean(values.animate) });
 }
 
 async function cmdList() {
@@ -104,6 +115,7 @@ async function main() {
       method: { type: "string", short: "X", default: "GET" },
       path: { type: "string", short: "p" },
       help: { type: "boolean", short: "h" },
+      animate: { type: "boolean", short: "a", default: false },
     },
   });
 
@@ -116,7 +128,9 @@ async function main() {
   const rest = positionals.slice(1);
 
   try {
-    if (cmd === "list") {
+    if (cmd === "splash") {
+      await cmdSplash(values);
+    } else if (cmd === "list") {
       await cmdList();
     } else if (cmd === "fetch") {
       await cmdFetch(rest, values);

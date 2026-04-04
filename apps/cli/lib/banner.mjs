@@ -16,7 +16,7 @@ const ansi = {
   goldDim: "\x1b[38;5;136m",
 };
 
-const INNER = 41;
+export const INNER = 41;
 
 /** Puma mirando a la derecha; cada fila = 37 cols (va dentro de │· … ·│). */
 const PUMA_PIXEL = [
@@ -38,8 +38,8 @@ function frameInner(body37) {
   return "│·" + body37 + "·│";
 }
 
-/** Convierte píxeles █ en bloques; con NO_COLOR se ven igual. */
-function buildMedallion() {
+/** Líneas del medallón central (puma + anillos + x402), cada una longitud INNER. */
+export function buildMedallion() {
   const top = " ╭" + "─".repeat(38) + "╮";
   const dots39 = "· ".repeat(19) + "·";
   const ring2 = "╱" + dots39 + "╲";
@@ -77,18 +77,18 @@ function buildMedallion() {
 
 const MEDALLION = buildMedallion();
 
-function noAnsi() {
+export function noAnsi() {
   return process.env.NO_COLOR === "1" || process.env.NO_COLOR === "true";
 }
 
-function bannerOff() {
+export function bannerOff() {
   return (
     process.env.AGENTICX402_NO_BANNER === "1" ||
     process.env.AGENTICX402_NO_BANNER === "true"
   );
 }
 
-function row(text, opts = {}) {
+export function paintBannerRow(text, opts = {}) {
   const t = text.length === INNER ? text : text.slice(0, INNER).padEnd(INNER);
   const body = `  ${t}  `;
   if (noAnsi()) {
@@ -99,7 +99,7 @@ function row(text, opts = {}) {
   return `${ansi.bg}${ansi.bold}${fg}${body}${ansi.x}`;
 }
 
-function subtitle(text) {
+export function paintSubtitle(text) {
   if (noAnsi()) {
     return `  ${text}`;
   }
@@ -111,11 +111,11 @@ export function printBannerFull() {
 
   console.log("");
   for (const line of MEDALLION) {
-    console.log(row(line));
+    console.log(paintBannerRow(line));
   }
-  console.log(row(" agenticx402 · Stellar · hub ".padEnd(INNER), { mid: true }));
+  console.log(paintBannerRow(" agenticx402 · Stellar · hub ".padEnd(INNER), { mid: true }));
   console.log("");
-  console.log(subtitle("pay-per-request · HTTP 402 · Soroban"));
+  console.log(paintSubtitle("pay-per-request · HTTP 402 · Soroban"));
   console.log("");
 }
 
