@@ -128,9 +128,18 @@ Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables.
 |-------|---------|
 | Contribución | Ampliar [`CONTRIBUTING.md`](./CONTRIBUTING.md) si aparecen reglas nuevas (deploy, branches). Base ya lista. |
 | Demo | Video corto o GIF: agente → listado → pago → resultado; narrar diferencia vs usar solo xlm402 sin orquestación. |
-| Deploy | Catálogo + API + UI en Vercel/Railway/Fly; **testnet only**; variables solo en panel del hosting. |
+| Deploy | Catálogo + API + UI en Vercel/Railway/Fly; **testnet only**; variables solo en panel del hosting. **Docker:** [`Dockerfile`](./Dockerfile) en la raíz (solo hub). |
 
 **Criterios de hecho:** URL pública del hub + enlace al repo; cualquier miembro del equipo puede repetir la demo en máquina limpia siguiendo docs.
+
+#### Hub con Docker (local o nube)
+
+```bash
+docker build -t pumax402-hub .
+docker run --rm -p 8080:8080 -e PORT=8080 pumax402-hub
+```
+
+Abre `http://127.0.0.1:8080/` y `http://127.0.0.1:8080/health`. En Fly.io / Railway / etc., el proveedor suele inyectar `PORT`; no hace falta imagen con Node fuera de este contenedor para servir el catálogo.
 
 ### Post-hackathon (opcional)
 

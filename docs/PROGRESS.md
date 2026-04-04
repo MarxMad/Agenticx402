@@ -14,7 +14,7 @@ Este archivo es la **fuente de verdad operativa**: qué fase toca, qué ya está
 | **1** | Cimientos del hub (catálogo + API + UI) | **Completa** | Core hub | Añadir entradas en `catalog/services.json` si hace falta |
 | **2** | Cliente x402 (CLI) | **Completa** (código + docs); prueba 402 real = Fase 0 | Integración Stellar | Cada dev: `STELLAR_SECRET_KEY` + `npm run cli -- fetch "<url 402>"` |
 | **3** | MCP / skill para agentes | **MCP stdio en repo** (`list_services`, `call_service`) | Agent UX | Demo grabada + registrar servidor en el cliente MCP; 402 real = Fase 0 |
-| **4** | Demo + deploy + pitch | Pendiente | Todo el equipo | Video, deploy público, pitch final |
+| **4** | Demo + deploy + pitch | **Docker hub listo**; falta URL pública + vídeo + pitch | Todo el equipo | Subir imagen o conectar repo al hosting; grabar demo MCP/CLI |
 
 **Leyenda de estado:** *Completa* = criterios de hecho del README cubiertos en código o docs del repo. *Guía lista* = el equipo debe ejecutar pasos fuera del repo (wallet, clone de x402-stellar).
 
@@ -80,9 +80,20 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 
 ---
 
+## Fase 4 — Deploy del hub (Docker)
+
+| Artefacto | Ubicación | Notas |
+|-----------|-----------|--------|
+| Imagen | [`Dockerfile`](../Dockerfile) en la raíz | Solo `catalog/` + `apps/catalog-api` + `apps/catalog-web`; puerto por `PORT` (default 8080 en imagen). |
+| Contexto | [`.dockerignore`](../.dockerignore) | Excluye CLI, MCP, `node_modules`, docs. |
+
+**Orden recomendado:** build local → probar → publicar en registry o desplegar desde el mismo `Dockerfile` en Fly/Railway/Render.
+
+---
+
 ## Fase 4 en adelante — Orden de trabajo recomendado
 
-1. **Fase 4:** deploy del servidor de catálogo, video de demo, pitch.
+1. **Fase 4:** URL pública (desde Docker o buildpack Node ejecutando `node apps/catalog-api/server.mjs`), video de demo, pitch.
 2. **Opcional:** skill Markdown duplicando instrucciones MCP para quien no use stdio.
 
 ---
@@ -91,6 +102,7 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 
 | Fecha | Cambio |
 |-------|--------|
+| 2026-04-04 | Fase 4 (parcial): `Dockerfile` + `.dockerignore` para desplegar solo el hub (API + UI). |
 | 2026-04-04 | Hub web: sección **Documentación** (`/#docs`) con enlaces a `docs/*` y JSON ejemplo MCP + copiar al portapapeles. |
 | 2026-04-04 | Fase 3: MCP stdio `pumax402-mcp` (`list_services`, `call_service`), `@modelcontextprotocol/sdk`, script `npm run mcp`. |
 | 2026-04-02 | Marca de producto **PumaX402** (banner/splash, catálogo web, README); bin npm y repo GitHub siguen `agenticx402` / Agenticx402. |
