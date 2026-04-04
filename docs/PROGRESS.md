@@ -2,7 +2,7 @@
 
 Este archivo es la **fuente de verdad operativa**: qué fase toca, qué ya está en el repo y qué falta. Actualízalo al cerrar tareas o al abrir PRs relevantes.
 
-**Última revisión del documento:** 2026-04-02
+**Última revisión del documento:** 2026-04-04
 
 ---
 
@@ -13,7 +13,7 @@ Este archivo es la **fuente de verdad operativa**: qué fase toca, qué ya está
 | **0** | Aterrizaje (wallet + x402 end-to-end local) | **Guía lista** — la ejecución es **por desarrollador** | Cada dev | Completar checklist en [`setup-fase-0.md`](./setup-fase-0.md) y anotar fecha en la tabla de abajo |
 | **1** | Cimientos del hub (catálogo + API + UI) | **Completa** | Core hub | Añadir entradas en `catalog/services.json` si hace falta |
 | **2** | Cliente x402 (CLI) | **Completa** (código + docs); prueba 402 real = Fase 0 | Integración Stellar | Cada dev: `STELLAR_SECRET_KEY` + `npm run cli -- fetch "<url 402>"` |
-| **3** | MCP / skill para agentes | Pendiente | Agent UX | Servidor MCP mínimo que use catálogo + CLI o `paywallFetch` |
+| **3** | MCP / skill para agentes | **MCP stdio en repo** (`list_services`, `call_service`) | Agent UX | Demo grabada + registrar servidor en el cliente MCP; 402 real = Fase 0 |
 | **4** | Demo + deploy + pitch | Pendiente | Todo el equipo | Video, deploy público, pitch final |
 
 **Leyenda de estado:** *Completa* = criterios de hecho del README cubiertos en código o docs del repo. *Guía lista* = el equipo debe ejecutar pasos fuera del repo (wallet, clone de x402-stellar).
@@ -37,7 +37,7 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 | Datos del catálogo | [`catalog/services.json`](../catalog/services.json) | Editar y correr validación |
 | Validación JSON | [`scripts/validate-catalog.mjs`](../scripts/validate-catalog.mjs) | `npm run catalog:validate` |
 | API read-only | [`apps/catalog-api/server.mjs`](../apps/catalog-api/server.mjs) | `npm run catalog:dev` → `GET /services`, `GET /services/:id` |
-| UI del hub | [`apps/catalog-web/index.html`](../apps/catalog-web/index.html) | Mismo servidor → abrir `http://127.0.0.1:3840/` |
+| UI del hub | [`apps/catalog-web/index.html`](../apps/catalog-web/index.html) | Mismo servidor → `http://127.0.0.1:3840/` · pestaña **Documentación** (`#docs`): enlaces a guías + snippet MCP |
 | Cómo dar de alta servicios | [`catalog/README.md`](../catalog/README.md) | PR con cambios en `services.json` |
 
 **Criterios de hecho Fase 1 (revisión):**
@@ -54,7 +54,7 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 
 | Componente | Ubicación | Cómo probarlo |
 |------------|-----------|----------------|
-| Entrada CLI | [`apps/cli/bin/agenticx402.mjs`](../apps/cli/bin/agenticx402.mjs) | `npm run cli -- help` |
+| Entrada CLI (PumaX402) | [`apps/cli/bin/agenticx402.mjs`](../apps/cli/bin/agenticx402.mjs) | `npm run cli -- help` |
 | Catálogo (file / URL) | [`apps/cli/lib/catalog-load.mjs`](../apps/cli/lib/catalog-load.mjs) | `AGENTICX402_CATALOG_URL=… npm run cli -- list` |
 | fetch con 402 | [`apps/cli/lib/x402-fetch.mjs`](../apps/cli/lib/x402-fetch.mjs) | Con `STELLAR_SECRET_KEY`: `npm run cli -- fetch "…"` |
 | Variables | [`.env.example`](../.env.example) | Copiar a `.env` local (no git) |
@@ -68,10 +68,22 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 
 ---
 
-## Fase 3 en adelante — Orden de trabajo recomendado
+## Fase 3 — Qué hay implementado
 
-1. **Fase 3:** MCP con `list_services` + `call_service` (HTTP al catálogo o `spawn` al CLI).
-2. **Fase 4:** deploy del servidor de catálogo, video de demo, pitch.
+| Componente | Ubicación | Cómo probarlo |
+|------------|-----------|----------------|
+| Servidor MCP (stdio) | [`apps/mcp/server.mjs`](../apps/mcp/server.mjs) | `npm run mcp` — conectar con Inspector MCP o Cursor (`command` + `args`) |
+| Tool `list_services` | mismo | Lista / filtra servicios del catálogo (mismas env vars que CLI) |
+| Tool `call_service` | mismo | `service_id` + `path` (+ `method`); usa `STELLAR_SECRET_KEY` si hay 402 |
+
+**Cursor (ejemplo):** servidor con `command` `node`, `args` `["/ruta/al/repo/apps/mcp/server.mjs"]`, `cwd` raíz del repo.
+
+---
+
+## Fase 4 en adelante — Orden de trabajo recomendado
+
+1. **Fase 4:** deploy del servidor de catálogo, video de demo, pitch.
+2. **Opcional:** skill Markdown duplicando instrucciones MCP para quien no use stdio.
 
 ---
 
@@ -79,7 +91,10 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 
 | Fecha | Cambio |
 |-------|--------|
-| 2026-04-02 | Fase 2: CLI `agenticx402` (`list`, `fetch`, `call`), `@x402/core` + `@x402/stellar`, `.env.example`, `docs/cli.md` |
+| 2026-04-04 | Hub web: sección **Documentación** (`/#docs`) con enlaces a `docs/*` y JSON ejemplo MCP + copiar al portapapeles. |
+| 2026-04-04 | Fase 3: MCP stdio `pumax402-mcp` (`list_services`, `call_service`), `@modelcontextprotocol/sdk`, script `npm run mcp`. |
+| 2026-04-02 | Marca de producto **PumaX402** (banner/splash, catálogo web, README); bin npm y repo GitHub siguen `agenticx402` / Agenticx402. |
+| 2026-04-02 | Fase 2: CLI PumaX402 (`list`, `fetch`, `call`), bin `agenticx402`, `@x402/core` + `@x402/stellar`, `.env.example`, `docs/cli.md` |
 | 2026-04-02 | Fase 1 cerrada: UI en `/`, segundo servicio en catálogo, `catalog:validate`, `CONTRIBUTING.md` |
 
 ---
@@ -88,6 +103,7 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 
 - [README principal](../README.md) — visión y plan de fases
 - [CLI](./cli.md)
+- [MCP](./mcp.md) — servidor stdio para agentes
 - [Modelo de negocio](../BUSINESS_MODEL.md)
 - [Recursos Stellar / x402](./../docs.md)
 - [Guía setup Fase 0](./setup-fase-0.md)

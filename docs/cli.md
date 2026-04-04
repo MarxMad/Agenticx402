@@ -1,4 +1,4 @@
-# CLI `agenticx402` (Fase 2)
+# CLI PumaX402 (Fase 2)
 
 Cliente de línea de comandos que resuelve el flujo **HTTP 402 → firma Stellar (Exact) → reintento** usando [`@x402/core`](https://www.npmjs.com/package/@x402/core) y [`@x402/stellar`](https://www.npmjs.com/package/@x402/stellar).
 
@@ -18,15 +18,19 @@ agenticx402 list
 
 ## Identidad en terminal (banner)
 
-Diseño **minimalista**: nombre en **cian + negrita**, subtítulo y reglas en **gris atenuado**. **No se pinta el fondo**: se respeta el color de fondo del tema (Oscuro, Solarized, Light, etc.).
+Cartel **PUMAX402** en **bloques pixel** (`█`) con **sombra** (`▒`). Parte de los bloques van en **azul tenue** (`94` atenuado); el resto en **blanco**. **No se pinta el fondo** del terminal.
+
+Con **`npm run cli -- splash --animate`** (TTY y color activo), el cartel se **redibuja** unos segundos para que la onda azul/blanco se mueva sobre las letras.
+
+Implementación: [`apps/cli/lib/banner-pixel.mjs`](../apps/cli/lib/banner-pixel.mjs) y [`apps/cli/lib/banner.mjs`](../apps/cli/lib/banner.mjs).
 
 - **Quitar cualquier cabecera:** `AGENTICX402_NO_BANNER=1`.
-- **`NO_COLOR=1`:** sin ANSI (solo texto plano).
-- **`fetch` / `call`:** no muestran el banner largo; **`list`** y **`-h`** sí una línea compacta o bloque corto.
+- **`NO_COLOR=1`:** sin ANSI; los bloques se muestran como `#` y la sombra como `:` para legibilidad ASCII.
+- **`fetch` / `call`:** no muestran el banner largo; **`list`** y **`-h`** sí el bloque pixel + tagline, o **una línea compacta** según el caso.
 
 ## Pantalla `splash`
 
-Lista de comandos y una línea divisoria; mismo criterio (sin fondo forzado).
+Misma cabecera pixel con tagline `CLI · STELLAR TESTNET · X402`, lista de comandos y reglas (sin fondo forzado).
 
 ```bash
 npm run cli -- splash

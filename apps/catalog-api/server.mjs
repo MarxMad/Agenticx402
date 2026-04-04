@@ -23,7 +23,7 @@ const server = http.createServer((req, res) => {
 
     if (req.method === "GET" && p === "/health") {
       res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-      res.end(JSON.stringify({ ok: true, service: "agenticx402-catalog" }));
+      res.end(JSON.stringify({ ok: true, service: "pumax402-catalog" }));
       return;
     }
 

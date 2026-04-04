@@ -1,16 +1,20 @@
 /**
- * Pantalla de bienvenida sobria: tipografía + reglas, fondo = el del tema del terminal.
- * --animate: solo un indicador breve en una línea (sin limpiar pantalla completa).
+ * Pantalla de bienvenida: cartel pixel + comandos. Fondo = el del tema del terminal.
+ * `--animate` (TTY + color): el bloque **PUMAX402** se redibuja unos segundos (onda azul/blanco).
  */
 
-import { paintBannerRow, paintSubtitle, noAnsi, bannerOff } from "./banner.mjs";
+import {
+  printBrandHeader,
+  printBrandHeaderAnimated,
+  paintBannerRow,
+  paintSubtitle,
+  noAnsi,
+  bannerOff,
+} from "./banner.mjs";
 
-function printBody() {
-  console.log("");
-  console.log(paintBannerRow("agenticx402", { kind: "title" }));
-  console.log(paintBannerRow("CLI · Stellar testnet · x402", { kind: "muted" }));
-  console.log(paintBannerRow("─".repeat(44), { kind: "muted" }));
-  console.log("");
+const SPLASH_TAGLINE = "CLI · STELLAR TESTNET · X402";
+
+function printBodyCommands(ruleW) {
   console.log(paintBannerRow("Comandos", { kind: "accent" }));
   console.log(paintBannerRow("  list              catálogo de servicios", { kind: "default" }));
   console.log(paintBannerRow("  fetch <url>       HTTP + flujo 402 si aplica", { kind: "default" }));
@@ -19,7 +23,7 @@ function printBody() {
   );
   console.log(paintBannerRow("  splash            esta pantalla", { kind: "default" }));
   console.log("");
-  console.log(paintBannerRow("─".repeat(44), { kind: "muted" }));
+  console.log(paintBannerRow("─".repeat(ruleW), { kind: "muted" }));
   console.log(paintSubtitle("Ayuda: npm run cli -- -h"));
   console.log("");
 }
@@ -29,7 +33,8 @@ export function printSplashStatic() {
     console.log("(splash desactivado: AGENTICX402_NO_BANNER=1)");
     return;
   }
-  printBody();
+  const ruleW = printBrandHeader({ tagline: SPLASH_TAGLINE }) ?? 44;
+  printBodyCommands(ruleW);
 }
 
 /**
@@ -44,7 +49,12 @@ export async function runSplash(opts = {}) {
   const animate = Boolean(opts.animate);
   const tty = process.stdout.isTTY;
 
-  printBody();
+  const ruleW =
+    animate && tty && !noAnsi()
+      ? (await printBrandHeaderAnimated({ tagline: SPLASH_TAGLINE })) ?? 44
+      : (printBrandHeader({ tagline: SPLASH_TAGLINE }) ?? 44);
+
+  printBodyCommands(ruleW);
 
   if (animate && tty && !noAnsi()) {
     const frames = [" ·  ", " ·· ", " ···", "  ··"];

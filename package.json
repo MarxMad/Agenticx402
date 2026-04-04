@@ -1,21 +1,25 @@
 {
   "name": "agenticx402",
   "private": true,
-  "description": "Hub de servicios x402 para agentes (Stellar)",
+  "description": "PumaX402 — hub de servicios x402 para agentes (Stellar)",
   "type": "module",
   "bin": {
-    "agenticx402": "apps/cli/bin/agenticx402.mjs"
+    "agenticx402": "apps/cli/bin/agenticx402.mjs",
+    "pumax402-mcp": "apps/mcp/server.mjs"
   },
   "scripts": {
     "catalog:dev": "node apps/catalog-api/server.mjs",
     "catalog:validate": "node scripts/validate-catalog.mjs",
-    "cli": "node apps/cli/bin/agenticx402.mjs"
+    "cli": "node apps/cli/bin/agenticx402.mjs",
+    "mcp": "node apps/mcp/server.mjs"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@x402/core": "2.9.0",
-    "@x402/stellar": "2.9.0"
+    "@x402/stellar": "2.9.0",
+    "zod": "^4.3.6"
   }
 }

@@ -1,4 +1,4 @@
-# Contribuir a Agenticx402
+# Contribuir a PumaX402
 
 Gracias por ayudar a construir el hub. Lee primero **[`docs/PROGRESS.md`](./docs/PROGRESS.md)** para ver en qué fase vamos y qué archivos tocar.
 

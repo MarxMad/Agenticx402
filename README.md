@@ -1,4 +1,4 @@
-# Agenticx402
+# PumaX402
 
 **Hub de servicios pagados por petición para agentes de IA — construido sobre [Stellar](https://stellar.org) y [x402](https://www.x402.org/).**
 
@@ -32,7 +32,7 @@ flowchart LR
     MCP[MCP opcional]
   end
 
-  subgraph hub [Agenticx402 Hub]
+  subgraph hub [PumaX402 Hub]
     CAT[Catálogo / API REST]
     GW[Gateway o cliente SDK]
   end
@@ -59,6 +59,7 @@ Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables.
 - **Avance y tareas para el equipo:** [`docs/PROGRESS.md`](./docs/PROGRESS.md) (actualizar al cerrar trabajo).
 - **Cómo contribuir:** [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 - **Fase 0 (checklist local):** [`docs/setup-fase-0.md`](./docs/setup-fase-0.md).
+- **MCP (agentes):** [`docs/mcp.md`](./docs/mcp.md).
 - **Modelo de negocio:** [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.md).
 
 ### Fase 0 — Aterrizaje (0.5–1 día)
@@ -84,7 +85,7 @@ Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables.
 |-------|---------|
 | Modelo de datos | Campos mínimos por servicio: `id`, `name`, `baseUrl`, `description`, `tags`, `status`, `network` (o `networkDefault` global), `source`; opcion `paths[]`, `pricingNote` o objeto `price`, `docsUrl`, `openapiUrl`. Ver semilla en [`catalog/services.json`](./catalog/services.json). |
 | API read-only | `GET /services`, `GET /services/:id` — [`apps/catalog-api/server.mjs`](./apps/catalog-api/server.mjs). |
-| UI mínima | **Hecha:** [`apps/catalog-web/index.html`](./apps/catalog-web/index.html) — lista, filtro por texto, filtro por tag, enlaces a sitio/docs/JSON. Sirve en `GET /` con `npm run catalog:dev`. |
+| UI mínima | **Hecha:** [`apps/catalog-web/index.html`](./apps/catalog-web/index.html) — catálogo (filtros, enlaces) + **Documentación** en `/#docs` (guías GitHub, snippet MCP Cursor). `GET /` con `npm run catalog:dev`. |
 | Alta de servicios | [`catalog/README.md`](./catalog/README.md) + validación **`npm run catalog:validate`** ([`scripts/validate-catalog.mjs`](./scripts/validate-catalog.mjs)). |
 
 **Criterios de hecho:** ✅ API alineada con `catalog/services.json`; ✅ UI usable en `/`; ✅ alta documentada y validable en CI/local.
@@ -98,7 +99,7 @@ Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables.
 | Tarea | Detalle |
 |-------|---------|
 | Dependencias | [`@x402/core`](https://www.npmjs.com/package/@x402/core) + [`@x402/stellar`](https://www.npmjs.com/package/@x402/stellar) (esquema Exact + `x402Client` / `x402HTTPClient`). |
-| CLI | **`npm run cli`** → binario [`apps/cli/bin/agenticx402.mjs`](./apps/cli/bin/agenticx402.mjs): `list`, `fetch <url>`, `call <service-id> --path /ruta`. Código reusable en [`apps/cli/lib/x402-fetch.mjs`](./apps/cli/lib/x402-fetch.mjs). |
+| CLI (PumaX402) | **`npm run cli`** → [`apps/cli/bin/agenticx402.mjs`](./apps/cli/bin/agenticx402.mjs) (bin global `agenticx402`): `list`, `fetch <url>`, `call <service-id> --path /ruta`. Código reusable en [`apps/cli/lib/x402-fetch.mjs`](./apps/cli/lib/x402-fetch.mjs). |
 | Config | [`.env.example`](./.env.example); `STELLAR_SECRET_KEY` solo por entorno (sin clave, `fetch`/`call` hacen un intento; si hay 402, indica que falta la clave). |
 | Pruebas | Sin claves en CI: `npm run cli -- list` y `fetch` a URL pública; pago real: manual con testnet — ver [`docs/cli.md`](./docs/cli.md). |
 
@@ -112,10 +113,12 @@ Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables.
 
 | Tarea | Detalle |
 |-------|---------|
-| MCP | Servidor delgado: tools `list_services` (lee API/catálogo) y `call_service` (delega en CLI o librería de Fase 2). Referencias: [x402-mcp-stellar](https://github.com/jamesbachini/x402-mcp-stellar), [Stellar Observatory](https://github.com/elliotfriend/stellar-observatory). |
+| MCP | **En repo:** servidor stdio [`apps/mcp/server.mjs`](./apps/mcp/server.mjs) — tools `list_services` y `call_service` (catálogo + [`x402-fetch`](./apps/cli/lib/x402-fetch.mjs)). Ejecutar: `npm run mcp`. Bin opcional: `pumax402-mcp`. Referencias externas: [x402-mcp-stellar](https://github.com/jamesbachini/x402-mcp-stellar), [Stellar Observatory](https://github.com/elliotfriend/stellar-observatory). |
 | Alternativa | Skill Markdown + prompts reproducibles en Cursor/Claude Code si el tiempo apremia. |
 
 **Criterios de hecho:** un flujo grabado o script donde el LLM elige un servicio del catálogo y obtiene respuesta pagada.
+
+**Estado:** servidor MCP **mínimo implementado** — falta demo grabada / configuración del cliente (Cursor, Claude Desktop, etc.) con `STELLAR_SECRET_KEY` si el endpoint exige 402.
 
 ### Fase 4 — Pulido para demo (0.5–1 día)
 

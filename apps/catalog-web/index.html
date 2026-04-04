@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agenticx402 — Catálogo</title>
+  <title>PumaX402 — Catálogo</title>
   <style>
     :root {
       --bg: #0c0d12;
@@ -41,6 +41,24 @@
       font-size: 0.9rem;
     }
     header a { color: var(--accent); }
+    .nav-main {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.25rem;
+      margin-top: 0.85rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+    .nav-main a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .nav-main a:hover { color: var(--text); }
+    .nav-main a.active {
+      color: var(--accent);
+    }
     main { max-width: 56rem; margin: 0 auto; padding: 1.5rem; }
     .toolbar {
       display: flex;
@@ -152,6 +170,77 @@
     .status-active { background: #14532d; color: #bbf7d0; }
     .status-draft { background: #422006; color: #fde68a; }
     .status-deprecated { background: #450a0a; color: #fecaca; }
+    .view-hidden { display: none !important; }
+    .docs-panel {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.35rem;
+      background: var(--surface);
+      margin-bottom: 1.5rem;
+    }
+    .docs-panel h2 {
+      margin: 0 0 0.65rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .docs-panel > p.lead {
+      margin: 0 0 1rem;
+      color: #b8bfd4;
+      font-size: 0.92rem;
+    }
+    .docs-panel h3 {
+      margin: 1.25rem 0 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .docs-panel h3:first-of-type { margin-top: 0; }
+    ul.doc-list {
+      margin: 0;
+      padding-left: 1.15rem;
+      color: #b8bfd4;
+      font-size: 0.9rem;
+    }
+    ul.doc-list li { margin: 0.35rem 0; }
+    ul.doc-list a { color: var(--accent); }
+    .snippet {
+      position: relative;
+      margin-top: 0.5rem;
+    }
+    .snippet pre {
+      margin: 0;
+      padding: 0.85rem 1rem;
+      padding-right: 5rem;
+      border-radius: 8px;
+      background: #0a0b10;
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      color: #c4c9d4;
+    }
+    .snippet button.copy {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-size: 0.72rem;
+      padding: 0.3rem 0.55rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .snippet button.copy:hover {
+      color: var(--text);
+      border-color: var(--accent-dim);
+    }
+    .snippet .hint {
+      margin: 0.4rem 0 0;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
     footer {
       margin-top: 2.5rem;
       padding-top: 1rem;
@@ -163,14 +252,19 @@
 </head>
 <body>
   <header>
-    <h1>Agenticx402 <span class="meta">catálogo</span></h1>
+    <h1>PumaX402 <span class="meta">catálogo</span></h1>
     <p>
       Servicios x402 en Stellar (descubrimiento). API:
       <a href="/services"><code>/services</code></a>
       · <a href="https://github.com/MarxMad/Agenticx402">GitHub</a>
     </p>
+    <nav class="nav-main" aria-label="Secciones">
+      <a href="#catalog" id="nav-catalog" class="active">Catálogo</a>
+      <a href="#docs" id="nav-docs">Documentación</a>
+    </nav>
   </header>
   <main>
+    <section id="view-catalog" class="view-catalog">
     <div class="toolbar">
       <label for="q">Filtrar</label>
       <input type="search" id="q" placeholder="Nombre, id, descripción o tag…" autocomplete="off" />
@@ -178,9 +272,50 @@
     </div>
     <div id="banner"></div>
     <ul class="services" id="list"></ul>
+    </section>
+
+    <section id="view-docs" class="view-docs view-hidden" aria-label="Documentación">
+      <div class="docs-panel">
+        <h2>Para desarrolladores y agentes</h2>
+        <p class="lead">
+          <strong>PumaX402</strong> es un hub de descubrimiento para APIs con pago por petición vía
+          <strong>x402</strong> en <strong>Stellar</strong>. Esta web lista el catálogo; el flujo de pago (402 → firma → reintento)
+          lo hacen el <strong>CLI</strong> o el <strong>MCP</strong> con tu wallet testnet.
+        </p>
+        <h3>Guías en el repositorio</h3>
+        <ul class="doc-list">
+          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/README.md" target="_blank" rel="noopener">README</a> — visión, fases y plan</li>
+          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/cli.md" target="_blank" rel="noopener">CLI</a> — <code>list</code>, <code>fetch</code>, <code>call</code>, variables de entorno</li>
+          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/mcp.md" target="_blank" rel="noopener">MCP</a> — servidor para Cursor / clientes MCP (<code>list_services</code>, <code>call_service</code>)</li>
+          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/setup-fase-0.md" target="_blank" rel="noopener">Setup Fase 0</a> — wallet testnet y primer 402 real</li>
+          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/PROGRESS.md" target="_blank" rel="noopener">PROGRESS</a> — avance del equipo</li>
+          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contribuir</a></li>
+        </ul>
+        <h3>Cursor — ejemplo MCP (<code>mcp.json</code>)</h3>
+        <p class="lead" style="margin-bottom: 0.35rem">
+          Sustituye <code>/ruta/a/tu/clon</code> por la ruta absoluta donde clonaste el repo. Para pagar 402, define
+          <code>STELLAR_SECRET_KEY</code> en el entorno del proceso MCP (no solo en el terminal).
+        </p>
+        <div class="snippet">
+          <button type="button" class="copy" id="copy-mcp" aria-label="Copiar JSON">Copiar</button>
+          <pre id="mcp-snippet">{
+  "mcpServers": {
+    "pumax402": {
+      "command": "node",
+      "args": ["/ruta/a/tu/clon/Agentix402/apps/mcp/server.mjs"],
+      "cwd": "/ruta/a/tu/clon/Agentix402"
+    }
+  }
+}</pre>
+          <p class="hint">Comprueba la ruta exacta de tu carpeta (p. ej. <code>Agentix402</code> vs <code>Agenticx402</code>).</p>
+        </div>
+      </div>
+    </section>
+
     <footer>
       Red por defecto del catálogo: <code id="network">—</code>.
-      Documentación del equipo: <a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/PROGRESS.md">docs/PROGRESS.md</a>
+      <a href="#docs">Documentación en esta web</a>
+      · avance: <a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/PROGRESS.md">docs/PROGRESS.md</a>
     </footer>
   </main>
   <script>
@@ -189,8 +324,40 @@
     const countEl = document.getElementById("count");
     const networkEl = document.getElementById("network");
     const input = document.getElementById("q");
+    const viewCatalog = document.getElementById("view-catalog");
+    const viewDocs = document.getElementById("view-docs");
+    const navCatalog = document.getElementById("nav-catalog");
+    const navDocs = document.getElementById("nav-docs");
+    const mcpSnippet = document.getElementById("mcp-snippet");
     let catalog = { services: [], networkDefault: "" };
     let tagFilter = "";
+
+    function setView(which) {
+      const docs = which === "docs";
+      viewCatalog.classList.toggle("view-hidden", docs);
+      viewDocs.classList.toggle("view-hidden", !docs);
+      navCatalog.classList.toggle("active", !docs);
+      navDocs.classList.toggle("active", docs);
+      document.title = docs ? "PumaX402 — Documentación" : "PumaX402 — Catálogo";
+    }
+
+    function routeFromHash() {
+      setView(window.location.hash === "#docs" ? "docs" : "catalog");
+    }
+
+    window.addEventListener("hashchange", routeFromHash);
+    routeFromHash();
+
+    document.getElementById("copy-mcp").addEventListener("click", async () => {
+      const t = mcpSnippet.textContent;
+      try {
+        await navigator.clipboard.writeText(t);
+        const b = document.getElementById("copy-mcp");
+        const prev = b.textContent;
+        b.textContent = "Listo";
+        setTimeout(() => { b.textContent = prev; }, 1600);
+      } catch (_) {}
+    });
 
     function statusClass(s) {
       if (s === "active") return "status-active";

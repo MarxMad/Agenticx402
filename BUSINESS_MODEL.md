@@ -1,10 +1,10 @@
-# Modelo de negocio — Agenticx402
+# Modelo de negocio — PumaX402
 
 Documento de referencia para alinear visión de producto, monetización y narrativa frente a inversores, jurados de hackathon o socios.
 
 ## Posicionamiento
 
-Agenticx402 no es solo un directorio de endpoints: es la capa que permite a **agentes y equipos** descubrir, pagar y orquestar servicios **pay-per-request** sobre Stellar mediante **x402**, con integración única, observabilidad y control de gasto.
+PumaX402 no es solo un directorio de endpoints: es la capa que permite a **agentes y equipos** descubrir, pagar y orquestar servicios **pay-per-request** sobre Stellar mediante **x402**, con integración única, observabilidad y control de gasto.
 
 Analogía útil: *infraestructura de routing + pagos para el consumo de herramientas por máquinas*, no una lista de enlaces.
 
@@ -53,7 +53,7 @@ Funciones dirigidas a empresas y builders que necesitan producción, no solo dem
 
 ### 4. Revenue share con servicios verticales
 
-Acuerdos con proveedores de alto valor (datos financieros, cumplimiento, analítica especializada) donde Agenticx402 aporta **descubrimiento y volumen agentic** y recibe un **porcentaje acordado** sobre el GMV generado por esas integraciones, además o en lugar del take rate estándar.
+Acuerdos con proveedores de alto valor (datos financieros, cumplimiento, analítica especializada) donde PumaX402 aporta **descubrimiento y volumen agentic** y recibe un **porcentaje acordado** sobre el GMV generado por esas integraciones, además o en lugar del take rate estándar.
 
 ## Fórmula resumida de ingresos
 

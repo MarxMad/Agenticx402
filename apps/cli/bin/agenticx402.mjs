@@ -9,8 +9,8 @@ function printHelp() {
   printBannerFull();
   console.log(`Uso:
   agenticx402 splash [--animate]
-      Resumen del CLI (tipografía limpia, sin cambiar el fondo del terminal).
-      --animate muestra un indicador breve en una línea (TTY).
+      Pantalla de bienvenida (cartel PUMAX402 + comandos). Sin cambiar el fondo del terminal.
+      --animate (TTY, con color): el cartel pixel se anima unos segundos (onda azul/blanco) y un indicador «listo».
 
   agenticx402 list
       Lista servicios del catálogo (archivo o AGENTICX402_CATALOG_URL).
