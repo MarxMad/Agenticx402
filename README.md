@@ -62,6 +62,7 @@ Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables.
 - **Cómo contribuir:** [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 - **Fase 0 (checklist local):** [`docs/setup-fase-0.md`](./docs/setup-fase-0.md).
 - **MCP (agentes):** [`docs/mcp.md`](./docs/mcp.md).
+- **Ecosistema x402 en Stellar + ideas:** [`docs/x402-stellar-panorama.md`](./docs/x402-stellar-panorama.md).
 - **Modelo de negocio:** [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.md).
 
 ### Fase 0 — Aterrizaje (0.5–1 día)

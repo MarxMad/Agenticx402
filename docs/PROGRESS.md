@@ -102,6 +102,7 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 
 | Fecha | Cambio |
 |-------|--------|
+| 2026-04-04 | `docs/x402-stellar-panorama.md`: inventario de servicios/demos x402 en Stellar + tabla de ideas innovadoras; enlaces README/hub/PROGRESS. |
 | 2026-04-04 | `docs/hackathon-jurado.md`: pitch, tabla Stellar/x402, deploy sin Docker (Render/Railway), por qué no Vercel tal cual, guion visual vídeo, Q&A jurado. |
 | 2026-04-04 | Fase 4 (parcial): `Dockerfile` + `.dockerignore` para desplegar solo el hub (API + UI). |
 | 2026-04-04 | Hub web: sección **Documentación** (`/#docs`) con enlaces a `docs/*` y JSON ejemplo MCP + copiar al portapapeles. |
@@ -118,6 +119,7 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 - [CLI](./cli.md)
 - [MCP](./mcp.md) — servidor stdio para agentes
 - [Hackathon / jurado](./hackathon-jurado.md) — pitch, Stellar+x402, Vercel vs Render, guion vídeo
+- [Panorama x402 Stellar + ideas nuevas](./x402-stellar-panorama.md) — qué servicios ya existen, opciones de innovación
 - [Modelo de negocio](../BUSINESS_MODEL.md)
 - [Recursos Stellar / x402](./../docs.md)
 - [Guía setup Fase 0](./setup-fase-0.md)
