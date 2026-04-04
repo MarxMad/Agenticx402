@@ -4,6 +4,8 @@
 
 Repositorio oficial: **[github.com/MarxMad/Agenticx402](https://github.com/MarxMad/Agenticx402)**
 
+**Hackathon / jurado:** qué resolvemos, Stellar vs x402, deploy **sin Docker**, guion del vídeo → **[`docs/hackathon-jurado.md`](./docs/hackathon-jurado.md)**.
+
 ---
 
 ## Por qué existe esto
