@@ -105,7 +105,45 @@ La innovación puede ser **producto**, **plataforma** o **experiencia de agente*
 
 ---
 
-## 5. Cómo usar este documento en el hackathon
+## 5. Veinticinco ideas “fuera de la caja” (agentes + Stellar)
+
+Brainstorming para el equipo: mezcla de **x402**, **Soroban**, **MPP**, **anchors**, **passkeys**, **patrocinio**, **ingesta** y **MCP** (inspirado en el ecosistema descrito en [`docs.md`](./docs.md) y recursos tipo [Stellar MCP](https://github.com/kalepail/stellar-mcp-server), [XDR MCP](https://github.com/stellar-experimental/mcp-stellar-xdr), [Smart Account Kit](https://github.com/kalepail/smart-account-kit)).  
+
+> **Aviso:** varias ideas son **provocadoras a propósito** (ética, privacidad, gobernanza). Sirven para **diseño de producto y debate**, no como recomendación legal ni moral. Filtrad antes de implementar.
+
+| # | Idea (resumen) | Stellar / stack | Por qué es “cool” o incómoda |
+|---|----------------|-----------------|--------------------------------|
+| 1 | **Mercado de “culpa” on-chain** | x402 + registro Soroban | Los agentes pagan por **registrar** una decisión (hash del prompt + resultado) como **prueba de trazabilidad**; abre el debate: ¿quién es responsable si el hash es manipulable? |
+| 2 | **Latido o silencio (dead switch lúdico)** | Contrato Soroban + pagos periódicos testnet | Si un agente **deja de pagar** un micro-abono simbólico, un contrato **libera** un mensaje o rota una clave de demostración. Metáfora de dependencia del agente respecto a fondos. |
+| 3 | **Subasta de “primer turno” entre agentes** | Soroban + x402 para entrar a la cola | Dos bots pujan en testnet por **orden de ejecución** en una cola HTTP; Stellar como **reloj** y **árbitro** de prioridad. |
+| 4 | **Notaría de conversaciones (hash)** | Transacción con memo / evento Soroban | Tras x402, el servicio **ancla** un hash del transcript agente-usuario para **disputas** (“qué dijo el modelo”). Controversia: privacidad vs prueba. |
+| 5 | **Impuesto simbólico al “brand” del modelo** | x402 con precio distinto por `User-Agent` declarado | Cobrar distinto si el cliente dice ser GPT vs Claude vs local — **discriminación por software**, útil solo como **experimento** de políticas de precio. |
+| 6 | **“Verdad referenciada” (oráculo + paywall)** | x402 + lectura Reflector/oráculo | El agente paga por un **paquete de cotizaciones firmadas** en formato JSON para prompts de trading; riesgo: **sobreconfianza** en el oráculo. |
+| 7 | **Cap humano residual** | x402 + bounty en testnet | Ciertas peticiones **exigen** un pase humano barato (crowd simulado) antes de que el agente reciba el dato; tensiona **automatización vs trabajo humano**. |
+| 8 | **Canal MPP entre dos agentes** | MPP Session + Stellar | Dos agentes abren **canal de micropagos** para intercambiar **cuota de API** sin tocar cadena cada vez; narrativa **economía agente-a-agente**. |
+| 9 | **Ramp “fantasma” (solo narrativa)** | Docs anchors + x402 | El agente paga un 402 que devuelve **solo** el siguiente paso SEP documentado (sin ejecutar ramp real); para **educar** sin custodia fiat en hackathon. |
+| 10 | **Passkey como freno de oro** | Smart Account Kit + presupuesto | El humano **solo con WebAuthn** puede subir el tope diario de gasto del agente en Soroban; poderoso pero **punto único de fallo** si pierdes el passkey. |
+| 11 | **x402 por cada decode XDR** | Encadenar [mcp-stellar-xdr](https://github.com/stellar-experimental/mcp-stellar-xdr) con tu paywall | Cada invocación “entender transacción” cuesta un microcent; idea **anti-abuso** y también **fricción** a la transparencia. |
+| 12 | **Reputación quemable** | Token o contador Soroban | Los agentes **pagan para bajar** (o subir) una métrica pública de otro agente — diseño **tóxico por defecto**; solo interesante si mostráis el **riesgo de gamificación**. |
+| 13 | **Logros “casi soulbound”** | NFT ligero Soroban tras N pagos x402 | Insignia **no transferible** de “completó 100 flujos 402 en testnet”; útil para **demo**, peligroso si se confunde con **identidad real**. |
+| 14 | **Ingesta como producto** | Ingest SDK + x402 | Vendéis **stream filtrado** de eventos Soroban por tópico, empaquetado para RAG de agentes; Stellar como **API de historia** de pago. |
+| 15 | **Tiempo bloqueado en ledger** | x402 + reveal en altura N | Pagas ahora; el contenido sensible (clave de demo, prompt) **solo se revela** al llegar un ledger; **commit–reveal** para agentes impacientes. |
+| 16 | **Prueba de “trabajo útil” simulado** | Soroban verifica hash de tarea | El agente paga para que un contrato **valide** un hash de salida contra un checklist on-chain; frontera con **vibes de PoW** sin quemar planeta. |
+| 17 | **Lista de amenazas para prompts (threat intel)** | x402 + JSON curado | Pagáis por **indicadores** (regex, temas) para que agentes **no ejecuten** ciertos patrones; controversia: **quién cura** la lista (censura vs seguridad). |
+| 18 | **Divorcio de cartera entre personas agente** | Multisig / split Soroban | Dos “personas” de un mismo stack **parten** saldo testnet según reglas; metáfora de **governance** entre co-fundadores y bots. |
+| 19 | **Mercado inverso: te pagan por inferir** | x402 invertido (tú eres el servicio) | Otro agente te paga en testnet para que **ejecutes** un sub-prompt; borde ético: **explotación** de cómputo barato — planteado como **laboratorio** de SLAs. |
+| 20 | **Micropago como prueba anti-sybil** | x402 mínimo antes de API | Menos CAPTCHA, más **coste marginal**; excluye a agentes sin wallet — **fricción de inclusión** vs **anti-spam**. |
+| 21 | **Will del agente (sucesión)** | Contrato + condiciones | Si no hay actividad N días, fondos testnet pasan a una **clave sucesora** declarada; útil para narrar **continuidad** de servicios autónomos. |
+| 22 | **Blend / DeFindex tras paywall** | x402 + enlace a estrategia sólo lectura | Tras pagar, el agente recibe **ruta documentada** (no asesoramiento) de cómo leer APY en testnet; cuidado con **regulación** si suena a finanzas. |
+| 23 | **Economic load balancer embebido** | Idea tipo [ELB](https://github.com/marcelosalloum/x402/tree/x402-hackathon) como **servicio** | Vuestro hub **elige** cadena/método de pago por coste; Stellar como **opción default** pero no única — historia **multi-red** desde PumaX402. |
+| 24 | **Sponsorship como narrativa** | Patrón [sponsored account](https://github.com/oceans404/stellar-sponsored-agent-account) + vuestro catálogo | “El hub **patrocina** la primera transacción del agente” en testnet; política clara de **límites** para no convertiros en faucet infinito. |
+| 25 | **MCP que cobra en cadena por tool** | MCP + x402 por invocación | Cada tool del servidor MCP tiene **precio dinámico** leído de Soroban; los agentes **ven** el coste antes de llamar — transparencia **radical** de coste marginal. |
+
+**Cómo usar esta lista:** elegid **1–2** ideas para un **paper prototype** o demo testnet; en el pitch, explicad **qué problema ético o de mercado** exploráis, no solo la feature.
+
+---
+
+## 6. Cómo usar este documento en el hackathon
 
 1. **Pitch:** “No competimos con xlm402.com en cantidad de endpoints; competimos en **X**” (elegid un hueco de la sección 4).
 2. **Demo:** Un servicio **propio** + catálogo PumaX402 + CLI/MCP da la historia **completa** (descubrimiento + pago + dato).
@@ -113,11 +151,12 @@ La innovación puede ser **producto**, **plataforma** o **experiencia de agente*
 
 ---
 
-## 6. Enlaces internos del repo PumaX402
+## 7. Enlaces internos del repo PumaX402
 
 - Catálogo actual: [`catalog/services.json`](../catalog/services.json)
 - Guía jurado / deploy / vídeo: [`hackathon-jurado.md`](./hackathon-jurado.md)
-- Recursos ampliados (inglés, lista larga): [`docs.md`](../docs.md)
+- Recursos ampliados (inglés, lista larga): [`docs.md`](./docs.md)
+- Índice tipo llms de docs Stellar (local): [`llmstellar.txt`](./llmstellar.txt)
 
 ---
 
