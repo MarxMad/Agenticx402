@@ -89,20 +89,22 @@ Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables.
 
 **Criterios de hecho:** ✅ API alineada con `catalog/services.json`; ✅ UI usable en `/`; ✅ alta documentada y validable en CI/local.
 
-**Estado:** Fase 1 **cerrada en repo**. Siguiente: **Fase 2** (CLI x402).
+**Estado:** Fase 1 **cerrada en repo**.
 
 ### Fase 2 — Cliente x402 reusable (1–2 días)
 
-**Objetivo:** una sola herramienta ejecuta **402 → pago → retry** contra cualquier `baseUrl` definido en el catálogo.
+**Objetivo:** una sola herramienta ejecuta **402 → pago → retry** contra cualquier URL (y URLs armadas desde el catálogo).
 
 | Tarea | Detalle |
 |-------|---------|
-| Dependencias | [`x402-stellar`](https://www.npmjs.com/package/x402-stellar) y/o patrones de [coinbase/x402](https://github.com/coinbase/x402) según encaje con Stellar. |
-| CLI | Comando tipo `agenticx402 call <service-id> --path /ruta --method GET` que resuelva URL desde catálogo local o desde la API de Fase 1. |
-| Config | `.env.example` con variables documentadas; lectura de `STELLAR_SECRET_KEY` solo desde entorno. |
-| Pruebas | Al menos un test de integración *opcional* (skipped en CI sin claves) o script manual documentado. |
+| Dependencias | [`@x402/core`](https://www.npmjs.com/package/@x402/core) + [`@x402/stellar`](https://www.npmjs.com/package/@x402/stellar) (esquema Exact + `x402Client` / `x402HTTPClient`). |
+| CLI | **`npm run cli`** → binario [`apps/cli/bin/agenticx402.mjs`](./apps/cli/bin/agenticx402.mjs): `list`, `fetch <url>`, `call <service-id> --path /ruta`. Código reusable en [`apps/cli/lib/x402-fetch.mjs`](./apps/cli/lib/x402-fetch.mjs). |
+| Config | [`.env.example`](./.env.example); `STELLAR_SECRET_KEY` solo por entorno (sin clave, `fetch`/`call` hacen un intento; si hay 402, indica que falta la clave). |
+| Pruebas | Sin claves en CI: `npm run cli -- list` y `fetch` a URL pública; pago real: manual con testnet — ver [`docs/cli.md`](./docs/cli.md). |
 
-**Criterios de hecho:** desde CLI, una llamada a un servicio de testnet devuelve cuerpo 200 tras el flujo de pago; documentación de “cómo correrlo” en README.
+**Criterios de hecho:** ✅ CLI documentado; ✅ flujo 402 implementado con reintento; ⏳ validación con endpoint testnet real la hace cada dev con su wallet.
+
+**Estado:** Fase 2 **implementada en repo** — falta comprobar contra un **402 real** con fondos testnet (Fase 0).
 
 ### Fase 3 — Cara de agente (1 día)
 
@@ -155,6 +157,16 @@ Con Node 20+: `npm run catalog:dev` (puerto **3840**, o `PORT`).
 | `GET /services/:id` | Un servicio |
 | `GET /health` | Salud del proceso (JSON) |
 
+### CLI (Fase 2)
+
+```bash
+npm run cli -- list
+npm run cli -- fetch "https://url-completa"
+npm run cli -- call stellar-observatory --path /ruta --method GET
+```
+
+Detalle: [`docs/cli.md`](./docs/cli.md). Catálogo remoto: `AGENTICX402_CATALOG_URL=http://127.0.0.1:3840/services npm run cli -- list`.
+
 ## Recursos que estamos usando
 
 Lista curada en este repo: [`docs.md`](./docs.md) (Stellar, x402, MPP, MCP, wallets compatibles, ejemplos de la comunidad).
@@ -176,7 +188,7 @@ git push -u origin main
 
 ## Estado del repositorio
 
-**Fase 1 (hub catálogo + API + UI)** lista en repo. **Fase 0** sigue siendo obligatoria **por desarrollador** (wallet + flujo x402 local) — ver [`docs/PROGRESS.md`](./docs/PROGRESS.md). Siguiente hito de código: **Fase 2** (CLI / cliente x402).
+**Fases 1 y 2** listas en repo (hub + CLI x402). **Fase 0** sigue siendo obligatoria **por desarrollador** para probar pagos reales — ver [`docs/PROGRESS.md`](./docs/PROGRESS.md). Siguiente hito: **Fase 3** (MCP).
 
 ## Licencia
 

@@ -3,11 +3,19 @@
   "private": true,
   "description": "Hub de servicios x402 para agentes (Stellar)",
   "type": "module",
+  "bin": {
+    "agenticx402": "apps/cli/bin/agenticx402.mjs"
+  },
   "scripts": {
     "catalog:dev": "node apps/catalog-api/server.mjs",
-    "catalog:validate": "node scripts/validate-catalog.mjs"
+    "catalog:validate": "node scripts/validate-catalog.mjs",
+    "cli": "node apps/cli/bin/agenticx402.mjs"
   },
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "@x402/core": "2.9.0",
+    "@x402/stellar": "2.9.0"
   }
 }
