@@ -1,18 +1,39 @@
 /**
- * Banner retro / “pixel” (ANSI opcional).
- * Ocultar del todo: AGENTICX402_NO_BANNER=1
- * Sin color pero con dibujo: NO_COLOR=1 (solo se quitan códigos ANSI)
+ * Banner inspirado en el emblema del equipo (oro sobre azul marino, anillos, x402).
+ * Referencia: /assets/logo.png
+ *
+ * AGENTICX402_NO_BANNER=1 — ocultar
+ * NO_COLOR=1 — sin ANSI
  */
 
 const ansi = {
   x: "\x1b[0m",
   bold: "\x1b[1m",
   dim: "\x1b[2m",
-  p: "\x1b[38;5;141m",
-  pHi: "\x1b[38;5;183m",
-  edge: "\x1b[38;5;238m",
-  accent: "\x1b[38;5;45m",
+  bg: "\x1b[48;5;17m",
+  gold: "\x1b[38;5;220m",
+  goldMid: "\x1b[38;5;178m",
+  goldDim: "\x1b[38;5;136m",
 };
+
+const INNER = 41;
+
+/** Cada fila: exactamente INNER columnas (monoespacio). */
+const MEDALLION = [
+  " ╭──────────────────────────────────────╮",
+  "╱· · · · · · · · · · · · · · · · · · · ·╲",
+  "│· · ╭──────────────────────────╮ · ○ ·═│",
+  "│ ·╱· ●··············●············╲─·─·○│",
+  "│·│ ·▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀···│·│·│",
+  "│ │·▓▓▓▓▓▓▓▓▓▓▓··················─·─│·│·│",
+  "│·│ ·╲···············▽···········╱··│·│·│",
+  "│ │·╲__╲─────────────────────────╱_·─·╱·│",
+  "│·│ ·╲······························╱···│",
+  "│ ╲· ·╲_____________________________╱··╱│",
+  "╲· · · ·╲_________________________╱· · ·╱",
+  " ╰──────────────────────────────────────╯",
+  "········x····4····0····2·················",
+];
 
 function noAnsi() {
   return process.env.NO_COLOR === "1" || process.env.NO_COLOR === "true";
@@ -25,40 +46,45 @@ function bannerOff() {
   );
 }
 
-function c(code, text) {
-  if (noAnsi()) return text;
-  return `${code}${text}${ansi.x}`;
+function row(text, opts = {}) {
+  const t = text.length === INNER ? text : text.slice(0, INNER).padEnd(INNER);
+  const body = `  ${t}  `;
+  if (noAnsi()) {
+    return body;
+  }
+  const { dim = false, mid = false } = opts;
+  const fg = dim ? ansi.goldDim : mid ? ansi.goldMid : ansi.gold;
+  return `${ansi.bg}${ansi.bold}${fg}${body}${ansi.x}`;
 }
 
-/** Bloques tipo pixel + marca (para --help y sin subcomando). */
+function subtitle(text) {
+  if (noAnsi()) {
+    return `  ${text}`;
+  }
+  return `${ansi.dim}${ansi.goldMid}  ${text}${ansi.x}`;
+}
+
 export function printBannerFull() {
   if (bannerOff()) return;
-  const e = (t) => c(ansi.edge, t);
-  const p = (t) => c(ansi.p, t);
-  const ph = (t) => c(ansi.pHi, t);
-  const a = (t) => c(ansi.accent, t);
-  const lines = [
-    "",
-    `${e("    ")}${p("▄▄████▄▄")}${e("    ")}`,
-    `${e("  ")}${p("▄█")}${e("▀▀")}${e("····")}${e("▀▀")}${p("█▄")}${e("  ")}`,
-    `${e("  ")}${p("█")}${e("··")}${ph("◆")}${e("··")}${a("402")}${e("··")}${p("█")}${e("  ")}`,
-    `${e("  ")}${p("▀█▄▄")}${e("····")}${p("▄▄█▀")}${e("  ")}`,
-    `${e("    ")}${p("▀▀████▀▀")}${e("    ")}`,
-    `${c(ansi.dim, "  ─────────────────────────")}`,
-    `  ${c(ansi.bold + ansi.p, "agenticx402")}${c(ansi.dim, " · ")}${a("x402")}${c(ansi.dim, " + ")}${ph("Stellar")}${c(ansi.dim, " · pay-per-request hub")}`,
-    "",
-  ];
-  console.log(lines.join("\n"));
+
+  console.log("");
+  for (const line of MEDALLION) {
+    console.log(row(line));
+  }
+  console.log(row(" agenticx402 · Stellar · hub ".padEnd(INNER), { mid: true }));
+  console.log("");
+  console.log(subtitle("pay-per-request · HTTP 402 · Soroban"));
+  console.log("");
 }
 
-/** Una línea, para `list`. */
 export function printBannerMini() {
   if (bannerOff()) return;
-  const e = (t) => c(ansi.edge, t);
-  const p = (t) => c(ansi.p, t);
-  const ph = (t) => c(ansi.pHi, t);
-  const a = (t) => c(ansi.accent, t);
+  if (noAnsi()) {
+    console.log("  [ x402 ]  agenticx402 · Stellar");
+    return;
+  }
+  const seg = `${ansi.bg}${ansi.bold}${ansi.gold} x402 ${ansi.x}`;
   console.log(
-    `${e("╭")} ${ph("◆")} ${c(ansi.bold + ansi.p, "agenticx402")} ${c(ansi.dim, "·")} ${a("x402")} ${c(ansi.dim, "·")} ${ph("Stellar")} ${e("╼")}`
+    `${ansi.dim}╭${ansi.x}${seg}${ansi.dim}╼${ansi.x} ${ansi.bold}${ansi.goldMid}agenticx402${ansi.x} ${ansi.dim}·${ansi.x} ${ansi.gold}Stellar${ansi.x}`
   );
 }

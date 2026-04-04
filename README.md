@@ -165,7 +165,7 @@ npm run cli -- fetch "https://url-completa"
 npm run cli -- call stellar-observatory --path /ruta --method GET
 ```
 
-Detalle: [`docs/cli.md`](./docs/cli.md). La ayuda (`-h`) y `list` muestran un **banner tipo pixel** en terminal; `AGENTICX402_NO_BANNER=1` lo desactiva.
+Detalle: [`docs/cli.md`](./docs/cli.md). La ayuda (`-h`) y `list` muestran un **medallón** (oro / azul marino, anillos y **x402**, alineado con [`assets/logo.png`](./assets/logo.png)); `AGENTICX402_NO_BANNER=1` lo desactiva.
 
 Catálogo remoto: `AGENTICX402_CATALOG_URL=http://127.0.0.1:3840/services npm run cli -- list`.
 
