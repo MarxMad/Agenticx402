@@ -72,6 +72,20 @@ const server = http.createServer((req, res) => {
 });
 
 const port = Number(process.env.PORT) || 3840;
+
+server.on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
+    console.error(
+      `Puerto ${port} en uso. Cierra la otra instancia (p. ej. otra terminal con catalog:dev) o usa otro puerto:\n` +
+        `  PORT=3841 npm run catalog:dev\n` +
+        `Para ver qué proceso usa el puerto: lsof -nP -iTCP:${port} -sTCP:LISTEN`
+    );
+  } else {
+    console.error(err);
+  }
+  process.exit(1);
+});
+
 server.listen(port, () => {
   console.error(`Hub:   http://127.0.0.1:${port}/`);
   console.error(`API:   http://127.0.0.1:${port}/services`);
