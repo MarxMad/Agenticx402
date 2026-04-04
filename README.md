@@ -163,11 +163,11 @@ Con Node 20+: `npm run catalog:dev` (puerto **3840**, o `PORT`).
 npm run cli -- list
 npm run cli -- fetch "https://url-completa"
 npm run cli -- call stellar-observatory --path /ruta --method GET
-npm run cli -- splash              # pantalla estilo consola PUMA/x402
-npm run cli -- splash --animate    # constelación animada (TTY)
+npm run cli -- splash              # resumen del CLI (sin tocar el fondo del tema)
+npm run cli -- splash --animate    # indicador breve en una línea (TTY)
 ```
 
-Detalle: [`docs/cli.md`](./docs/cli.md). Mock visual de referencia: [`assets/cli-mockup-reference.png`](./assets/cli-mockup-reference.png). La ayuda (`-h`) y `list` muestran un **medallón** con **puma en pixel** (perfil), red y **x402**, oro/azul marino — reinterpretación terminal de [`assets/logo.png`](./assets/logo.png); `AGENTICX402_NO_BANNER=1` lo desactiva.
+Detalle: [`docs/cli.md`](./docs/cli.md). Banner **minimalista** (cian + gris, **sin** color de fondo ANSI). Logo de marca en [`assets/logo.png`](./assets/logo.png) es independiente del CLI. `AGENTICX402_NO_BANNER=1` oculta cabeceras.
 
 Catálogo remoto: `AGENTICX402_CATALOG_URL=http://127.0.0.1:3840/services npm run cli -- list`.
 

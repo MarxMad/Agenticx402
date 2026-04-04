@@ -9,8 +9,8 @@ function printHelp() {
   printBannerFull();
   console.log(`Uso:
   agenticx402 splash [--animate]
-      Pantalla completa estilo consola PUMA/x402 (oro/azul). --animate redibuja
-      constelaciones en terminal interactiva (TTY, sin NO_COLOR).
+      Resumen del CLI (tipografía limpia, sin cambiar el fondo del terminal).
+      --animate muestra un indicador breve en una línea (TTY).
 
   agenticx402 list
       Lista servicios del catálogo (archivo o AGENTICX402_CATALOG_URL).

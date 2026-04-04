@@ -16,25 +16,24 @@ O con bin global tras `npm link` (opcional):
 agenticx402 list
 ```
 
-## Banner visual (terminal)
+## Identidad en terminal (banner)
 
-Al ejecutar `npm run cli -- -h` o `list`, el CLI muestra un **medallón** en texto: anillo exterior, **silueta de puma en perfil** (píxeles `█`), fila tipo red (`○─·─○`), **x402** y paleta **oro sobre azul marino** (ANSI). La referencia gráfica sigue siendo [`assets/logo.png`](../assets/logo.png); en terminal es una reinterpretación pixel, no el vector.
+Diseño **minimalista**: nombre en **cian + negrita**, subtítulo y reglas en **gris atenuado**. **No se pinta el fondo**: se respeta el color de fondo del tema (Oscuro, Solarized, Light, etc.).
 
-- **Quitar el dibujo por completo:** `AGENTICX402_NO_BANNER=1`.
-- **Solo sin colores:** `NO_COLOR=1` mantiene el arte ASCII en blanco y negro (útil en terminales o CI que no soportan ANSI).
-- **`fetch` / `call`:** no imprimen el banner grande para no mezclar con JSON en stdout; solo `list` y la ayuda.
+- **Quitar cualquier cabecera:** `AGENTICX402_NO_BANNER=1`.
+- **`NO_COLOR=1`:** sin ANSI (solo texto plano).
+- **`fetch` / `call`:** no muestran el banner largo; **`list`** y **`-h`** sí una línea compacta o bloque corto.
 
-## Pantalla “consola PUMA” (splash)
+## Pantalla `splash`
 
-Vista completa inspirada en mockups tipo **PUMA SYSTEM CLI**: barra de título `==== [ … ] ====`, menú `File | Network | Stellar`, separadores, **campo de constelaciones** (caracteres que cambian), medallón con puma + x402 y un bloque de **prompt simulado** (`puma@stellar-testnet:~$ …`).
+Lista de comandos y una línea divisoria; mismo criterio (sin fondo forzado).
 
 ```bash
 npm run cli -- splash
 npm run cli -- splash --animate   # o -a
 ```
 
-- **Dinámico (`--animate`):** en una **TTY** y **sin** `NO_COLOR`, limpia la pantalla unas veces y **redibuja** las filas de constelación (semilla distinta por frame) + oculta el cursor durante ~3 s. No es un motor gráfico: es ANSI + texto; para UI tipo Ink/blessed haría falta otra dependencia.
-- En **CI**, **pipes** o `NO_COLOR=1` solo se imprime la versión **estática** (sin animación ni `clear`).
+- **`--animate`:** en TTY, una **línea** con indicador tipo `·` que rota (~1 s); no borra la pantalla entera.
 
 ## Variables de entorno
 
@@ -48,7 +47,7 @@ Sin `STELLAR_SECRET_KEY`, `fetch` y `call` solo hacen una petición normal; si l
 
 | Comando | Descripción |
 |---------|-------------|
-| `splash` | Pantalla completa estilo consola; `--animate` / `-a` para constelación viva (TTY). |
+| `splash` | Resumen de comandos; `--animate` / `-a` indicador breve (TTY). |
 | `list` | Imprime servicios del catálogo (archivo local o `AGENTICX402_CATALOG_URL`). |
 | `fetch <url>` | GET (o `--method`) a una URL completa. |
 | `call <id> --path /ruta` | Construye URL con `baseUrl` del servicio `id` en el catálogo + `path`. |
