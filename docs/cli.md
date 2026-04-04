@@ -18,7 +18,7 @@ agenticx402 list
 
 ## Banner visual (terminal)
 
-Al ejecutar `npm run cli -- -h` o `list`, el CLI muestra un **medallón** en texto: doble marco, detalle tipo felino + red de nodos y **x402**, en **oro sobre azul marino** (ANSI), alineado con el logo del equipo en [`assets/logo.png`](../assets/logo.png).
+Al ejecutar `npm run cli -- -h` o `list`, el CLI muestra un **medallón** en texto: anillo exterior, **silueta de puma en perfil** (píxeles `█`), fila tipo red (`○─·─○`), **x402** y paleta **oro sobre azul marino** (ANSI). La referencia gráfica sigue siendo [`assets/logo.png`](../assets/logo.png); en terminal es una reinterpretación pixel, no el vector.
 
 - **Quitar el dibujo por completo:** `AGENTICX402_NO_BANNER=1`.
 - **Solo sin colores:** `NO_COLOR=1` mantiene el arte ASCII en blanco y negro (útil en terminales o CI que no soportan ANSI).

@@ -1,9 +1,9 @@
 /**
- * Banner inspirado en el emblema del equipo (oro sobre azul marino, anillos, x402).
- * Referencia: /assets/logo.png
+ * Banner: puma en perfil (pixel █), anillo y x402 — oro sobre azul marino (ANSI).
+ * Referencia marca: /assets/logo.png
  *
  * AGENTICX402_NO_BANNER=1 — ocultar
- * NO_COLOR=1 — sin ANSI
+ * NO_COLOR=1 — sin ANSI (silueta en · y █)
  */
 
 const ansi = {
@@ -18,22 +18,64 @@ const ansi = {
 
 const INNER = 41;
 
-/** Cada fila: exactamente INNER columnas (monoespacio). */
-const MEDALLION = [
-  " ╭──────────────────────────────────────╮",
-  "╱· · · · · · · · · · · · · · · · · · · ·╲",
-  "│· · ╭──────────────────────────╮ · ○ ·═│",
-  "│ ·╱· ●··············●············╲─·─·○│",
-  "│·│ ·▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀···│·│·│",
-  "│ │·▓▓▓▓▓▓▓▓▓▓▓··················─·─│·│·│",
-  "│·│ ·╲···············▽···········╱··│·│·│",
-  "│ │·╲__╲─────────────────────────╱_·─·╱·│",
-  "│·│ ·╲······························╱···│",
-  "│ ╲· ·╲_____________________________╱··╱│",
-  "╲· · · ·╲_________________________╱· · ·╱",
-  " ╰──────────────────────────────────────╯",
-  "········x····4····0····2·················",
+/** Puma mirando a la derecha; cada fila = 37 cols (va dentro de │· … ·│). */
+const PUMA_PIXEL = [
+  "...........█.........................",
+  "..........███........................",
+  ".........█...█.......................",
+  "........█.....█......................",
+  ".......█...█....█....................",
+  "......█....██....█...................",
+  "......█.....█....█...................",
+  "......█..........██..................",
+  ".......█..........██.................",
+  "........█...........█................",
+  "........██.........██................",
+  ".........████████████................",
 ];
+
+function frameInner(body37) {
+  return "│·" + body37 + "·│";
+}
+
+/** Convierte píxeles █ en bloques; con NO_COLOR se ven igual. */
+function buildMedallion() {
+  const top = " ╭" + "─".repeat(38) + "╮";
+  const dots39 = "· ".repeat(19) + "·";
+  const ring2 = "╱" + dots39 + "╲";
+  const empty = frameInner("·".repeat(37));
+  const netRow = frameInner(
+    "····························○─·─○····"
+  );
+
+  const pumaRows = PUMA_PIXEL.map((row) => frameInner(row));
+
+  const lower = "╲· · · ·╲_________________________╱· · ·╱";
+  const bot = " ╰" + "─".repeat(38) + "╯";
+  const x402core = "········x····4····0····2";
+  const x402line = (x402core + "·".repeat(INNER)).slice(0, INNER);
+
+  const lines = [
+    top,
+    ring2,
+    empty,
+    ...pumaRows,
+    netRow,
+    empty,
+    lower,
+    bot,
+    x402line,
+  ];
+
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].length !== INNER) {
+      throw new Error(`banner línea ${i}: longitud ${lines[i].length}, esperado ${INNER}`);
+    }
+  }
+  return lines;
+}
+
+const MEDALLION = buildMedallion();
 
 function noAnsi() {
   return process.env.NO_COLOR === "1" || process.env.NO_COLOR === "true";
@@ -80,11 +122,12 @@ export function printBannerFull() {
 export function printBannerMini() {
   if (bannerOff()) return;
   if (noAnsi()) {
-    console.log("  [ x402 ]  agenticx402 · Stellar");
+    console.log("  [█ puma/x402 ]  agenticx402 · Stellar");
     return;
   }
+  const pumaHint = `${ansi.bg}${ansi.bold}${ansi.gold}▄▀▄${ansi.x}`;
   const seg = `${ansi.bg}${ansi.bold}${ansi.gold} x402 ${ansi.x}`;
   console.log(
-    `${ansi.dim}╭${ansi.x}${seg}${ansi.dim}╼${ansi.x} ${ansi.bold}${ansi.goldMid}agenticx402${ansi.x} ${ansi.dim}·${ansi.x} ${ansi.gold}Stellar${ansi.x}`
+    `${ansi.dim}╭${ansi.x}${pumaHint}${seg}${ansi.dim}╼${ansi.x} ${ansi.bold}${ansi.goldMid}agenticx402${ansi.x} ${ansi.dim}·${ansi.x} ${ansi.gold}Stellar${ansi.x}`
   );
 }
