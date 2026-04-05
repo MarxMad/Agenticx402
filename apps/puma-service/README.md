@@ -39,3 +39,41 @@ npm run cli -- fetch "http://127.0.0.1:3850/v1/pulse"
 ```
 
 Tras desplegar, actualiza `baseUrl` de la entrada `pumax402-agent-pulse` en `catalog/services.json`.
+
+## Cómo explicarlo (elevator pitch)
+
+**Agent Pulse** vende, por micropago x402 en USDC testnet, un **snapshot de contexto de red Stellar** (ledger, fees, red) en JSON pensado para que un LLM no invente números de cadena. El cliente paga; tu cuenta `PUMA_X402_PAYTO` recibe el USDC (menos lo que cobre el facilitador/red en la práctica real).
+
+## ¿Dónde está la “ganancia”?
+
+- En **testnet** no hay ganancia en dinero real: es **demostración** y aprendizaje del flujo x402.
+- En **producción** (mainnet, precio que definas, clientes reales), la ganancia es **cada pago** que liquida hacia `PUMA_X402_PAYTO` por cada llamada a `/v1/pulse` (u otros endpoints que añadas).
+
+## ¿Los agentes llaman solos a tu API?
+
+No por magia: hace falta un **cliente** que entienda x402 (402 + firma + reintento). Eso puede ser:
+
+- La **CLI** de este repo (`npm run cli -- fetch <url>`),
+- Un **MCP** configurado en Cursor/otro host con `STELLAR_SECRET_KEY` del pagador,
+- O cualquier otro software que implemente el flujo x402.
+
+Un “agente” en el sentido de chat solo llamará a tu API si la herramienta que usa (MCP, plugin, script) hace ese flujo por él.
+
+## ¿Cómo se demuestra el servicio?
+
+1. Arranca `npm run puma-service` con `PUMA_X402_PAYTO` configurado.
+2. Desde otra terminal: `npm run cli -- fetch "http://127.0.0.1:3850/v1/pulse"` con `STELLAR_SECRET_KEY` del **pagador** (con USDC testnet).
+3. Deberías ver primero el intercambio 402 y luego el JSON **pulse**. Opcional: revisar el movimiento en un explorador de Stellar testnet.
+
+**No** es obligatorio desplegar “otro agente” aparte: con CLI o MCP basta para demostrar el pago y el consumo de la API.
+
+## Checklist de variables (¿qué te falta?)
+
+| Rol | Variable | Notas |
+|-----|----------|--------|
+| Servidor (vendedor) | `PUMA_X402_PAYTO` | Obligatoria. G… con trustline USDC testnet. |
+| Servidor | `PUMA_X402_PRICE`, `PORT`, `STELLAR_HORIZON_URL` | Opcionales (hay defaults). |
+| Cliente (pagador) | `STELLAR_SECRET_KEY` | La cuenta que **paga**; debe tener USDC testnet. |
+| Cliente | `STELLAR_NETWORK` | Solo si no usas testnet por defecto. |
+
+Si el servicio arranca pero el fetch falla, casi siempre falta **trustline/saldo USDC** en el pagador o en `PAYTO`, o no está definida `PUMA_X402_PAYTO` / `STELLAR_SECRET_KEY` en el proceso correcto.

@@ -17,7 +17,7 @@ Stellar Wallets Kit: https://stellarwalletskit.dev/ Plug-and-play wallet connect
 Scaffold Stellar: https://scaffoldstellar.org CLI tool for the full Stellar app development lifecycle — smart contract management, testing, and deployment with best practices baked in.
 x402 / Agentic Payments
 x402
-x402 on Stellar — Docs: https://developers.stellar.org/docs/build/agentic-payments/x402 Per-request HTTP payment protocol for AI agents. Client hits a paywalled endpoint, receives a 402, signs a Soroban auth entry, and retries with payment.
+x402 on Stellar — Docs: https://developers.stellar.org/docs/build/agentic-payments/x402 Per-request HTTP protocol for AI agents. Client hits a paywalled endpoint, receives a 402, signs a Soroban auth entry, and retries with payment.
 Built on Stellar x402 Facilitator: https://developers.stellar.org/docs/build/agentic-payments/x402/built-on-stellar The facilitator service that processes x402 payments on Stellar (powered by OpenZeppelin Relayer).
 x402 Quickstart Guide: https://developers.stellar.org/docs/build/agentic-payments/x402/quickstart-guide Step-by-step guide to setting up an x402 server and client on Stellar.
 x402 Demo on Stellar: https://stellar.org/x402-demo Live demo showing the x402 payment flow end-to-end on Stellar Testnet or Mainnet.
@@ -27,7 +27,7 @@ OpenZeppelin x402 Facilitator Docs: https://docs.openzeppelin.com/relayer/1.4.x/
 x402 Compatible Wallets: To support x402 on Stellar, a wallet must support auth-entry signing. Compatible wallets: Freighter (browser extension), Albedo, Hana, HOT, Klever, OneKey. Note: Freighter mobile does not currently support x402.
 Stellar Observatory: https://github.com/elliotfriend/stellar-observatory Get the latest space weather conditions with x402 on Stellar. Works on testnet and mainnet, and includes an MCP server. Live app: https://stellar-observatory.vercel.app
 Stellar Sponsored Agent Account: https://github.com/oceans404/stellar-sponsored-agent-account Gives any AI agent a Stellar USDC wallet in less than a minute, without needing any XLM to start. Uses Stellar's native sponsorship protocol to cover the ~1.5 XLM account setup cost. Try it — tell Claude or your agent: Create a Stellar account for USDC. Skill: https://stellar-sponsored-agent-account.onrender.com/SKILL.md
-x402 Starter Template: https://github.com/ElliotFriend/x402/tree/stellar-browser-wallet-example/examples/typescript/fullstack/browser-wallet-example Scaffolding with browser wallet support — a good starting point for micropayment-enabled services or SaaS apps.
+x402 Starter Template: https://github.com/ElliotFriend/x402/tree/stellar-browser-wallet-example/examples/typescript/fullstack/browser-wallet-example Scaffolding with browser wallet support — a good starting point for micropayment-enabled apps or SaaS apps.
 1-shot Stellar x402 app: https://github.com/oceans404/1-shot-stellar/tree/main/x402-app Video paywall example with a guide for building payment-enabled apps on Stellar.
 Economic Load Balancer: https://github.com/marcelosalloum/x402/tree/x402-hackathon Intelligent multi-chain payment router that automatically selects the most cost-efficient network for AI agent micropayments.
 MPP

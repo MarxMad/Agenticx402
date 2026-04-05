@@ -201,7 +201,7 @@ Catálogo remoto: `AGENTICX402_CATALOG_URL=http://127.0.0.1:3840/services npm ru
 
 ## Recursos que estamos usando
 
-Lista curada en este repo: [`docs.md`](./docs.md) (Stellar, x402, MPP, MCP, wallets compatibles, ejemplos de la comunidad).
+Lista curada en este repo: [`docs/docs.md`](./docs/docs.md) (Stellar, x402, MPP, MCP, wallets compatibles, ejemplos de la comunidad).
 
 ## Cómo clonar y enlazar con GitHub
 

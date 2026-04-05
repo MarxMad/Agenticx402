@@ -124,5 +124,5 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 - [Hackathon / jurado](./hackathon-jurado.md) — pitch, Stellar+x402, Vercel vs Render, guion vídeo
 - [Panorama x402 Stellar + ideas nuevas](./x402-stellar-panorama.md) — qué servicios ya existen, opciones de innovación
 - [Modelo de negocio](../BUSINESS_MODEL.md)
-- [Recursos Stellar / x402](./../docs.md)
+- [Recursos Stellar / x402](./docs.md)
 - [Guía setup Fase 0](./setup-fase-0.md)
