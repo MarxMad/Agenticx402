@@ -72,6 +72,7 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 
 | Componente | Ubicación | Cómo probarlo |
 |------------|-----------|----------------|
+| **Agent Pulse** (x402 propio) | [`apps/puma-service/server.mjs`](../apps/puma-service/server.mjs) | `PUMA_X402_PAYTO=G... npm run puma-service` → `cli call pumax402-agent-pulse --path /v1/pulse` |
 | Servidor MCP (stdio) | [`apps/mcp/server.mjs`](../apps/mcp/server.mjs) | `npm run mcp` — conectar con Inspector MCP o Cursor (`command` + `args`) |
 | Tool `list_services` | mismo | Lista / filtra servicios del catálogo (mismas env vars que CLI) |
 | Tool `call_service` | mismo | `service_id` + `path` (+ `method`); usa `STELLAR_SECRET_KEY` si hay 402 |
@@ -103,6 +104,7 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 | Fecha | Cambio |
 |-------|--------|
 | 2026-04-04 | `x402-stellar-panorama.md`: +25 ideas fuera de la caja (agentes, Soroban, MPP, passkeys, ética); refs `docs.md` y `llmstellar.txt`. |
+| 2026-04-04 | **Agent Pulse**: servicio x402 propio (`apps/puma-service`), JSON “pulse” testnet para prompts de agentes; catálogo `pumax402-agent-pulse`; deps `@x402/express`, `express`. |
 | 2026-04-04 | `docs/x402-stellar-panorama.md`: inventario de servicios/demos x402 en Stellar + tabla de ideas innovadoras; enlaces README/hub/PROGRESS. |
 | 2026-04-04 | `docs/hackathon-jurado.md`: pitch, tabla Stellar/x402, deploy sin Docker (Render/Railway), por qué no Vercel tal cual, guion visual vídeo, Q&A jurado. |
 | 2026-04-04 | Fase 4 (parcial): `Dockerfile` + `.dockerignore` para desplegar solo el hub (API + UI). |

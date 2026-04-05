@@ -15,6 +15,18 @@
       "docsUrl": "https://xlm402.com"
     },
     {
+      "id": "pumax402-agent-pulse",
+      "name": "PumaX402 Agent Pulse",
+      "description": "Servicio propio del hub: JSON de contexto Stellar testnet (último ledger, fees, hints) optimizado para system prompts de agentes. Paywall x402 Exact USDC testnet. Ejecutar local o desplegar con npm run puma-service.",
+      "baseUrl": "http://127.0.0.1:3850",
+      "paths": ["/v1/pulse"],
+      "pricingNote": "Default $0.001 USDC testnet por request (PUMA_X402_PRICE). Requiere PUMA_X402_PAYTO en el servidor.",
+      "tags": ["pumax402", "agents", "context", "testnet", "x402"],
+      "status": "active",
+      "source": "team",
+      "docsUrl": "https://github.com/MarxMad/Agenticx402/blob/main/apps/puma-service/README.md"
+    },
+    {
       "id": "stellar-observatory",
       "name": "Stellar Observatory",
       "description": "Condiciones espaciales y datos expuestos con x402 en Stellar; el repositorio incluye servidor MCP.",

@@ -172,6 +172,19 @@ Con Node 20+: `npm run catalog:dev` (puerto **3840**, o `PORT`).
 | `GET /services/:id` | Un servicio |
 | `GET /health` | Salud del proceso (JSON) |
 
+### Servicio propio: **Agent Pulse** (x402 Stellar testnet)
+
+API del equipo **PumaX402**: tras pago **x402 Exact** (USDC testnet) devuelve un JSON de **contexto de red** (ledger reciente, fees, hints) pensado para **prompts de agentes** — distinto de catálogos genéricos como xlm402.
+
+```bash
+export PUMA_X402_PAYTO=G...   # cuenta con trustline USDC testnet
+npm run puma-service          # puerto 3850 por defecto
+# Otro terminal, con STELLAR_SECRET_KEY del pagador:
+npm run cli -- call pumax402-agent-pulse --path /v1/pulse
+```
+
+Documentación: [`apps/puma-service/README.md`](./apps/puma-service/README.md). Entrada en catálogo: `pumax402-agent-pulse`.
+
 ### CLI (Fase 2)
 
 ```bash
