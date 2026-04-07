@@ -1,6 +1,7 @@
 {
   "name": "agenticx402",
   "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "description": "PumaX402 — hub de servicios x402 para agentes (Stellar)",
   "type": "module",

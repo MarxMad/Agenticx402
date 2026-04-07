@@ -1,287 +1,183 @@
 # PumaX402
 
-**Hub de servicios pagados por petición para agentes de IA — construido sobre [Stellar](https://stellar.org) y [x402](https://www.x402.org/).**
+<p align="center">
+  <a href="https://agenticx402-production.up.railway.app/"><img src="https://img.shields.io/badge/Hub-en%20vivo-3B82F6?style=flat-square" alt="Hub en vivo" /></a>
+  <a href="https://github.com/MarxMad/Agenticx402"><img src="https://img.shields.io/badge/repo-Agenticx402-181717?style=flat-square&logo=github" alt="Repositorio" /></a>
+  <img src="https://img.shields.io/badge/node-%3E%3D20-339933?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js 20+" />
+  <img src="https://img.shields.io/badge/license-MIT-888888?style=flat-square" alt="Licencia MIT" />
+</p>
 
-Repositorio oficial: **[github.com/MarxMad/Agenticx402](https://github.com/MarxMad/Agenticx402)**
+**Catálogo y punto de acceso unificado para servicios [x402](https://www.x402.org/) en [Stellar](https://stellar.org):** descubrimiento, pago por petición y consumo con el mismo flujo HTTP 402 → firma → reintento, orientado a agentes y equipos humanos.
 
-**Hackathon / jurado:** qué resolvemos, Stellar vs x402, deploy **sin Docker**, guion del vídeo → **[`docs/hackathon-jurado.md`](./docs/hackathon-jurado.md)**.
+| | |
+| :--- | :--- |
+| **Hub público** | [**agenticx402-production.up.railway.app**](https://agenticx402-production.up.railway.app/) |
+| **API del catálogo** | `GET` [`/services`](https://agenticx402-production.up.railway.app/services) · `GET /services/:id` · [`/health`](https://agenticx402-production.up.railway.app/health) |
+| **Código** | [github.com/MarxMad/Agenticx402](https://github.com/MarxMad/Agenticx402) |
+| **Catálogo remoto (CLI)** | `AGENTICX402_CATALOG_URL=https://agenticx402-production.up.railway.app/services` |
 
 ---
 
-## Por qué existe esto
+## Visión
 
-Los agentes necesitan **descubrir**, **pagar** y **consumir** APIs de forma uniforme. x402 estandariza el flujo HTTP 402 → firma → pago; Stellar lo ejecuta con bajas fricciones y USDC/XLM en testnet o mainnet. Este proyecto apunta a ser el **punto de encuentro**: catálogo + acceso unificado para humanos y para agentes (HTTP, SDK y opcionalmente MCP).
+> Un directorio operativo de microservicios x402 en Stellar y una puerta de entrada para invocarlos con un contrato único: *pago por petición, sin integraciones ad hoc por proveedor*.
 
-## Visión en una frase
+---
 
-> Un directorio vivo de microservicios x402 en Stellar y una puerta de entrada para que cualquier agente los invoque con el mismo contrato mental: *pay-per-request, sin cuentas opacas ni integraciones ad hoc por proveedor*.
+## Qué incluye el repositorio
 
-## Objetivos del MVP (hackathon)
+| Capa | Contenido |
+|------|-----------|
+| **Hub** | API REST + interfaz web (`apps/catalog-api`, `apps/catalog-web`): listado, filtros, documentación enlazada. |
+| **CLI** | Cliente `agenticx402`: `doctor`, `list`, `fetch`, `call` con x402 Stellar — [`docs/cli.md`](./docs/cli.md) |
+| **MCP** | Servidor stdio: `list_services`, `call_service` — [`docs/mcp.md`](./docs/mcp.md) · [`docs/mcp-demo.md`](./docs/mcp-demo.md) |
+| **Servicios de referencia** | Agent Pulse, señales DEX (Horizon), riesgo geopolítico (orquestación x402). |
+| **Operaciones** | [`Dockerfile`](./Dockerfile) · [`docs/deploy.md`](./docs/deploy.md) |
 
-| Meta | Descripción |
-|------|-------------|
-| **Catálogo** | Listado de servicios con metadata: URL base, precio, asset, red (`stellar:testnet`), tags, estado. |
-| **Cliente unificado** | Librería o CLI que ejecute el flujo x402 completo contra cualquier URL registrada. |
-| **Demostración** | Al menos 2–3 servicios de ejemplo (o integración con servicios públicos de prueba) y un video o guía de 5 minutos. |
-| **Historia “agent-first”** | Documentar el flujo desde un LLM (ej. vía MCP o instrucciones reproducibles). |
+---
 
-## Arquitectura objetivo
+## Arquitectura
 
 ```mermaid
 flowchart LR
-  subgraph agents [Agentes]
+  subgraph agents [Agentes y operadores]
     LLM[LLM / CLI]
-    MCP[MCP opcional]
+    MCP[MCP]
   end
 
-  subgraph hub [PumaX402 Hub]
-    CAT[Catálogo / API REST]
-    GW[Gateway o cliente SDK]
+  subgraph hub [Hub PumaX402]
+    CAT[Catálogo REST]
+    UI[Interfaz web]
   end
 
-  subgraph stellar [Stellar + x402]
+  subgraph stellar [Stellar y x402]
     SVC[Servicios x402]
     FAC[Facilitator]
   end
 
-  LLM --> GW
-  MCP --> GW
-  GW --> CAT
-  GW -->|402 challenge + firma| SVC
+  LLM --> CAT
+  MCP --> CAT
+  LLM -->|402 y firma| SVC
+  MCP -->|402 y firma| SVC
+  CAT --> UI
   SVC --> FAC
 ```
 
-- **Catálogo**: no sustituye al facilitator; solo **enruta metadata** y opcionalmente health checks.
-- **Servicios**: cada uno es un servidor x402 estándar ([quickstart Stellar](https://developers.stellar.org/docs/build/agentic-payments/x402/quickstart-guide)).
+El catálogo **no** sustituye al facilitator: publica metadatos y enlaces; cada servicio implementa x402 según la [guía Stellar](https://developers.stellar.org/docs/build/agentic-payments/x402/quickstart-guide).
 
-## Plan de implementación
+---
 
-Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables.
+## Inicio rápido
 
-- **Avance y tareas para el equipo:** [`docs/PROGRESS.md`](./docs/PROGRESS.md) (actualizar al cerrar trabajo).
-- **Cómo contribuir:** [`CONTRIBUTING.md`](./CONTRIBUTING.md).
-- **Fase 0 (checklist local):** [`docs/setup-fase-0.md`](./docs/setup-fase-0.md).
-- **MCP (agentes):** [`docs/mcp.md`](./docs/mcp.md) · demo / Cursor: [`docs/mcp-demo.md`](./docs/mcp-demo.md).
-- **Trustline USDC testnet (agentes que pagan):** [`docs/agents-stellar-trustline.md`](./docs/agents-stellar-trustline.md).
-- **Ecosistema x402 en Stellar + ideas:** [`docs/x402-stellar-panorama.md`](./docs/x402-stellar-panorama.md).
-- **Modelo de negocio:** [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.md).
+```bash
+git clone https://github.com/MarxMad/Agenticx402.git
+cd Agenticx402
+npm install
+npm run cli -- doctor
+```
 
-### Fase 0 — Aterrizaje (0.5–1 día)
+| Objetivo | Comando |
+|----------|---------|
+| Hub local (API + UI, puerto **3840** por defecto) | `npm run catalog:dev` |
+| Listar servicios (catálogo del repo) | `npm run cli -- list` |
+| Listar contra el hub público | `AGENTICX402_CATALOG_URL=https://agenticx402-production.up.railway.app/services npm run cli -- list` |
+| Servidor MCP | `npm run mcp` |
 
-**Objetivo:** mismo lenguaje técnico que el jurado (402, facilitator, firma); wallet testnet lista; un flujo real completado.
+Variables y claves: [`.env.example`](./.env.example). Pagos en testnet: guía de trustline USDC [`docs/agents-stellar-trustline.md`](./docs/agents-stellar-trustline.md).
 
-| Tarea | Detalle |
-|-------|---------|
-| Alcance | Por defecto: **solo testnet**; activo principal **USDC** donde aplique; XLM si el ejemplo lo requiere. |
-| x402-stellar / quickstart | Clonar [stellar/x402-stellar](https://github.com/stellar/x402-stellar) en carpeta hermana; seguir [quickstart](https://developers.stellar.org/docs/build/agentic-payments/x402/quickstart-guide) hasta respuesta exitosa tras pago. |
-| Wallet | [Stellar CLI](https://developers.stellar.org/docs/tools/cli) (`stellar keys generate … --fund`) o [Lab](https://developers.stellar.org/docs/tools/lab) / Freighter (desktop); fondos testnet; **no** subir claves al repo. Detalle: [`docs/setup-fase-0.md`](./docs/setup-fase-0.md). |
-| Servicio externo | Probar al menos un flujo contra [xlm402.com](https://xlm402.com) (o otro endpoint público documentado). |
+---
 
-**Criterios de hecho:** (1) nota interna o issue con endpoint probado y red; (2) screenshot o log de éxito **sin secretos**; (3) `.env` local ignorado por git.
+## API del hub (local o desplegado)
 
-**Artefacto en repo:** guía [`docs/setup-fase-0.md`](./docs/setup-fase-0.md) + este README actualizado.
+| Ruta | Descripción |
+|------|-------------|
+| `GET /` | Interfaz del hub |
+| `GET /services` | JSON del catálogo |
+| `GET /services/:id` | Un servicio |
+| `GET /health` | Estado del proceso |
 
-### Fase 1 — Cimientos del hub (1–2 días)
+Datos fuente: [`catalog/services.json`](./catalog/services.json). Validación antes de contribuir: `npm run catalog:validate`. Registro de altas: [`catalog/README.md`](./catalog/README.md).
 
-**Objetivo:** el catálogo es **dato versionado** + **API** consumible; cualquier agente puede *descubrir* servicios sin conocer URLs sueltas.
+---
 
-| Tarea | Detalle |
-|-------|---------|
-| Modelo de datos | Campos mínimos por servicio: `id`, `name`, `baseUrl`, `description`, `tags`, `status`, `network` (o `networkDefault` global), `source`; opcion `paths[]`, `pricingNote` o objeto `price`, `docsUrl`, `openapiUrl`. Ver semilla en [`catalog/services.json`](./catalog/services.json). |
-| API read-only | `GET /services`, `GET /services/:id` — [`apps/catalog-api/server.mjs`](./apps/catalog-api/server.mjs). |
-| UI mínima | **Hecha:** [`apps/catalog-web/index.html`](./apps/catalog-web/index.html) — catálogo (filtros, enlaces) + **Documentación** en `/#docs` (guías GitHub, snippet MCP Cursor). `GET /` con `npm run catalog:dev`. |
-| Alta de servicios | [`catalog/README.md`](./catalog/README.md) + validación **`npm run catalog:validate`** ([`scripts/validate-catalog.mjs`](./scripts/validate-catalog.mjs)). |
+## Servicios en catálogo (referencia)
 
-**Criterios de hecho:** ✅ API alineada con `catalog/services.json`; ✅ UI usable en `/`; ✅ alta documentada y validable en CI/local.
+| Servicio | Rol |
+|----------|-----|
+| **Agent Pulse** (`pumax402-agent-pulse`) | Contexto de red para prompts de agentes tras pago x402 (USDC testnet). [`apps/puma-service/README.md`](./apps/puma-service/README.md) |
+| **DEX Signal** (`pumax402-stellar-dex-signal`) | Señales Horizon (libro, trades, pools). [`apps/stellar-dex-signal/README.md`](./apps/stellar-dex-signal/README.md) |
+| **Geopolitical Risk** (`pumax402-geopolitical-risk`) | Agregación de riesgo con upstream x402. [`apps/geopolitical-risk/README.md`](./apps/geopolitical-risk/README.md) |
 
-**Estado:** Fase 1 **cerrada en repo**.
+Ejemplo local Agent Pulse (dos terminales):
 
-### Fase 2 — Cliente x402 reusable (1–2 días)
+```bash
+export PUMA_X402_PAYTO=G...   # cuenta receptora con trustline USDC testnet
+npm run puma-service
 
-**Objetivo:** una sola herramienta ejecuta **402 → pago → retry** contra cualquier URL (y URLs armadas desde el catálogo).
+export STELLAR_SECRET_KEY=S...   # pagador
+npm run cli -- fetch "http://127.0.0.1:3850/v1/pulse"
+```
 
-| Tarea | Detalle |
-|-------|---------|
-| Dependencias | [`@x402/core`](https://www.npmjs.com/package/@x402/core) + [`@x402/stellar`](https://www.npmjs.com/package/@x402/stellar) (esquema Exact + `x402Client` / `x402HTTPClient`). |
-| CLI (PumaX402) | **`npm run cli`** → [`apps/cli/bin/agenticx402.mjs`](./apps/cli/bin/agenticx402.mjs) (bin global `agenticx402`): `list`, `fetch <url>`, `call <service-id> --path /ruta`. Código reusable en [`apps/cli/lib/x402-fetch.mjs`](./apps/cli/lib/x402-fetch.mjs). |
-| Config | [`.env.example`](./.env.example); `STELLAR_SECRET_KEY` solo por entorno (sin clave, `fetch`/`call` hacen un intento; si hay 402, indica que falta la clave). |
-| Pruebas | Sin claves en CI: `npm run cli -- list` y `fetch` a URL pública; pago real: manual con testnet — ver [`docs/cli.md`](./docs/cli.md). |
+Otros servicios: `npm run dex-signal` · `npm run geopolitical-risk` — rutas y precios en cada README y en el JSON del catálogo.
 
-**Criterios de hecho:** ✅ CLI documentado; ✅ flujo 402 implementado con reintento; ⏳ validación con endpoint testnet real la hace cada dev con su wallet.
+---
 
-**Estado:** Fase 2 **implementada en repo** — falta comprobar contra un **402 real** con fondos testnet (Fase 0).
+## CLI — comandos frecuentes
 
-### Fase 3 — Cara de agente (1 día)
+**Invocación:** `npm run cli -- <comando>` (el `--` separa argumentos de npm de los del CLI).
 
-**Objetivo:** demostrar consumo desde un **agente** (MCP o skill), no solo desde terminal humana.
+| Comando | Uso |
+|---------|-----|
+| `doctor` | Comprueba Node, entorno, catálogo y recordatorios Stellar. |
+| `list` | Lista servicios del catálogo. |
+| `fetch "<url>"` | Petición HTTP; ante 402, firma y reintenta si hay `STELLAR_SECRET_KEY`. |
+| `call <id> --path /ruta` | Resuelve `baseUrl` desde el catálogo y aplica el mismo flujo x402. |
+| `splash` / `splash --animate` | Identidad en terminal. |
 
-| Tarea | Detalle |
-|-------|---------|
-| MCP | **En repo:** servidor stdio [`apps/mcp/server.mjs`](./apps/mcp/server.mjs) — tools `list_services` y `call_service` (catálogo + [`x402-fetch`](./apps/cli/lib/x402-fetch.mjs)). Ejecutar: `npm run mcp`. Bin opcional: `pumax402-mcp`. Referencias externas: [x402-mcp-stellar](https://github.com/jamesbachini/x402-mcp-stellar), [Stellar Observatory](https://github.com/elliotfriend/stellar-observatory). |
-| Alternativa | Skill Markdown + prompts reproducibles en Cursor/Claude Code si el tiempo apremia. |
+Referencias: [`docs/cli.md`](./docs/cli.md) · bin enlazable `agenticx402` tras `npm link`.
 
-**Criterios de hecho:** un flujo grabado o script donde el LLM elige un servicio del catálogo y obtiene respuesta pagada.
+---
 
-**Estado:** servidor MCP **mínimo implementado** — falta demo grabada / configuración del cliente (Cursor, Claude Desktop, etc.) con `STELLAR_SECRET_KEY` si el endpoint exige 402.
+## Documentación
 
-### Fase 4 — Pulido para demo (0.5–1 día)
+| Documento | Tema |
+|-----------|------|
+| [`docs/PROGRESS.md`](./docs/PROGRESS.md) | Estado del proyecto y bitácora |
+| [`docs/setup-fase-0.md`](./docs/setup-fase-0.md) | Entorno Stellar / wallet testnet |
+| [`docs/deploy.md`](./docs/deploy.md) | Despliegue del hub |
+| [`docs/hackathon-jurado.md`](./docs/hackathon-jurado.md) | Pitch, mensajes clave Stellar/x402 y guion audiovisual |
+| [`docs/x402-stellar-panorama.md`](./docs/x402-stellar-panorama.md) | Panorama del ecosistema |
+| [`docs/docs.md`](./docs/docs.md) | Enlaces Stellar, x402, MCP |
+| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Contribución |
+| [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.md) | Modelo de negocio |
 
-**Objetivo:** entrega presentable al jurado: onboarding claro + deploy + storytelling.
-
-| Tarea | Detalle |
-|-------|---------|
-| Contribución | Ampliar [`CONTRIBUTING.md`](./CONTRIBUTING.md) si aparecen reglas nuevas (deploy, branches). Base ya lista. |
-| Demo | Video corto o GIF: agente → listado → pago → resultado; narrar diferencia vs usar solo xlm402 sin orquestación. |
-| Deploy | Catálogo + API + UI en Vercel/Railway/Fly; **testnet only**; variables solo en panel del hosting. **Docker:** [`Dockerfile`](./Dockerfile) en la raíz (solo hub). |
-
-**Criterios de hecho:** URL pública del hub + enlace al repo; cualquier miembro del equipo puede repetir la demo en máquina limpia siguiendo docs.
-
-#### Hub con Docker (local o nube)
+Checklist local: `npm run fase0:check`. Hub con Docker:
 
 ```bash
 docker build -t pumax402-hub .
 docker run --rm -p 8080:8080 -e PORT=8080 pumax402-hub
 ```
 
-Abre `http://127.0.0.1:8080/` y `http://127.0.0.1:8080/health`. En Fly.io / Railway / etc., el proveedor suele inyectar `PORT`; no hace falta imagen con Node fuera de este contenedor para servir el catálogo.
-
-**Hub en producción (Railway):** [https://agenticx402-production.up.railway.app/](https://agenticx402-production.up.railway.app/) · API `GET /services` · más detalle en [`docs/deploy.md`](./docs/deploy.md).
-
-**Checklist local sin secretos:** `npm run fase0:check` (catálogo + `cli list`; opcional 402 con `X402_SMOKE_URL` + `STELLAR_SECRET_KEY`). **CI:** GitHub Actions [`.github/workflows/ci.yml`](./.github/workflows/ci.yml).
-
-### Post-hackathon (opcional)
-
-- [ ] Mainnet tras revisar compliance y límites.
-- [ ] Onboarding de proveedores con verificación mínima y analytics (alineado a [BUSINESS_MODEL.md](./BUSINESS_MODEL.md)).
-- [ ] [MPP](https://developers.stellar.org/docs/build/agentic-payments/mpp) / canales si el volumen por request lo justifica.
-
-## Stack sugerido
-
-| Capa | Opciones |
-|------|----------|
-| Runtime | Node.js 20+ / TypeScript |
-| x402 | [coinbase/x402](https://github.com/coinbase/x402), [stellar/x402-stellar](https://github.com/stellar/x402-stellar) |
-| Red | Stellar testnet; facilitator según [docs Built on Stellar](https://developers.stellar.org/docs/build/agentic-payments/x402/built-on-stellar) |
-| Catálogo | JSON estático al inicio → SQLite/Postgres si crece |
-
-## Catálogo (en evolución)
-
-Datos: [`catalog/services.json`](./catalog/services.json). Validar antes de PR: `npm run catalog:validate`.
-
-Con Node 20+: `npm run catalog:dev` (puerto **3840**, o `PORT`). **Público:** el mismo contrato de rutas en [agenticx402-production.up.railway.app](https://agenticx402-production.up.railway.app/).
-
-| Ruta | Uso |
-|------|-----|
-| `GET /` | Interfaz del hub (listado + filtros) |
-| `GET /services` | JSON del catálogo completo |
-| `GET /services/:id` | Un servicio |
-| `GET /health` | Salud del proceso (JSON) |
-
-### Servicio propio: **Agent Pulse** (x402 Stellar testnet)
-
-API del equipo **PumaX402**: tras pago **x402 Exact** (USDC testnet) devuelve un JSON de **contexto de red** (ledger reciente, fees, hints) pensado para **prompts de agentes** — distinto de catálogos genéricos como xlm402.
-
-```bash
-export PUMA_X402_PAYTO=G...   # cuenta con trustline USDC testnet
-npm run puma-service          # puerto 3850 por defecto
-# Otro terminal, con STELLAR_SECRET_KEY del pagador:
-npm run cli -- call pumax402-agent-pulse --path /v1/pulse
-```
-
-Documentación: [`apps/puma-service/README.md`](./apps/puma-service/README.md). Entrada en catálogo: `pumax402-agent-pulse`.
-
-### Servicios propios: **DEX Signal** y **Geopolitical Risk**
-
-| Servicio | Puerto | Rol |
-|----------|--------|-----|
-| [`stellar-dex-signal`](./apps/stellar-dex-signal/README.md) | 3851 | Señales Horizon (order book, trades, pools); **$0.05** por defecto. |
-| [`geopolitical-risk`](./apps/geopolitical-risk/README.md) | 3852 | Orquestador news xlm402 + riesgo agregado; **$0.08** cliente / **~$0.01** upstream. |
-
-```bash
-export DEX_X402_PAYTO=G... DEX_DEFAULT_BUYING_ISSUER=G...
-npm run dex-signal
-# otro terminal:
-export GEO_X402_PAYTO=G... GEO_UPSTREAM_SECRET_KEY=S...
-npm run geopolitical-risk
-
-npm run cli -- call pumax402-stellar-dex-signal --path /v1/signal
-npm run cli -- call pumax402-geopolitical-risk --path "/v1/risk?region=global"
-```
-
-Entradas de catálogo: `pumax402-stellar-dex-signal`, `pumax402-geopolitical-risk`.
-
-### CLI (Fase 2)
-
-El CLI **no** se invoca con `npm fetch`, `fetch` en la shell ni comandos sueltos: **`npm` solo entiende sus propios subcomandos** (`install`, `run`, etc.). Hay que ejecutar el script del proyecto y **pasarle** los argumentos del CLI.
-
-**Patrón obligatorio:** `npm run cli -- <comando> [opciones…]`
-
-El **`--`** separa opciones de npm de los argumentos que recibe Node: todo lo que va **después** del `--` llega a [`apps/cli/bin/agenticx402.mjs`](./apps/cli/bin/agenticx402.mjs).
-
-| Comando | Descripción |
-|---------|-------------|
-| `npm run cli -- doctor` | Comprueba Node, variables, catálogo y trustline/testnet (recomendado la primera vez). |
-| `npm run cli -- splash` | Pantalla de bienvenida y lista de subcomandos. |
-| `npm run cli -- splash --animate` | Igual, con animación breve del cartel (TTY con color). |
-| `npm run cli -- list` | Servicios del catálogo (`catalog/services.json` o `AGENTICX402_CATALOG_URL`). |
-| `npm run cli -- fetch "<url>"` | GET (u otro método con `--method`) a una URL; si hay **402**, firma y reintenta **solo si** existe `STELLAR_SECRET_KEY`. |
-| `npm run cli -- call <service-id> --path /ruta` | Arma `baseUrl` del catálogo + `--path`; mismo flujo x402 que `fetch`. |
-| `npm run cli -- -h` | Ayuda completa (variables de entorno y ejemplos). |
-
-**Pago x402 (402 → firma → reintento):** exporta la cuenta que **paga** (testnet por defecto):
-
-```bash
-export STELLAR_SECRET_KEY=S...
-npm run cli -- fetch "http://127.0.0.1:3850/v1/pulse"
-# o desde catálogo:
-npm run cli -- call pumax402-agent-pulse --path /v1/pulse
-```
-
-Sin `STELLAR_SECRET_KEY`, `fetch`/`call` hacen un intento HTTP normal; si el servidor responde 402, el CLI indica que falta la clave para completar el pago.
-
-**Flujo con Agent Pulse:** en un terminal, `PUMA_X402_PAYTO=G... npm run puma-service`; en otro, `STELLAR_SECRET_KEY` del pagador + `npm run cli -- fetch "http://127.0.0.1:3850/v1/pulse"`. Si ves *Falta PUMA_X402_PAYTO*, es el **servidor** quien no tiene configurada la cuenta receptora.
-
-**Atajo local** (tras `npm install`): `./node_modules/.bin/agenticx402 list` (o `fetch` / `call` con los mismos argumentos que tras `--`).
-
-Ejemplos rápidos:
-
-```bash
-npm run cli -- list
-npm run cli -- fetch "https://url-completa"
-npm run cli -- call stellar-observatory --path /ruta --method GET
-```
-
-Detalle y casos límite: [`docs/cli.md`](./docs/cli.md). Banner **minimalista** (cian + gris, **sin** color de fondo ANSI). Logo de marca en [`assets/logo.png`](./assets/logo.png) es independiente del CLI. `AGENTICX402_NO_BANNER=1` oculta cabeceras.
-
-Catálogo remoto (producción): `AGENTICX402_CATALOG_URL=https://agenticx402-production.up.railway.app/services npm run cli -- list` · local: `…=http://127.0.0.1:3840/services …`.
-
-## Recursos que estamos usando
-
-Lista curada en este repo: [`docs/docs.md`](./docs/docs.md) (Stellar, x402, MPP, MCP, wallets compatibles, ejemplos de la comunidad).
-
-## Cómo clonar y enlazar con GitHub
-
-```bash
-git clone https://github.com/MarxMad/Agenticx402.git
-cd Agenticx402
-```
-
-Si trabajas en una copia local con otro nombre de carpeta, añade el remoto:
-
-```bash
-git remote add origin https://github.com/MarxMad/Agenticx402.git
-git branch -M main
-git push -u origin main
-```
-
-## Estado del repositorio
-
-**Fases 1 y 2** listas en repo (hub + CLI x402). **Fase 0** sigue siendo obligatoria **por desarrollador** para probar pagos reales — ver [`docs/PROGRESS.md`](./docs/PROGRESS.md). Siguiente hito: **Fase 3** (MCP).
-
-## Licencia
-
-Por definir (MIT recomendada para hackathon y reuso de ejemplos con atribución a Stellar/x402).
+Abrir `http://127.0.0.1:8080/` y `/health`.
 
 ---
 
-**Construido para el ecosistema agentic + Stellar.** PRs y issues bienvenidos en [MarxMad/Agenticx402](https://github.com/MarxMad/Agenticx402).
+## Stack
+
+| Área | Tecnología |
+|------|------------|
+| Runtime | Node.js 20+ |
+| Pagos agentic | [`@x402/core`](https://www.npmjs.com/package/@x402/core), [`@x402/stellar`](https://www.npmjs.com/package/@x402/stellar) |
+| Agente | MCP [`@modelcontextprotocol/sdk`](https://www.npmjs.com/package/@modelcontextprotocol/sdk) |
+| Red | Stellar (testnet por defecto en ejemplos); facilitator según [documentación](https://developers.stellar.org/docs/build/agentic-payments/x402/built-on-stellar) |
+| Catálogo | JSON versionado (`catalog/services.json`) |
+
+---
+
+## Licencia
+
+[MIT](./LICENSE)
+
+---
+
+*PumaX402 — hub de servicios x402 para el ecosistema agentic en Stellar.* Issues y pull requests: [MarxMad/Agenticx402](https://github.com/MarxMad/Agenticx402).
