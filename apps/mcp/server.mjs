@@ -156,6 +156,44 @@ server.registerTool(
   }
 );
 
+server.registerTool(
+  "get_service_signal",
+  {
+    description: "Llama internamente a pumax402-stellar-dex-signal y devuelve el JSON del orderbook.",
+    inputSchema: {
+      selling_code: z.string().optional(),
+      buying_code: z.string().optional()
+    }
+  },
+  async ({ selling_code, buying_code }) => {
+    const catalog = await loadCatalog();
+    const service = findService(catalog, "pumax402-stellar-dex-signal");
+    const path = `/v1/signal?selling_code=${selling_code||"USDC"}&buying_code=${buying_code||"EURC"}`;
+    const url = resolveServiceUrl(service, path);
+    const res = await httpCall(url);
+    const text = await res.text();
+    return { content: [{ type: "text", text }] };
+  }
+);
+
+server.registerTool(
+  "execute_x402_payment",
+  {
+    description: "Utilidad que ayuda al agente a construir el auth_entry necesario para el flujo 402 de Stellar.",
+    inputSchema: {
+      www_authenticate: z.string().describe("Header WWW-Authenticate retornado en caso de 402.")
+    }
+  },
+  async ({ www_authenticate }) => {
+    return {
+      content: [{ 
+        type: "text", 
+        text: `Para construir el auth_entry de un error 402 con header '${www_authenticate}':\n1. Parsea el header para extraer 'pay_to' y 'amount'.\n2. Construye una transacción enviando ese amount en el asset acordado hacia 'pay_to' y expide el tx_hash.\n3. Tu auth_entry es el base64 de '{"tx_hash":"tu_hash"}'\n4. Envialo como 'Authorization: L402 <tu_base64>'.`
+      }]
+    };
+  }
+);
+
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);

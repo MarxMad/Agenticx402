@@ -217,18 +217,25 @@ function ensureOrderbookStream(selling, buying, cacheKey) {
   const sAsset = selling.type === "native" ? StellarSdk.Asset.native() : new StellarSdk.Asset(selling.code, selling.issuer);
   const bAsset = buying.type === "native" ? StellarSdk.Asset.native() : new StellarSdk.Asset(buying.code, buying.issuer);
 
-  stellarServer.orderbook(sAsset, bAsset).stream({
-    onmessage: (res) => {
-      liveOrderbooks.set(cacheKey, {
-        bids: res.bids || [],
-        asks: res.asks || [],
-        lastUpdated: Date.now()
-      });
-    },
-    onerror: (err) => {
-      console.error("Orderbook stream error for", cacheKey);
-    }
-  });
+  function startStream() {
+    stellarServer.orderbook(sAsset, bAsset).stream({
+      onmessage: (res) => {
+        console.log("[PUMAX402] Stream activo: Actualizando RAM Cache...");
+        const current = liveOrderbooks.get(cacheKey) || {};
+        liveOrderbooks.set(cacheKey, {
+          bids: res.bids || [],
+          asks: res.asks || [],
+          lastUpdated: Date.now()
+        });
+      },
+      onerror: (err) => {
+        console.error("[PUMAX402] Orderbook stream error for", cacheKey, "Reconnecting in 5s...");
+        setTimeout(startStream, 5000);
+      }
+    });
+  }
+  
+  startStream();
 }
 
 app.get("/v1/signal", async (req, res) => {
