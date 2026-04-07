@@ -8,8 +8,10 @@ import { config } from "dotenv";
 
 export function loadRepoEnv() {
   const explicit = process.env.AGENTICX402_ENV_FILE?.trim();
+  const dotenvOpts = { quiet: true };
+
   if (explicit && existsSync(explicit)) {
-    config({ path: explicit });
+    config({ path: explicit, ...dotenvOpts });
     return;
   }
 
@@ -22,7 +24,7 @@ export function loadRepoEnv() {
         if (pkg.name === "agenticx402") {
           const envPath = join(dir, ".env");
           if (existsSync(envPath)) {
-            config({ path: envPath });
+            config({ path: envPath, ...dotenvOpts });
           }
           return;
         }
@@ -38,6 +40,6 @@ export function loadRepoEnv() {
   }
   const fallback = join(process.cwd(), ".env");
   if (existsSync(fallback)) {
-    config({ path: fallback });
+    config({ path: fallback, ...dotenvOpts });
   }
 }
