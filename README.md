@@ -9,6 +9,8 @@
 
 **A unified catalog and access layer for [x402](https://www.x402.org/) services on [Stellar](https://stellar.org):** discover, pay per request, and consume APIs with the same HTTP 402 → sign → retry flow—for agents and human operators alike.
 
+**Straight talk:** any agent *could* integrate x402 endpoints one by one. PumaX402 is **not** “secret sauce in the protocol.” The protocol is public. What stacks over time is **(a)** first-party APIs with **Stellar-specific and orchestration value**, **(b)** one discovery surface (catalog + MCP/CLI), and **(c)** room to ship **more** team-owned services under the same contract. If you only need one external URL, you do not need us; if you want **our** DEX / risk / pulse semantics and a single way to find and call them, you do.
+
 | | |
 | :--- | :--- |
 | **Public hub** | [**agenticx402-production.up.railway.app**](https://agenticx402-production.up.railway.app/) |
@@ -24,15 +26,36 @@
 
 ---
 
-## What’s in this repo
+## First-party APIs (where differentiation lives)
+
+These are **maintained in this repo** (`source: team` in the catalog). They are the core “why us” beyond a generic directory: **shaped responses, Stellar/Horizon semantics, and multi-step x402 orchestration** agents can rely on without reimplementing each flow.
+
+| API | Catalog id | What it gives an agent |
+|-----|------------|-------------------------|
+| **Stellar DEX Signal** | `pumax402-stellar-dex-signal` | Order-book and trading-relevant structure from **Horizon** (book, trades, pool snapshot)—paid, consistent schema, DEX-focused. [`README`](./apps/stellar-dex-signal/README.md) |
+| **Geopolitical Risk** | `pumax402-geopolitical-risk` | **Orchestrated** risk signal (upstream x402 news + aggregation heuristics)—one call instead of wiring payments + merge logic yourself. [`README`](./apps/geopolitical-risk/README.md) |
+| **Agent Pulse** | `pumax402-agent-pulse` | **Network context** for prompts (ledger/fees/hints)—cheap orientation for agents on Stellar testnet workflows. [`README`](./apps/puma-service/README.md) |
+
+Additional team-owned capabilities should land the same way: **new service + catalog entry + same MCP/CLI `call`**—so the hub grows with **your** APIs, not only third-party links.
+
+---
+
+## What’s in this repo (platform + catalog)
 
 | Layer | Contents |
 |------|----------|
 | **Hub** | REST API + web UI (`apps/catalog-api`, `apps/catalog-web`): listing, filters, linked documentation. |
 | **CLI** | `agenticx402` client: `doctor`, `list`, `fetch`, `call` with Stellar x402 — [`docs/cli.md`](./docs/cli.md) |
 | **MCP** | Stdio server: `list_services`, `call_service` — [`docs/mcp.md`](./docs/mcp.md) · [`docs/mcp-demo.md`](./docs/mcp-demo.md) |
-| **Reference services** | Agent Pulse, DEX signals (Horizon), geopolitical risk (x402 orchestration). |
 | **Operations** | [`Dockerfile`](./Dockerfile) · [`docs/deploy.md`](./docs/deploy.md) |
+
+The catalog also lists **ecosystem** entries (e.g. [`catalog/services.json`](./catalog/services.json) `source: external`) for discovery and benchmarking—not claimed as PumaX402 IP.
+
+---
+
+## Product gap (what often feels “missing”)
+
+Open payment rails are **necessary but not sufficient**. Teams that win on top of x402 usually add at least one of: **unique data or models**, **verified provider quality**, **SLAs / support**, **compliance posture**, or **vertical packaging** (one product for traders, risk desks, etc.). PumaX402 today is strong on **shipping first-party x402 APIs + a thin platform**; the next layer of “innovation” is whichever of those you choose to make explicit next.
 
 ---
 
@@ -100,13 +123,7 @@ Source data: [`catalog/services.json`](./catalog/services.json). Validate before
 
 ---
 
-## Catalog services (reference)
-
-| Service | Role |
-|---------|------|
-| **Agent Pulse** (`pumax402-agent-pulse`) | Network context for agent prompts after x402 payment (USDC testnet). [`apps/puma-service/README.md`](./apps/puma-service/README.md) |
-| **DEX Signal** (`pumax402-stellar-dex-signal`) | Horizon signals (order book, trades, pools). [`apps/stellar-dex-signal/README.md`](./apps/stellar-dex-signal/README.md) |
-| **Geopolitical Risk** (`pumax402-geopolitical-risk`) | Risk aggregation with x402 upstream. [`apps/geopolitical-risk/README.md`](./apps/geopolitical-risk/README.md) |
+## First-party quick run (example)
 
 Local Agent Pulse example (two terminals):
 
