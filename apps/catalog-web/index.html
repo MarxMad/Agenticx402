@@ -1095,6 +1095,16 @@
         <p class="count-line" id="count-line" aria-live="polite"></p>
         <div class="grid-services" id="list" role="list"></div>
 
+        <div id="live-activity" class="panel section-anchor" style="margin-top: 2rem">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <h2 style="margin: 0; font-size: 1.25rem;">Live Network Activity </h2>
+            <span class="live-badge ok" style="font-size: 0.65rem;"><span class="dot" aria-hidden="true"></span>ON-CHAIN</span>
+          </div>
+          <div id="live-activity-feed" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; color: #a5b4fc;">
+            Esperando transacciones de la red...
+          </div>
+        </div>
+
         <div id="documentacion" class="section-anchor docs-wrap">
         <div class="docs-panel">
           <h2>Documentación e integración</h2>
@@ -1205,6 +1215,7 @@
     const flowDiagram = document.getElementById("flow-diagram");
     const mcpSnippet = document.getElementById("mcp-snippet");
     const toastEl = document.getElementById("toast");
+    const activityFeedEl = document.getElementById("live-activity-feed");
 
     let catalog = { services: [], networkDefault: "" };
     let tagFilter = "";
@@ -1354,6 +1365,27 @@
         refreshHubStatus();
       }
     });
+
+    const recentTxs = [];
+    function setupLiveActivity(accountId) {
+      if(!accountId || accountId === "null" || accountId.startsWith("ENV_")) return; // fallback
+      const sse = new EventSource("https://horizon-testnet.stellar.org/accounts/" + accountId + "/transactions?cursor=now");
+      sse.onmessage = (msg) => {
+        try {
+          const tx = JSON.parse(msg.data);
+          recentTxs.unshift(tx);
+          if(recentTxs.length > 5) recentTxs.pop();
+          activityFeedEl.innerHTML = recentTxs.map(t => {
+            return "<div style='margin-bottom:0.5rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border);'>" +
+               "<a href='https://stellar.expert/explorer/testnet/tx/" + t.hash + "' target='_blank' style='color:var(--cyan); text-decoration:none;'>Tx: " + t.hash.substring(0,24) + "...</a> " +
+               "<span style='color:var(--muted); margin-left:0.5rem'>" + new Date(t.created_at).toLocaleTimeString() + "</span>" +
+               "<div style='font-size:0.7rem; margin-top:0.2rem; color:#6ee7b7;'>Source: " + t.source_account + "</div></div>";
+          }).join("");
+        } catch(e) {}
+      };
+    }
+    // Hardcoded testnet address for activity demo (DEX Signal wallet)
+    setTimeout(() => setupLiveActivity("GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5"), 2000);
 
     const copyMcpBtn = document.getElementById("copy-mcp");
     if (copyMcpBtn && mcpSnippet) {

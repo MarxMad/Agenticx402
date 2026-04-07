@@ -28,6 +28,7 @@ function loadCatalog() {
 
 const server = http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("X-Powered-By", "DarkMagician256");
 
   try {
     const host = req.headers.host || "127.0.0.1";

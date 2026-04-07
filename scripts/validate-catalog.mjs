@@ -12,7 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const catalogPath = path.join(root, "catalog", "services.json");
 
-const requiredService = ["id", "name", "baseUrl", "tags", "status", "source"];
+const requiredService = ["id", "name", "version", "cost", "currency", "provider_address", "baseUrl", "discovery_tags", "status", "source"];
 
 function fail(msg) {
   console.error("catalog:validate —", msg);
@@ -53,8 +53,8 @@ for (let i = 0; i < data.services.length; i++) {
       fail(`${prefix}: falta o vacío "${k}"`);
     }
   }
-  if (!Array.isArray(s.tags)) {
-    fail(`${prefix}: "tags" debe ser array`);
+  if (!Array.isArray(s.discovery_tags)) {
+    fail(`${prefix}: "discovery_tags" debe ser array`);
   }
   if (ids.has(s.id)) {
     fail(`id duplicado: ${s.id}`);

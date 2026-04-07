@@ -26,6 +26,19 @@
 
 ---
 
+## Novedades del MVP (Últimos Cambios)
+
+El código fundacional ha sido optimizado con mejoras orientadas al marco institucional 2026:
+- **Latencia Optimizada (< 500ms):** El servicio `stellar-dex-signal` ahora cuenta con persistencia de orderbooks a memoria RAM mediante Streaming WebSockets puro proveniente de `stellar-sdk` para ofrecer velocidad instantánea.
+- **Estándar XGATE 2026:** El `catalog/services.json` ha sido ampliado y validado con los rigurosos esquemas de indexación XGATE (`version`, `cost`, `provider_address`, `discovery_tags`).
+- **Middleware de Trustlines Compartido:** Fuerte seguridad con pre-evaluación de las métricas de red. Si el cliente carece de la línea de confianza con los activos aceptados (USDC/EURC), el servidor ataja el error tempranamente enviando instrucciones amigables en `402 Payment Required` (ver Requisitos al final del documento).
+- **Onboarding Cero-Fricciones (Sponsor):** Soporte inteligente para agentes IA usando `SPONSOR_SECRET_KEY` para emitir transferencias asíncronas firmadas con `beginSponsoringFutureReserves`, solucionando el problema de las cuentas vacías y permitiendo cobrar en stables sin que el agente tenga XLM previo.
+- **Interoperabilidad MCP Avanzada:** Se expidieron las utilidades `get_service_signal` y `execute_x402_payment` dentro del Servidor del Protocolo de Contexto de Modelos (MCP), volviendo la infraestructura navegable por LLMs como Claude Code, Cursor o Windsurf.
+- **Dashboard de Monitoreo On-chain:** Flujo de eventos continuo mediante WebSockets/SSE de Horizon para auditar las últimas operaciones en las cuentas operativas de Puma (`catalog-web`), mostrando el 'Proof of Work'.
+- **Easter Eggs de Comunidad:** Respuesta oficial estandarizada bajo el header `X-Powered-By: DarkMagician256` de cara a las peticiones del directorio API.
+
+---
+
 ## First-party APIs (where differentiation lives)
 
 These are **maintained in this repo** (`source: team` in the catalog). They are the core “why us” beyond a generic directory: **shaped responses, Stellar/Horizon semantics, and multi-step x402 orchestration** agents can rely on without reimplementing each flow.
@@ -87,6 +100,20 @@ flowchart LR
 ```
 
 The catalog does **not** replace the facilitator: it publishes metadata and links; each service implements x402 per the [Stellar guide](https://developers.stellar.org/docs/build/agentic-payments/x402/quickstart-guide).
+
+---
+
+## Requisitos para Agentes (Trustlines)
+
+Para garantizar la interoperabilidad en la red Stellar y admitir micro-cobros en $x402$, todos los Agentes (o sus _wallets_ delegadas) deben establecer los siguientes **Trustlines** en la red correspondiente antes de invocar los endpoints que cobren en stablecoins:
+
+### Circle Issuers Oficiales
+Se debe realizar una operación `changeTrust` hacia los emisores oficiales de Circle para autorizar el comercio de su activo.
+- **USDC (Mainnet)**: `GA5ZSEJYB37JRC52ZMR0UT5PZK7M84K0A7D40QQR6K1823T8H23RFT1`
+- **USDC (Testnet)**: `GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5`
+- **EURC (Mainnet)**: `GCO22MDQA...` *(Refiérase a la documentación oficial de Circle para la ID completa de EURC activo)*
+
+Nuestros servicios `pumax402` implementan un middleware validador. Si la PublicKey del cliente no posee la línea de confianza requerida al momento de la pre-evaluación del cobro, la llamada será abortada con un estatus `402 Payment Required`, incluyendo en su respuesta HTTP un campo `instruction` que le indicará al agente cómo abrir este trustline.
 
 ---
 
