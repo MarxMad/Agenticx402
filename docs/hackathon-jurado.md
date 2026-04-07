@@ -98,6 +98,7 @@ Objetivo: que el jurado **vea** catálogo → cliente → (opcional) pago. Orden
 
 ## 7. Enlaces oficiales (para la presentación)
 
+- **Hub en vivo (equipo):** [agenticx402-production.up.railway.app](https://agenticx402-production.up.railway.app/) · API catálogo: `/services`
 - [x402 en Stellar (docs)](https://developers.stellar.org/docs/build/agentic-payments/x402)
 - [Quickstart x402 Stellar](https://developers.stellar.org/docs/build/agentic-payments/x402/quickstart-guide)
 - [x402.org](https://www.x402.org/)
@@ -105,4 +106,4 @@ Objetivo: que el jurado **vea** catálogo → cliente → (opcional) pago. Orden
 
 ---
 
-*Actualiza [`PROGRESS.md`](./PROGRESS.md) cuando tengas URL pública y enlace al vídeo.*
+*Actualiza [`PROGRESS.md`](./PROGRESS.md) con el enlace al vídeo cuando lo subas.*

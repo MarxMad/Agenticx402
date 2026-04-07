@@ -145,7 +145,7 @@ docker run --rm -p 8080:8080 -e PORT=8080 pumax402-hub
 
 Abre `http://127.0.0.1:8080/` y `http://127.0.0.1:8080/health`. En Fly.io / Railway / etc., el proveedor suele inyectar `PORT`; no hace falta imagen con Node fuera de este contenedor para servir el catálogo.
 
-**Deploy en producción:** pasos por proveedor y variable **`AGENTICX402_CATALOG_URL=https://TU-DOMINIO/services`** → [`docs/deploy.md`](./docs/deploy.md).
+**Hub en producción (Railway):** [https://agenticx402-production.up.railway.app/](https://agenticx402-production.up.railway.app/) · API `GET /services` · más detalle en [`docs/deploy.md`](./docs/deploy.md).
 
 **Checklist local sin secretos:** `npm run fase0:check` (catálogo + `cli list`; opcional 402 con `X402_SMOKE_URL` + `STELLAR_SECRET_KEY`). **CI:** GitHub Actions [`.github/workflows/ci.yml`](./.github/workflows/ci.yml).
 
@@ -168,7 +168,7 @@ Abre `http://127.0.0.1:8080/` y `http://127.0.0.1:8080/health`. En Fly.io / Rail
 
 Datos: [`catalog/services.json`](./catalog/services.json). Validar antes de PR: `npm run catalog:validate`.
 
-Con Node 20+: `npm run catalog:dev` (puerto **3840**, o `PORT`).
+Con Node 20+: `npm run catalog:dev` (puerto **3840**, o `PORT`). **Público:** el mismo contrato de rutas en [agenticx402-production.up.railway.app](https://agenticx402-production.up.railway.app/).
 
 | Ruta | Uso |
 |------|-----|
@@ -253,7 +253,7 @@ npm run cli -- call stellar-observatory --path /ruta --method GET
 
 Detalle y casos límite: [`docs/cli.md`](./docs/cli.md). Banner **minimalista** (cian + gris, **sin** color de fondo ANSI). Logo de marca en [`assets/logo.png`](./assets/logo.png) es independiente del CLI. `AGENTICX402_NO_BANNER=1` oculta cabeceras.
 
-Catálogo remoto: `AGENTICX402_CATALOG_URL=http://127.0.0.1:3840/services npm run cli -- list`.
+Catálogo remoto (producción): `AGENTICX402_CATALOG_URL=https://agenticx402-production.up.railway.app/services npm run cli -- list` · local: `…=http://127.0.0.1:3840/services …`.
 
 ## Recursos que estamos usando
 

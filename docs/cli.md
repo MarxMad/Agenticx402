@@ -8,7 +8,7 @@ Cliente de línea de comandos que resuelve el flujo **HTTP 402 → firma Stellar
 |-----------|---------|
 | **Node.js** | **20 o superior** (`node -v`). El repo declara `engines.node >=20`. |
 | **Dependencias** | En la raíz del repo: `npm install`. |
-| **Catálogo** | Por defecto se lee `catalog/services.json` **desde el clon del repo**. Si ejecutas el bin desde otra carpeta o sin ese archivo, define **`AGENTICX402_CATALOG_URL`** (URL de un hub, p. ej. `…/services`) o **`AGENTICX402_CATALOG_FILE`** (ruta absoluta a un `services.json`). |
+| **Catálogo** | Por defecto: `catalog/services.json` en el clon. Sin repo: **`AGENTICX402_CATALOG_URL`** — hub público del equipo: `https://agenticx402-production.up.railway.app/services` — o **`AGENTICX402_CATALOG_FILE`**. |
 | **Variables** | Opcional: archivo **`.env`** en la raíz del repo (se carga solo al arrancar el CLI/MCP), o **`AGENTICX402_ENV_FILE`** apuntando a un `.env` concreto. |
 | **Pagar un 402** | **`STELLAR_SECRET_KEY`**: clave secreta `S…` de una cuenta con **XLM** (fees) en la red que use el servicio (**testnet** por defecto). Sin ella, `fetch`/`call` hacen una petición normal y, si hay 402, el CLI indica que falta la clave. |
 | **USDC en testnet** | Suele hacer falta **trustline** al emisor de USDC antes de que el pago Exact funcione. Guía: [`agents-stellar-trustline.md`](./agents-stellar-trustline.md). |

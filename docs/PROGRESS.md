@@ -14,7 +14,7 @@ Este archivo es la **fuente de verdad operativa**: qué fase toca, qué ya está
 | **1** | Cimientos del hub (catálogo + API + UI) | **Completa** | Core hub | Añadir entradas en `catalog/services.json` si hace falta |
 | **2** | Cliente x402 (CLI) | **Completa** (código + docs); prueba 402 real = Fase 0 | Integración Stellar | Cada dev: `STELLAR_SECRET_KEY` + `npm run cli -- fetch "<url 402>"` |
 | **3** | MCP / skill para agentes | **MCP stdio + guión demo** [`mcp-demo.md`](./mcp-demo.md) | Agent UX | Grabar vídeo; registrar servidor MCP en Cursor; 402 real = Fase 0 |
-| **4** | Demo + deploy + pitch | **Docker + [`deploy.md`](./deploy.md)**; URL pública = acción del equipo | Todo el equipo | Desplegar hub; sustituir `TU-DOMINIO` en docs; vídeo + pitch |
+| **4** | Demo + deploy + pitch | **Docker + [`deploy.md`](./deploy.md)**; hub Railway activo | Todo el equipo | Vídeo + pitch; URL: `https://agenticx402-production.up.railway.app/` |
 
 **Leyenda de estado:** *Completa* = criterios de hecho del README cubiertos en código o docs del repo. *Guía lista* = el equipo debe ejecutar pasos fuera del repo (wallet, clone de x402-stellar).
 
@@ -37,7 +37,7 @@ Cada persona **añade una fila** cuando termine el checklist de [`setup-fase-0.m
 | Datos del catálogo | [`catalog/services.json`](../catalog/services.json) | Editar y correr validación |
 | Validación JSON | [`scripts/validate-catalog.mjs`](../scripts/validate-catalog.mjs) | `npm run catalog:validate` |
 | API read-only | [`apps/catalog-api/server.mjs`](../apps/catalog-api/server.mjs) | `npm run catalog:dev` → `GET /services`, `GET /services/:id` |
-| UI del hub | [`apps/catalog-web/index.html`](../apps/catalog-web/index.html) | Mismo servidor → `http://127.0.0.1:3840/` · pestaña **Documentación** (`#docs`): enlaces a guías + snippet MCP |
+| UI del hub | [`apps/catalog-web/index.html`](../apps/catalog-web/index.html) | Local: `npm run catalog:dev` → `http://127.0.0.1:3840/` · producción: [`agenticx402-production.up.railway.app`](https://agenticx402-production.up.railway.app/) |
 | Cómo dar de alta servicios | [`catalog/README.md`](../catalog/README.md) | PR con cambios en `services.json` |
 
 **Criterios de hecho Fase 1 (revisión):**
@@ -105,6 +105,7 @@ Cada persona **añade una fila** cuando termine el checklist de [`setup-fase-0.m
 
 | Fecha | Cambio |
 |-------|--------|
+| 2026-04-07 | Hub desplegado en **Railway**: `https://agenticx402-production.up.railway.app/`; docs/README/`.env.example` con `AGENTICX402_CATALOG_URL` de producción. |
 | 2026-04-06 | Servicios x402 **stellar-dex-signal** ($0.05 Horizon) y **geopolitical-risk** ($0.08, upstream xlm402 news); catálogo + `npm run dex-signal` / `geopolitical-risk`. |
 | 2026-04-06 | Fase 0: `npm run fase0:check` ([`scripts/fase-0-check.mjs`](../scripts/fase-0-check.mjs)), `X402_SMOKE_URL` en [`.env.example`](../.env.example); CI GitHub; [`docs/mcp-demo.md`](./mcp-demo.md); [`docs/deploy.md`](./deploy.md); tabla Fase 0 con plantilla de fila. |
 | 2026-04-04 | `x402-stellar-panorama.md`: +25 ideas fuera de la caja (agentes, Soroban, MPP, passkeys, ética); refs `docs.md` y `llmstellar.txt`. |

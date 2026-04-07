@@ -39,7 +39,7 @@ Variables de entorno:
   STELLAR_SECRET_KEY     Clave secreta S... (obligatoria para firmar 402)
   STELLAR_NETWORK        testnet | pubnet (default: testnet)
   STELLAR_SOROBAN_RPC_URL  Opcional; RPC Soroban personalizado
-  AGENTICX402_CATALOG_URL  Opcional; p. ej. http://127.0.0.1:3840/services
+  AGENTICX402_CATALOG_URL  Opcional; p. ej. https://agenticx402-production.up.railway.app/services
   AGENTICX402_CATALOG_FILE Ruta absoluta a services.json si no usas URL
   AGENTICX402_NO_BANNER   1 = sin arte ASCII al inicio (útil en CI / logs)
 
