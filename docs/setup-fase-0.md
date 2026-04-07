@@ -68,8 +68,8 @@ Seguir el README del monorepo y el [quickstart](https://developers.stellar.org/d
 
 ## 3. Probar un servicio público
 
-1. Abrir [xlm402.com](https://xlm402.com) y elegir un endpoint documentado.
-2. Repetir el flujo con la herramienta que uses (curl + scripts del quickstart, o UI del demo).
+1. Listado navegable: [xlm402.com](https://xlm402.com). Listado JSON (paths por red): [`https://xlm402.com/api/catalog`](https://xlm402.com/api/catalog) — filtrá entradas con `"network":"testnet"`; la URL completa es `https://xlm402.com` + `path` (p. ej. `GET https://xlm402.com/testnet/news/tech`).
+2. Repetir el flujo con la herramienta que uses (este repo: `npm run cli -- fetch "<url>"` con `STELLAR_SECRET_KEY`, o UI del demo en xlm402).
 
 **Hecho cuando:** has registrado en notas (o en un issue) qué endpoint usaste, asset, y un hash o captura de respuesta exitosa **sin exponer claves**.
 
