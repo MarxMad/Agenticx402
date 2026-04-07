@@ -26,6 +26,15 @@
 
 ---
 
+## Novedades del MVP (Últimos Cambios)
+
+El código fundacional ha sido optimizado con mejoras orientadas al marco institucional 2026:
+- **Latencia Optimizada (< 500ms):** El servicio `stellar-dex-signal` ahora cuenta con persistencia de orderbooks a memoria RAM mediante Streaming WebSockets puro proveniente de `stellar-sdk` para ofrecer velocidad instantánea.
+- **Estándar XGATE 2026:** El `catalog/services.json` ha sido ampliado y validado con los rigurosos esquemas de indexación XGATE (`version`, `cost`, `provider_address`, `discovery_tags`).
+- **Middleware de Trustlines Compartido:** Fuerte seguridad con pre-evaluación de las métricas de red. Si el cliente carece de la línea de confianza con los activos aceptados (USDC/EURC), el servidor ataja el error tempranamente enviando instrucciones amigables en `402 Payment Required` (ver Requisitos al final del documento).
+
+---
+
 ## First-party APIs (where differentiation lives)
 
 These are **maintained in this repo** (`source: team` in the catalog). They are the core “why us” beyond a generic directory: **shaped responses, Stellar/Horizon semantics, and multi-step x402 orchestration** agents can rely on without reimplementing each flow.
