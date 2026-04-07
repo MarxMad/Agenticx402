@@ -220,6 +220,7 @@ El **`--`** separa opciones de npm de los argumentos que recibe Node: todo lo qu
 
 | Comando | Descripción |
 |---------|-------------|
+| `npm run cli -- doctor` | Comprueba Node, variables, catálogo y trustline/testnet (recomendado la primera vez). |
 | `npm run cli -- splash` | Pantalla de bienvenida y lista de subcomandos. |
 | `npm run cli -- splash --animate` | Igual, con animación breve del cartel (TTY con color). |
 | `npm run cli -- list` | Servicios del catálogo (`catalog/services.json` o `AGENTICX402_CATALOG_URL`). |

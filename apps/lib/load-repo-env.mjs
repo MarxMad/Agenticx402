@@ -7,6 +7,12 @@ import { dirname, join } from "node:path";
 import { config } from "dotenv";
 
 export function loadRepoEnv() {
+  const explicit = process.env.AGENTICX402_ENV_FILE?.trim();
+  if (explicit && existsSync(explicit)) {
+    config({ path: explicit });
+    return;
+  }
+
   let dir = process.cwd();
   for (;;) {
     const pkgPath = join(dir, "package.json");

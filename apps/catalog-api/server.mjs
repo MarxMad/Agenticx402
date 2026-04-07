@@ -7,6 +7,19 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "../..");
 const catalogPath = path.join(root, "catalog/services.json");
 const webRoot = path.join(root, "apps/catalog-web");
+const assetsDir = path.join(webRoot, "assets");
+
+const MIME = {
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".gif": "image/gif",
+  ".webp": "image/webp",
+  ".svg": "image/svg+xml",
+  ".ico": "image/x-icon",
+  ".woff2": "font/woff2",
+  ".woff": "font/woff",
+};
 
 function loadCatalog() {
   const raw = fs.readFileSync(catalogPath, "utf8");
@@ -30,6 +43,31 @@ const server = http.createServer((req, res) => {
     if (req.method === "GET" && p === "/favicon.ico") {
       res.writeHead(204);
       res.end();
+      return;
+    }
+
+    if (req.method === "GET" && p.startsWith("/assets/")) {
+      const rel = decodeURIComponent(p.slice("/assets/".length));
+      const resolved = path.resolve(assetsDir, rel);
+      const relToAssets = path.relative(assetsDir, resolved);
+      if (relToAssets.startsWith("..") || path.isAbsolute(relToAssets)) {
+        res.writeHead(403, { "Content-Type": "application/json; charset=utf-8" });
+        res.end(JSON.stringify({ error: "forbidden" }));
+        return;
+      }
+      if (!fs.existsSync(resolved) || !fs.statSync(resolved).isFile()) {
+        res.writeHead(404, { "Content-Type": "application/json; charset=utf-8" });
+        res.end(JSON.stringify({ error: "not_found" }));
+        return;
+      }
+      const ext = path.extname(resolved).toLowerCase();
+      const type = MIME[ext] || "application/octet-stream";
+      const body = fs.readFileSync(resolved);
+      res.writeHead(200, {
+        "Content-Type": type,
+        "Cache-Control": "public, max-age=3600",
+      });
+      res.end(body);
       return;
     }
 
