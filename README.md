@@ -90,6 +90,20 @@ The catalog does **not** replace the facilitator: it publishes metadata and link
 
 ---
 
+## Requisitos para Agentes (Trustlines)
+
+Para garantizar la interoperabilidad en la red Stellar y admitir micro-cobros en $x402$, todos los Agentes (o sus _wallets_ delegadas) deben establecer los siguientes **Trustlines** en la red correspondiente antes de invocar los endpoints que cobren en stablecoins:
+
+### Circle Issuers Oficiales
+Se debe realizar una operación `changeTrust` hacia los emisores oficiales de Circle para autorizar el comercio de su activo.
+- **USDC (Mainnet)**: `GA5ZSEJYB37JRC52ZMR0UT5PZK7M84K0A7D40QQR6K1823T8H23RFT1`
+- **USDC (Testnet)**: `GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5`
+- **EURC (Mainnet)**: `GCO22MDQA...` *(Refiérase a la documentación oficial de Circle para la ID completa de EURC activo)*
+
+Nuestros servicios `pumax402` implementan un middleware validador. Si la PublicKey del cliente no posee la línea de confianza requerida al momento de la pre-evaluación del cobro, la llamada será abortada con un estatus `402 Payment Required`, incluyendo en su respuesta HTTP un campo `instruction` que le indicará al agente cómo abrir este trustline.
+
+---
+
 ## Quick start
 
 ```bash

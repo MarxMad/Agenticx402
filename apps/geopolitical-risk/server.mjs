@@ -10,6 +10,7 @@ import {
   createPaywallHttpClient,
   paywallFetch,
 } from "../cli/lib/x402-fetch.mjs";
+import { checkTrustline } from "../shared/trustline.mjs";
 
 const payTo = process.env.GEO_X402_PAYTO?.trim();
 if (!payTo) {
@@ -66,6 +67,8 @@ const routes = {
       "Agregación heurística de riesgo geopolítico a partir de news xlm402 (upstream pagado).",
   },
 };
+
+app.use(checkTrustline);
 
 app.use(
   paymentMiddlewareFromConfig(
