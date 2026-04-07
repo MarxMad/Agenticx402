@@ -56,5 +56,7 @@ Copia plantilla en `.env.example` cuando exista el paquete cliente (Fase 2).
 - [ ] x402-stellar o quickstart ejecutado al menos una vez con éxito.
 - [ ] Al menos una llamada exitosa contra un servicio externo de prueba.
 - [ ] `.env` local fuera de git; `.gitignore` verificado.
+- [ ] Desde la raíz del repo: `npm run fase0:check` (valida catálogo y `cli list`; opcionalmente 402 si defines `X402_SMOKE_URL` y `STELLAR_SECRET_KEY`).
+- [ ] Añade tu fila en la tabla **Fase 0** de [`docs/PROGRESS.md`](./PROGRESS.md) (fecha + nota sin secretos).
 
-Siguiente paso: **Fase 1** → exponer `catalog/services.json` vía API read-only y UI mínima.
+Siguiente paso (equipo): **Fase 1** ya está en el repo; sigue integración con hub según [`README.md`](../README.md).

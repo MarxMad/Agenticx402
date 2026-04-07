@@ -61,7 +61,7 @@ Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables.
 - **Avance y tareas para el equipo:** [`docs/PROGRESS.md`](./docs/PROGRESS.md) (actualizar al cerrar trabajo).
 - **Cómo contribuir:** [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 - **Fase 0 (checklist local):** [`docs/setup-fase-0.md`](./docs/setup-fase-0.md).
-- **MCP (agentes):** [`docs/mcp.md`](./docs/mcp.md).
+- **MCP (agentes):** [`docs/mcp.md`](./docs/mcp.md) · demo / Cursor: [`docs/mcp-demo.md`](./docs/mcp-demo.md).
 - **Ecosistema x402 en Stellar + ideas:** [`docs/x402-stellar-panorama.md`](./docs/x402-stellar-panorama.md).
 - **Modelo de negocio:** [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.md).
 
@@ -144,6 +144,10 @@ docker run --rm -p 8080:8080 -e PORT=8080 pumax402-hub
 
 Abre `http://127.0.0.1:8080/` y `http://127.0.0.1:8080/health`. En Fly.io / Railway / etc., el proveedor suele inyectar `PORT`; no hace falta imagen con Node fuera de este contenedor para servir el catálogo.
 
+**Deploy en producción:** pasos por proveedor y variable **`AGENTICX402_CATALOG_URL=https://TU-DOMINIO/services`** → [`docs/deploy.md`](./docs/deploy.md).
+
+**Checklist local sin secretos:** `npm run fase0:check` (catálogo + `cli list`; opcional 402 con `X402_SMOKE_URL` + `STELLAR_SECRET_KEY`). **CI:** GitHub Actions [`.github/workflows/ci.yml`](./.github/workflows/ci.yml).
+
 ### Post-hackathon (opcional)
 
 - [ ] Mainnet tras revisar compliance y límites.
@@ -184,6 +188,26 @@ npm run cli -- call pumax402-agent-pulse --path /v1/pulse
 ```
 
 Documentación: [`apps/puma-service/README.md`](./apps/puma-service/README.md). Entrada en catálogo: `pumax402-agent-pulse`.
+
+### Servicios propios: **DEX Signal** y **Geopolitical Risk**
+
+| Servicio | Puerto | Rol |
+|----------|--------|-----|
+| [`stellar-dex-signal`](./apps/stellar-dex-signal/README.md) | 3851 | Señales Horizon (order book, trades, pools); **$0.05** por defecto. |
+| [`geopolitical-risk`](./apps/geopolitical-risk/README.md) | 3852 | Orquestador news xlm402 + riesgo agregado; **$0.08** cliente / **~$0.01** upstream. |
+
+```bash
+export DEX_X402_PAYTO=G... DEX_DEFAULT_BUYING_ISSUER=G...
+npm run dex-signal
+# otro terminal:
+export GEO_X402_PAYTO=G... GEO_UPSTREAM_SECRET_KEY=S...
+npm run geopolitical-risk
+
+npm run cli -- call pumax402-stellar-dex-signal --path /v1/signal
+npm run cli -- call pumax402-geopolitical-risk --path "/v1/risk?region=global"
+```
+
+Entradas de catálogo: `pumax402-stellar-dex-signal`, `pumax402-geopolitical-risk`.
 
 ### CLI (Fase 2)
 

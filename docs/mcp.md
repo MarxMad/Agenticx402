@@ -34,3 +34,7 @@ Sustituye `/ruta/absoluta/...` por tu clon.
 1. Catálogo por defecto: invoca `list_services` sin argumentos.
 2. HTTP sin pago: `call_service` con un `path` que no devuelva 402.
 3. 402: sin clave, la respuesta incluye `hint`; con `STELLAR_SECRET_KEY` testnet, debe reintentar como `npm run cli -- fetch`.
+
+## Demo / Cursor (guion completo)
+
+Configuración JSON, flujo para vídeo y uso de **Inspector**: **[`docs/mcp-demo.md`](./mcp-demo.md)**.

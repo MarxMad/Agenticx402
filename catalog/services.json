@@ -27,6 +27,30 @@
       "docsUrl": "https://github.com/MarxMad/Agenticx402/blob/main/apps/puma-service/README.md"
     },
     {
+      "id": "pumax402-stellar-dex-signal",
+      "name": "PumaX402 Stellar DEX Signal",
+      "description": "Señales order book + trades (Horizon) y snapshot de pools AMM; x402 Exact USDC. Pensado para agentes de trading y arbitraje en Stellar.",
+      "baseUrl": "http://127.0.0.1:3851",
+      "paths": ["/v1/signal", "/v1/pools"],
+      "pricingNote": "Default $0.05 USDC por ruta (DEX_X402_PRICE). Requiere DEX_X402_PAYTO y DEX_DEFAULT_BUYING_ISSUER para par XLM/USDC por defecto.",
+      "tags": ["pumax402", "defi", "dex", "horizon", "agents", "x402"],
+      "status": "active",
+      "source": "team",
+      "docsUrl": "https://github.com/MarxMad/Agenticx402/blob/main/apps/stellar-dex-signal/README.md"
+    },
+    {
+      "id": "pumax402-geopolitical-risk",
+      "name": "PumaX402 Geopolitical Risk",
+      "description": "Orquestador: paga news en xlm402.com y devuelve señal de riesgo agregada por región (heurística). Demuestra el modelo hub PumaX402.",
+      "baseUrl": "http://127.0.0.1:3852",
+      "paths": ["/v1/risk"],
+      "pricingNote": "Default $0.08 USDC cliente; ~$0.01 upstream news (GEO_UPSTREAM_SECRET_KEY + GEO_X402_PAYTO).",
+      "tags": ["pumax402", "risk", "news", "aggregator", "agents", "x402"],
+      "status": "active",
+      "source": "team",
+      "docsUrl": "https://github.com/MarxMad/Agenticx402/blob/main/apps/geopolitical-risk/README.md"
+    },
+    {
       "id": "stellar-observatory",
       "name": "Stellar Observatory",
       "description": "Condiciones espaciales y datos expuestos con x402 en Stellar; el repositorio incluye servidor MCP.",
