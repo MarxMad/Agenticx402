@@ -10,9 +10,12 @@
   "scripts": {
     "catalog:dev": "node apps/catalog-api/server.mjs",
     "catalog:validate": "node scripts/validate-catalog.mjs",
+    "fase0:check": "node scripts/fase-0-check.mjs",
     "cli": "node apps/cli/bin/agenticx402.mjs",
     "mcp": "node apps/mcp/server.mjs",
-    "puma-service": "node apps/puma-service/server.mjs"
+    "puma-service": "node apps/puma-service/server.mjs",
+    "dex-signal": "node apps/stellar-dex-signal/server.mjs",
+    "geopolitical-risk": "node apps/geopolitical-risk/server.mjs"
   },
   "engines": {
     "node": ">=20"

@@ -2,7 +2,7 @@
 
 Este archivo es la **fuente de verdad operativa**: qué fase toca, qué ya está en el repo y qué falta. Actualízalo al cerrar tareas o al abrir PRs relevantes.
 
-**Última revisión del documento:** 2026-04-04
+**Última revisión del documento:** 2026-04-06
 
 ---
 
@@ -10,11 +10,11 @@ Este archivo es la **fuente de verdad operativa**: qué fase toca, qué ya está
 
 | Fase | Nombre | Estado en repo | Responsable típico | Siguiente acción |
 |------|--------|----------------|----------------------|------------------|
-| **0** | Aterrizaje (wallet + x402 end-to-end local) | **Guía lista** — la ejecución es **por desarrollador** | Cada dev | Completar checklist en [`setup-fase-0.md`](./setup-fase-0.md) y anotar fecha en la tabla de abajo |
+| **0** | Aterrizaje (wallet + x402 end-to-end local) | **Guía + `npm run fase0:check`** — wallet y 402 real siguen siendo **por desarrollador** | Cada dev | [`setup-fase-0.md`](./setup-fase-0.md) + fila en tabla Fase 0 + opcional `X402_SMOKE_URL` |
 | **1** | Cimientos del hub (catálogo + API + UI) | **Completa** | Core hub | Añadir entradas en `catalog/services.json` si hace falta |
 | **2** | Cliente x402 (CLI) | **Completa** (código + docs); prueba 402 real = Fase 0 | Integración Stellar | Cada dev: `STELLAR_SECRET_KEY` + `npm run cli -- fetch "<url 402>"` |
-| **3** | MCP / skill para agentes | **MCP stdio en repo** (`list_services`, `call_service`) | Agent UX | Demo grabada + registrar servidor en el cliente MCP; 402 real = Fase 0 |
-| **4** | Demo + deploy + pitch | **Docker hub listo**; falta URL pública + vídeo + pitch | Todo el equipo | Subir imagen o conectar repo al hosting; grabar demo MCP/CLI |
+| **3** | MCP / skill para agentes | **MCP stdio + guión demo** [`mcp-demo.md`](./mcp-demo.md) | Agent UX | Grabar vídeo; registrar servidor MCP en Cursor; 402 real = Fase 0 |
+| **4** | Demo + deploy + pitch | **Docker + [`deploy.md`](./deploy.md)**; URL pública = acción del equipo | Todo el equipo | Desplegar hub; sustituir `TU-DOMINIO` en docs; vídeo + pitch |
 
 **Leyenda de estado:** *Completa* = criterios de hecho del README cubiertos en código o docs del repo. *Guía lista* = el equipo debe ejecutar pasos fuera del repo (wallet, clone de x402-stellar).
 
@@ -22,11 +22,11 @@ Este archivo es la **fuente de verdad operativa**: qué fase toca, qué ya está
 
 ## Fase 0 — Seguimiento local (obligatorio antes de integrar pagos reales)
 
-Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./setup-fase-0.md).
+Cada persona **añade una fila** cuando termine el checklist de [`setup-fase-0.md`](./setup-fase-0.md) y ejecute `npm run fase0:check` sin errores (más un `fetch`/`call` manual con testnet si quieres validar 402 fuera del script).
 
 | Persona / alias | Fecha cierre Fase 0 | Nota (sin secretos) |
 |-----------------|---------------------|----------------------|
-| _Pendiente_ | | |
+| edgadafi | _2026-04-06_ | _ej. xlm402 — endpoint documentado; quickstart OK_ |
 
 ---
 
@@ -73,6 +73,8 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 | Componente | Ubicación | Cómo probarlo |
 |------------|-----------|----------------|
 | **Agent Pulse** (x402 propio) | [`apps/puma-service/server.mjs`](../apps/puma-service/server.mjs) | `PUMA_X402_PAYTO=G... npm run puma-service` → `cli call pumax402-agent-pulse --path /v1/pulse` |
+| **Stellar DEX Signal** | [`apps/stellar-dex-signal/server.mjs`](../apps/stellar-dex-signal/server.mjs) | `DEX_X402_PAYTO` + `DEX_DEFAULT_BUYING_ISSUER` → `npm run dex-signal` → `cli call pumax402-stellar-dex-signal --path /v1/signal` |
+| **Geopolitical Risk** | [`apps/geopolitical-risk/server.mjs`](../apps/geopolitical-risk/server.mjs) | `GEO_X402_PAYTO` + `GEO_UPSTREAM_SECRET_KEY` → `npm run geopolitical-risk` → `cli call pumax402-geopolitical-risk --path "/v1/risk?region=global"` |
 | Servidor MCP (stdio) | [`apps/mcp/server.mjs`](../apps/mcp/server.mjs) | `npm run mcp` — conectar con Inspector MCP o Cursor (`command` + `args`) |
 | Tool `list_services` | mismo | Lista / filtra servicios del catálogo (mismas env vars que CLI) |
 | Tool `call_service` | mismo | `service_id` + `path` (+ `method`); usa `STELLAR_SECRET_KEY` si hay 402 |
@@ -103,6 +105,8 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 
 | Fecha | Cambio |
 |-------|--------|
+| 2026-04-06 | Servicios x402 **stellar-dex-signal** ($0.05 Horizon) y **geopolitical-risk** ($0.08, upstream xlm402 news); catálogo + `npm run dex-signal` / `geopolitical-risk`. |
+| 2026-04-06 | Fase 0: `npm run fase0:check` ([`scripts/fase-0-check.mjs`](../scripts/fase-0-check.mjs)), `X402_SMOKE_URL` en [`.env.example`](../.env.example); CI GitHub; [`docs/mcp-demo.md`](./mcp-demo.md); [`docs/deploy.md`](./deploy.md); tabla Fase 0 con plantilla de fila. |
 | 2026-04-04 | `x402-stellar-panorama.md`: +25 ideas fuera de la caja (agentes, Soroban, MPP, passkeys, ética); refs `docs.md` y `llmstellar.txt`. |
 | 2026-04-04 | **Agent Pulse**: servicio x402 propio (`apps/puma-service`), JSON “pulse” testnet para prompts de agentes; catálogo `pumax402-agent-pulse`; deps `@x402/express`, `express`. |
 | 2026-04-04 | `docs/x402-stellar-panorama.md`: inventario de servicios/demos x402 en Stellar + tabla de ideas innovadoras; enlaces README/hub/PROGRESS. |
@@ -121,6 +125,8 @@ Cada persona marca su fila cuando termine el checklist de [`setup-fase-0.md`](./
 - [README principal](../README.md) — visión y plan de fases
 - [CLI](./cli.md)
 - [MCP](./mcp.md) — servidor stdio para agentes
+- [Demo MCP / Cursor](./mcp-demo.md)
+- [Deploy del hub](./deploy.md)
 - [Hackathon / jurado](./hackathon-jurado.md) — pitch, Stellar+x402, Vercel vs Render, guion vídeo
 - [Panorama x402 Stellar + ideas nuevas](./x402-stellar-panorama.md) — qué servicios ya existen, opciones de innovación
 - [Modelo de negocio](../BUSINESS_MODEL.md)
