@@ -42,7 +42,7 @@ Note: Please beware of scams via DM on both platforms.
 
 # PumaX402 y el hackathon — lectura del brief
 
-El bloque siguiente resume texto oficial del reto; más abajo, **qué valor presentar para competir** y cómo lo cubre este repo.
+El bloque siguiente resume texto oficial del reto. Más abajo, [**Valor para competir**](#valor-competir) responde concretamente a *qué valor mostrar para ganar*: APIs propias + cliente + hub + demo con Stellar real.
 
 ---
 
@@ -59,6 +59,8 @@ El bloque siguiente resume texto oficial del reto; más abajo, **qué valor pres
 **Lo que más peso tiene para el jurado:** que en el **vídeo** y el README se **vea** Stellar (explorer, firma, testnet USDC/XLM, o log inequívoco post-402). Un catálogo bonito **sin** demostrar transacción real **no cumple** el criterio explícito de la convocatoria.
 
 ---
+
+<a id="valor-competir"></a>
 
 ## Valor para **competir** (qué premian y qué aportamos)
 
