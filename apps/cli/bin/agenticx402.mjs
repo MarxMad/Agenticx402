@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+import { loadRepoEnv } from "../../lib/load-repo-env.mjs";
+loadRepoEnv();
+
 import { parseArgs } from "node:util";
 import { loadCatalog, findService, resolveServiceUrl } from "../lib/catalog-load.mjs";
 import { createPaywallHttpClient, paywallFetch } from "../lib/x402-fetch.mjs";
@@ -22,6 +25,7 @@ function printHelp() {
       Igual que fetch pero arma la URL con baseUrl del catálogo + --path.
 
 Variables de entorno:
+  (Opcional) Archivo .env en la raíz del repo se carga al arrancar el CLI.
   STELLAR_SECRET_KEY     Clave secreta S... (obligatoria para 402)
   STELLAR_NETWORK        testnet | pubnet (default: testnet)
   STELLAR_SOROBAN_RPC_URL  Opcional; RPC Soroban personalizado

@@ -6,6 +6,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { STELLAR_TESTNET_USDC } from "../apps/lib/stellar-usdc-testnet.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -59,6 +60,40 @@ for (let i = 0; i < data.services.length; i++) {
     fail(`id duplicado: ${s.id}`);
   }
   ids.add(s.id);
+
+  if (s.stellarPrerequisites !== undefined) {
+    const pr = s.stellarPrerequisites;
+    if (pr === null || typeof pr !== "object") {
+      fail(`${prefix}: "stellarPrerequisites" debe ser objeto`);
+    }
+    if (pr.trustlines !== undefined) {
+      if (!Array.isArray(pr.trustlines)) {
+        fail(`${prefix}: stellarPrerequisites.trustlines debe ser array`);
+      }
+      for (let j = 0; j < pr.trustlines.length; j++) {
+        const t = pr.trustlines[j];
+        if (!t || typeof t !== "object") {
+          fail(`${prefix}: stellarPrerequisites.trustlines[${j}] inválido`);
+        }
+        if (typeof t.asset !== "string" || typeof t.issuer !== "string") {
+          fail(
+            `${prefix}: trustline[${j}] requiere strings "asset" y "issuer"`
+          );
+        }
+      }
+    }
+    if (s.id === "pumax402-agent-pulse" && Array.isArray(pr.trustlines)) {
+      const usdc = pr.trustlines.find((t) => t.asset === "USDC");
+      if (
+        usdc &&
+        usdc.issuer !== STELLAR_TESTNET_USDC.issuer
+      ) {
+        fail(
+          `${prefix}: issuer USDC testnet debe ser el de Circle (${STELLAR_TESTNET_USDC.issuer})`
+        );
+      }
+    }
+  }
 }
 
 console.log(

@@ -47,6 +47,8 @@ Ver [`.env.example`](../.env.example). Mínimo para pagar un 402:
 
 Sin `STELLAR_SECRET_KEY`, `fetch` y `call` solo hacen una petición normal; si la respuesta es **402**, el CLI indica que falta la clave.
 
+En **testnet con USDC**, la cuenta suele necesitar **trustline** al emisor antes de que el pago funcione. Guía orientada a agentes: [`agents-stellar-trustline.md`](./agents-stellar-trustline.md).
+
 ## Comandos
 
 | Comando | Descripción |

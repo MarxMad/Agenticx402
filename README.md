@@ -62,6 +62,7 @@ Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables.
 - **Cómo contribuir:** [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 - **Fase 0 (checklist local):** [`docs/setup-fase-0.md`](./docs/setup-fase-0.md).
 - **MCP (agentes):** [`docs/mcp.md`](./docs/mcp.md) · demo / Cursor: [`docs/mcp-demo.md`](./docs/mcp-demo.md).
+- **Trustline USDC testnet (agentes que pagan):** [`docs/agents-stellar-trustline.md`](./docs/agents-stellar-trustline.md).
 - **Ecosistema x402 en Stellar + ideas:** [`docs/x402-stellar-panorama.md`](./docs/x402-stellar-panorama.md).
 - **Modelo de negocio:** [`BUSINESS_MODEL.md`](./BUSINESS_MODEL.md).
 
@@ -73,7 +74,7 @@ Orden **secuencial**: cada fase cierra con *criterios de hecho* verificables.
 |-------|---------|
 | Alcance | Por defecto: **solo testnet**; activo principal **USDC** donde aplique; XLM si el ejemplo lo requiere. |
 | x402-stellar / quickstart | Clonar [stellar/x402-stellar](https://github.com/stellar/x402-stellar) en carpeta hermana; seguir [quickstart](https://developers.stellar.org/docs/build/agentic-payments/x402/quickstart-guide) hasta respuesta exitosa tras pago. |
-| Wallet | [Lab](https://developers.stellar.org/docs/tools/lab) o Freighter (desktop); fondos testnet; **no** subir claves al repo. |
+| Wallet | [Stellar CLI](https://developers.stellar.org/docs/tools/cli) (`stellar keys generate … --fund`) o [Lab](https://developers.stellar.org/docs/tools/lab) / Freighter (desktop); fondos testnet; **no** subir claves al repo. Detalle: [`docs/setup-fase-0.md`](./docs/setup-fase-0.md). |
 | Servicio externo | Probar al menos un flujo contra [xlm402.com](https://xlm402.com) (o otro endpoint público documentado). |
 
 **Criterios de hecho:** (1) nota interna o issue con endpoint probado y red; (2) screenshot o log de éxito **sin secretos**; (3) `.env` local ignorado por git.
@@ -211,15 +212,45 @@ Entradas de catálogo: `pumax402-stellar-dex-signal`, `pumax402-geopolitical-ris
 
 ### CLI (Fase 2)
 
+El CLI **no** se invoca con `npm fetch`, `fetch` en la shell ni comandos sueltos: **`npm` solo entiende sus propios subcomandos** (`install`, `run`, etc.). Hay que ejecutar el script del proyecto y **pasarle** los argumentos del CLI.
+
+**Patrón obligatorio:** `npm run cli -- <comando> [opciones…]`
+
+El **`--`** separa opciones de npm de los argumentos que recibe Node: todo lo que va **después** del `--` llega a [`apps/cli/bin/agenticx402.mjs`](./apps/cli/bin/agenticx402.mjs).
+
+| Comando | Descripción |
+|---------|-------------|
+| `npm run cli -- splash` | Pantalla de bienvenida y lista de subcomandos. |
+| `npm run cli -- splash --animate` | Igual, con animación breve del cartel (TTY con color). |
+| `npm run cli -- list` | Servicios del catálogo (`catalog/services.json` o `AGENTICX402_CATALOG_URL`). |
+| `npm run cli -- fetch "<url>"` | GET (u otro método con `--method`) a una URL; si hay **402**, firma y reintenta **solo si** existe `STELLAR_SECRET_KEY`. |
+| `npm run cli -- call <service-id> --path /ruta` | Arma `baseUrl` del catálogo + `--path`; mismo flujo x402 que `fetch`. |
+| `npm run cli -- -h` | Ayuda completa (variables de entorno y ejemplos). |
+
+**Pago x402 (402 → firma → reintento):** exporta la cuenta que **paga** (testnet por defecto):
+
+```bash
+export STELLAR_SECRET_KEY=S...
+npm run cli -- fetch "http://127.0.0.1:3850/v1/pulse"
+# o desde catálogo:
+npm run cli -- call pumax402-agent-pulse --path /v1/pulse
+```
+
+Sin `STELLAR_SECRET_KEY`, `fetch`/`call` hacen un intento HTTP normal; si el servidor responde 402, el CLI indica que falta la clave para completar el pago.
+
+**Flujo con Agent Pulse:** en un terminal, `PUMA_X402_PAYTO=G... npm run puma-service`; en otro, `STELLAR_SECRET_KEY` del pagador + `npm run cli -- fetch "http://127.0.0.1:3850/v1/pulse"`. Si ves *Falta PUMA_X402_PAYTO*, es el **servidor** quien no tiene configurada la cuenta receptora.
+
+**Atajo local** (tras `npm install`): `./node_modules/.bin/agenticx402 list` (o `fetch` / `call` con los mismos argumentos que tras `--`).
+
+Ejemplos rápidos:
+
 ```bash
 npm run cli -- list
 npm run cli -- fetch "https://url-completa"
 npm run cli -- call stellar-observatory --path /ruta --method GET
-npm run cli -- splash              # resumen del CLI (sin tocar el fondo del tema)
-npm run cli -- splash --animate    # indicador breve en una línea (TTY)
 ```
 
-Detalle: [`docs/cli.md`](./docs/cli.md). Banner **minimalista** (cian + gris, **sin** color de fondo ANSI). Logo de marca en [`assets/logo.png`](./assets/logo.png) es independiente del CLI. `AGENTICX402_NO_BANNER=1` oculta cabeceras.
+Detalle y casos límite: [`docs/cli.md`](./docs/cli.md). Banner **minimalista** (cian + gris, **sin** color de fondo ANSI). Logo de marca en [`assets/logo.png`](./assets/logo.png) es independiente del CLI. `AGENTICX402_NO_BANNER=1` oculta cabeceras.
 
 Catálogo remoto: `AGENTICX402_CATALOG_URL=http://127.0.0.1:3840/services npm run cli -- list`.
 

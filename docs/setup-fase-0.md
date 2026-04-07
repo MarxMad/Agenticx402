@@ -10,9 +10,46 @@ Objetivo: tener **billetera en testnet**, **flujo x402 validado** contra un serv
 
 ## 1. Cuenta y fondos (testnet)
 
-1. Crear o importar cuenta en [Stellar Lab](https://developers.stellar.org/docs/tools/lab) o [Freighter](https://www.freighter.app/) (extension de escritorio; Freighter mobile no cubre x402 al cierre de esta guía).
+### Opción A — Stellar CLI (recomendada en este repo)
+
+Instala el CLI: [Stellar CLI — documentación](https://developers.stellar.org/docs/tools/cli) (apartado *Install*).
+
+**zsh / pegar desde el chat:** en la terminal interactiva, `#` **no** es comentario por defecto. Si copias `stellar keys public-key pumax402-payto    # nota`, el CLI recibe `#` como argumento y responde `unexpected argument '#' found`. Ejecuta **solo** la parte del comando, o pon la nota en la **línea anterior**. Opcional: `setopt interactivecomments` para que `#` al final de línea se ignore.
+
+1. **Usar testnet por defecto** (una vez por máquina):
+   ```bash
+   stellar network use testnet
+   ```
+2. **Nueva identidad + XLM testnet** — `--fund` pide fondos en la red de pruebas (no sirve para mainnet):
+   ```bash
+   stellar keys generate pumax402-fase0 --fund
+   ```
+   Para **Agent Pulse** conviene **dos identidades**: una **receptora** (`PUMA_X402_PAYTO`) y una **pagadora** (`STELLAR_SECRET_KEY`):
+   ```bash
+   stellar keys generate pumax402-payto --fund
+   stellar keys generate pumax402-payer --fund
+   ```
+3. **Dirección pública (G…)** de la cuenta que recibirá pagos:
+   ```bash
+   stellar keys public-key pumax402-payto
+   ```
+   Ese valor es el candidato a `PUMA_X402_PAYTO` (con trustline USDC en esa cuenta).
+4. **Clave secreta (S…)** de la cuenta que pagará en el CLI:
+   ```bash
+   stellar keys secret pumax402-payer
+   ```
+   Guárdala en `.env` como `STELLAR_SECRET_KEY=...`. No la subas al repo ni la muestres en capturas.
+5. **USDC testnet:** el `--fund` del CLI cubre **XLM** de prueba. Los servicios x402 de este proyecto suelen cobrar en **USDC** testnet: abre trustline y consigue USDC de prueba siguiendo el [quickstart x402](https://developers.stellar.org/docs/build/agentic-payments/x402/quickstart-guide) (receptor y pagador según lo que vayas a probar). Guía detallada para **agentes / LLMs** (de dónde sacar emisor y comando, MCP, `GET /`): [`agents-stellar-trustline.md`](./agents-stellar-trustline.md).
+
+Si ya generaste la clave sin fondos: `stellar keys fund <NOMBRE> --network testnet`.
+
+**Hecho cuando:** tienes XLM testnet en las identidades que uses y, si vas a pagar o cobrar en USDC, trustline + saldo USDC según el quickstart.
+
+### Opción B — Stellar Lab o Freighter
+
+1. Crear o importar cuenta en [Stellar Lab](https://developers.stellar.org/docs/tools/lab) o [Freighter](https://www.freighter.app/) (extensión de escritorio; Freighter mobile no cubre x402 al cierre de esta guía).
 2. Solicitar XLM testnet en el friendbot / faucet que indiquen las docs actuales.
-3. Si el servicio cobra en **USDC testnet**, seguir la guía del [quickstart x402](https://developers.stellar.org/docs/build/agentic-payments/x402/quickstart-guide) para obtener USDC de prueba.
+3. Si el servicio cobra en **USDC testnet**, seguir el mismo [quickstart x402](https://developers.stellar.org/docs/build/agentic-payments/x402/quickstart-guide) para trustline y USDC de prueba.
 
 **Hecho cuando:** puedes firmar una transacción Soroban de prueba en Lab o desde el ejemplo oficial.
 
@@ -41,14 +78,16 @@ Seguir el README del monorepo y el [quickstart](https://developers.stellar.org/d
 Crear `.env` en tu máquina (nunca commitear):
 
 ```bash
-# Ejemplo — nombres definitivos en Fase 2
-STELLAR_NETWORK=TESTNET
+# Clave del pagador (p. ej. salida de: stellar keys secret pumax402-payer)
 STELLAR_SECRET_KEY=SXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-# Opcional según SDK
-STELLAR_PUBLIC_KEY=GXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# testnet (default del cliente) | pubnet
+# STELLAR_NETWORK=testnet
+
+# Agent Pulse — cuenta que recibe (p. ej. stellar keys public-key pumax402-payto)
+# PUMA_X402_PAYTO=G...
 ```
 
-Copia plantilla en `.env.example` cuando exista el paquete cliente (Fase 2).
+Plantilla alineada con el repo: [`.env.example`](../.env.example).
 
 ## 5. Cierre de Fase 0
 

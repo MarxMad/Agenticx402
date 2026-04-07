@@ -24,7 +24,23 @@
       "tags": ["pumax402", "agents", "context", "testnet", "x402"],
       "status": "active",
       "source": "team",
-      "docsUrl": "https://github.com/MarxMad/Agenticx402/blob/main/apps/puma-service/README.md"
+      "docsUrl": "https://github.com/MarxMad/Agenticx402/blob/main/apps/puma-service/README.md",
+      "stellarPrerequisites": {
+        "network": "stellar:testnet",
+        "summary": "Trustline USDC testnet (Circle) en pagador y receptora antes de x402 Exact; luego USDC de prueba vía quickstart / faucet.",
+        "trustlines": [
+          {
+            "asset": "USDC",
+            "issuer": "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+            "line": "USDC:GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5"
+          }
+        ],
+        "stellarCliChangeTrustTemplate": "stellar network use testnet && stellar tx new change-trust --source <SOURCE> --line USDC:GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+        "obtainTestUsdc": {
+          "circleFaucet": "https://faucet.circle.com/",
+          "quickstart": "https://developers.stellar.org/docs/build/agentic-payments/x402/quickstart-guide"
+        }
+      }
     },
     {
       "id": "pumax402-stellar-dex-signal",

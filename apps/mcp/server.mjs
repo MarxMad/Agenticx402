@@ -3,6 +3,9 @@
  * MCP PumaX402 — stdio. Tools: list_services, call_service.
  * Mismas variables que el CLI (STELLAR_SECRET_KEY, catálogo, red).
  */
+import { loadRepoEnv } from "../lib/load-repo-env.mjs";
+loadRepoEnv();
+
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import * as z from "zod/v4";
@@ -48,6 +51,9 @@ function summarizeService(s) {
     paths: s.paths || [],
     pricingNote: s.pricingNote,
     docsUrl: s.docsUrl,
+    ...(s.stellarPrerequisites != null
+      ? { stellarPrerequisites: s.stellarPrerequisites }
+      : {}),
   };
 }
 
@@ -70,7 +76,7 @@ const server = new McpServer(
   { name: "pumax402-mcp", version: "0.1.0" },
   {
     instructions:
-      "PumaX402: catálogo de servicios x402 en Stellar. Usa list_services para descubrir IDs; call_service invoca baseUrl+path (HTTP; si el endpoint exige pago, hace falta STELLAR_SECRET_KEY en el entorno del proceso MCP).",
+      "PumaX402: catálogo de servicios x402 en Stellar. Usa list_services para descubrir IDs; si un servicio incluye stellarPrerequisites, ahí va la trustline USDC testnet y plantilla de comando stellar CLI para el usuario/agente. call_service invoca baseUrl+path (HTTP; 402 requiere STELLAR_SECRET_KEY en el entorno MCP). Servicios propios pueden exponer más detalle en GET / sin pago (ej. Agent Pulse → trustlineOnboardingForAgents).",
   }
 );
 

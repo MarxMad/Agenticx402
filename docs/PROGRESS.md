@@ -127,6 +127,7 @@ Cada persona **añade una fila** cuando termine el checklist de [`setup-fase-0.m
 - [MCP](./mcp.md) — servidor stdio para agentes
 - [Demo MCP / Cursor](./mcp-demo.md)
 - [Deploy del hub](./deploy.md)
+- [Trustline USDC para agentes](./agents-stellar-trustline.md) — pagar x402 en testnet sin fallar por trustline
 - [Hackathon / jurado](./hackathon-jurado.md) — pitch, Stellar+x402, Vercel vs Render, guion vídeo
 - [Panorama x402 Stellar + ideas nuevas](./x402-stellar-panorama.md) — qué servicios ya existen, opciones de innovación
 - [Modelo de negocio](../BUSINESS_MODEL.md)

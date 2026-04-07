@@ -15,6 +15,10 @@ Servidor [Model Context Protocol](https://modelcontextprotocol.io) por **stdio**
 | `list_services` | Opcional `query` (texto): devuelve JSON con `version`, `networkDefault` y lista de servicios (id, name, baseUrl, tags, …). |
 | `call_service` | `service_id` (del catálogo), `path` (ej. `/ruta`), opcional `method` (`GET` por defecto). Respuesta: `status`, `body`, `url`. |
 
+## Trustline USDC testnet (antes de pagar)
+
+Si el usuario o el agente van a **liquidar x402 en USDC testnet**, la cuenta pagadora (y a veces la receptora) necesita **trustline** al emisor correcto. No lo inventes: usa **`stellarPrerequisites`** en la salida de `list_services` cuando exista, o la guía **[`agents-stellar-trustline.md`](./agents-stellar-trustline.md)** (descubrimiento vía catálogo, `GET /` de Agent Pulse, comando Stellar CLI, Lab, faucet).
+
 ## Variables de entorno
 
 Las mismas que el CLI — ver [`.env.example`](../.env.example) y [`docs/cli.md`](./cli.md). Para pagar un 402 hace falta **`STELLAR_SECRET_KEY`** en el entorno del **proceso del servidor MCP** (no solo del chat).
