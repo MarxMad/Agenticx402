@@ -3,7 +3,7 @@
  * PumaX402 **energy-signal** — precios simulados WTI/Brent/GAS + señal (Groq opcional o heurística local), paywall x402 Exact Stellar.
  *
  * Env: ENERGY_X402_PAYTO (G..., obligatoria), ENERGY_X402_PRICE (default $0.10), GROQ_API_KEY (opcional),
- *      STELLAR_NETWORK=testnet|pubnet (default testnet), PORT (default 3851).
+ *      STELLAR_NETWORK=testnet|pubnet (default testnet), PORT (default 3853).
  * Arranque: ENERGY_X402_PAYTO=G... npm run energy-signal
  */
 import express from "express";
@@ -20,7 +20,7 @@ if (!payTo) {
 }
 
 const PRICE = process.env.ENERGY_X402_PRICE?.trim() || "$0.10";
-const port = Number(process.env.PORT) || 3851;
+const port = Number(process.env.PORT) || 3853;
 const isPubnet = process.env.STELLAR_NETWORK?.trim().toLowerCase() === "pubnet";
 const network = isPubnet ? "stellar:pubnet" : "stellar:testnet";
 
