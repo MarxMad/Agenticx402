@@ -15,7 +15,9 @@
     "mcp": "node apps/mcp/server.mjs",
     "puma-service": "node apps/puma-service/server.mjs",
     "dex-signal": "node apps/stellar-dex-signal/server.mjs",
-    "geopolitical-risk": "node apps/geopolitical-risk/server.mjs"
+    "geopolitical-risk": "node apps/geopolitical-risk/server.mjs",
+    "energy-signal": "node apps/energy-signal/server.mjs",
+    "volume:generate": "node scripts/generate-volume.mjs"
   },
   "engines": {
     "node": ">=20"

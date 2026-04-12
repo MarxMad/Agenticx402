@@ -26,7 +26,7 @@ Cada persona **añade una fila** cuando termine el checklist de [`setup-fase-0.m
 
 | Persona / alias | Fecha cierre Fase 0 | Nota (sin secretos) |
 |-----------------|---------------------|----------------------|
-| edgadafi | _2026-04-06_ | _ej. xlm402 — endpoint documentado; quickstart OK_ |
+| edgadafi | _2026-04-08_ | _dex-signal + geopolitical-risk OK testnet_ |
 
 ---
 
