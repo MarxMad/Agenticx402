@@ -110,6 +110,26 @@
       "docsUrl": "https://github.com/MarxMad/Agenticx402/blob/main/apps/geopolitical-risk/README.md"
     },
     {
+      "id": "pumax402-energy-signal",
+      "name": "PumaX402 — Energy Signal",
+      "description": "Precio petróleo WTI/Brent/GAS + señal IA (BUY/SELL/HOLD) + impacto en tipo de cambio LATAM. Contexto: guerra Irán 2026, Estrecho de Ormuz restringido, Brent ~$120.",
+      "baseUrl": "http://127.0.0.1:3853",
+      "paths": [
+        {
+          "path": "/v1/signal",
+          "method": "GET",
+          "description": "Señal energética con análisis IA. Query: ?asset=WTI|BRENT|GAS",
+          "price": "0.10",
+          "asset": "USDC"
+        }
+      ],
+      "pricingNote": "$0.10 USDC por consulta vía x402 Exact en Stellar testnet.",
+      "tags": ["owned", "energy", "ai", "latam", "commodities", "iran"],
+      "status": "active",
+      "source": "team",
+      "docsUrl": "https://github.com/MarxMad/Agenticx402/blob/main/apps/energy-signal/README.md"
+    },
+    {
       "id": "stellar-observatory",
       "name": "Stellar Observatory",
       "version": "1.0.0",
