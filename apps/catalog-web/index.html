@@ -261,6 +261,34 @@
       <!-- Dynamic Services Content -->
     </div>
 
+    <section id="mcp" class="activity-panel" style="margin-top: 1rem;">
+      <h3>MCP Tools</h3>
+      <p style="color: var(--muted); margin-top: 0;">
+        Expose PumaX402 services to agent runtimes (Cursor, Claude, OpenClaw-style MCP clients)
+        using a single stdio server.
+      </p>
+      <div style="display: grid; gap: 0.75rem;">
+        <code style="display:block; background: var(--bg); border:1px solid var(--border); padding:0.75rem; border-radius: 8px;">
+          npm run mcp
+        </code>
+        <p style="color: var(--muted); margin: 0;">
+          Core tools: <code>list_services</code>, <code>call_service</code>, plus onboarding helpers such as
+          <code>sponsor_agent_account</code> when sponsorship is configured.
+        </p>
+      </div>
+    </section>
+
+    <section id="docs" class="activity-panel" style="margin-top: 1rem;">
+      <h3>Documentation</h3>
+      <div style="display:flex; flex-wrap: wrap; gap: 0.5rem;">
+        <a href="/services" target="_blank" style="padding: 0.45rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; text-decoration:none;">Catalog API</a>
+        <a href="https://github.com/MarxMad/Agenticx402#readme" target="_blank" style="padding: 0.45rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; text-decoration:none;">README</a>
+        <a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/mcp.md" target="_blank" style="padding: 0.45rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; text-decoration:none;">MCP Guide</a>
+        <a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/cli.md" target="_blank" style="padding: 0.45rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; text-decoration:none;">CLI Guide</a>
+        <a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/agents-stellar-trustline.md" target="_blank" style="padding: 0.45rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; text-decoration:none;">Trustline Setup</a>
+      </div>
+    </section>
+
     <section id="activity" class="activity-panel">
       <h3>Live Network Activity — Pulse</h3>
       <div id="activity-log" class="activity-log">
@@ -270,7 +298,7 @@
   </main>
 
   <footer class="footer">
-    <p>&copy; 2026 PumaX402 — Built for the Stellar Agentic Economy Hackathon.</p>
+    <p>&copy; 2026 PumaX402 — Agentic payment infrastructure on Stellar.</p>
   </footer>
 
   <script>
@@ -282,19 +310,36 @@
     async function loadCatalog() {
       try {
         const res = await fetch('/services');
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
         catalog = await res.json();
         renderServices();
       } catch (err) {
         console.error("Failed to load catalog", err);
+        servicesContainer.innerHTML = `
+          <article class="card">
+            <h3 class="card-title">Catalog unavailable</h3>
+            <p style="color: var(--muted);">
+              No se pudo cargar <code>/services</code>. Arranca el hub con
+              <code>npm run catalog:dev</code> o <code>npm run dev:all</code> y abre
+              <code>http://127.0.0.1:3840/</code> (no abras el HTML directo con <code>file://</code>).
+            </p>
+          </article>
+        `;
       }
     }
 
     function renderServices() {
       const q = searchInput.value.toLowerCase();
+      const normalizeTags = (s) => s.tags || s.discovery_tags || [];
+      const priceLabel = (s) =>
+        s.pricingNote ||
+        (s.cost && s.currency ? `${s.cost} ${s.currency} per request` : 'Pay per request');
       const filtered = catalog.services.filter(s => 
         s.name.toLowerCase().includes(q) || 
         s.description.toLowerCase().includes(q) ||
-        s.tags.some(t => t.toLowerCase().includes(q))
+        normalizeTags(s).some(t => t.toLowerCase().includes(q))
       );
 
       servicesContainer.innerHTML = filtered.map(s => `
@@ -305,9 +350,9 @@
           </div>
           <p style="color: var(--muted); font-size: 0.9rem;">${s.id}</p>
           <p>${s.description}</p>
-          <div class="price-tag">${s.pricingNote || 'Pay per request'}</div>
+          <div class="price-tag">${priceLabel(s)}</div>
           <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: auto;">
-            ${s.tags.map(t => `<span class="badge-tag">${t}</span>`).join('')}
+            ${normalizeTags(s).map(t => `<span class="badge-tag">${t}</span>`).join('')}
           </div>
           <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
             <button onclick="copyCmd('${s.id}')" style="flex: 1; padding: 0.5rem; background: var(--accent-soft); border: 1px solid var(--accent); color: #fff; cursor: pointer; border-radius: 4px;">Copy CLI</button>

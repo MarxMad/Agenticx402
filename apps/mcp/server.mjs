@@ -43,12 +43,13 @@ async function httpCall(url, opts = {}) {
 }
 
 function summarizeService(s) {
+  const tags = s.tags || s.discovery_tags || [];
   return {
     id: s.id,
     name: s.name,
     baseUrl: s.baseUrl,
     description: s.description,
-    tags: s.tags || [],
+    tags,
     status: s.status,
     paths: s.paths || [],
     pricingNote: s.pricingNote,
@@ -62,11 +63,12 @@ function summarizeService(s) {
 function matchesQuery(s, q) {
   if (!q) return true;
   const low = q.toLowerCase();
+  const tags = s.tags || s.discovery_tags || [];
   const hay = [
     s.id,
     s.name,
     s.description,
-    ...(s.tags || []),
+    ...tags,
   ]
     .filter(Boolean)
     .join(" ")

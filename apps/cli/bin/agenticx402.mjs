@@ -93,10 +93,11 @@ async function cmdList() {
   const net = catalog.networkDefault || "—";
   console.log(`Catálogo v${catalog.version} · red por defecto: ${net}\n`);
   for (const s of catalog.services || []) {
+    const tags = s.tags || s.discovery_tags || [];
     console.log(`  ${s.id}`);
     console.log(`    ${s.name}`);
     console.log(`    ${s.baseUrl}`);
-    console.log(`    tags: ${(s.tags || []).join(", ")} · status: ${s.status}`);
+    console.log(`    tags: ${tags.join(", ")} · status: ${s.status}`);
     console.log("");
   }
 }
