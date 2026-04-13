@@ -8,11 +8,37 @@ This file is the **operational source of truth**: what phase is active, what is 
 
 ## Change Log (April 2026)
 
-### [2026-04-13] Final Hackathon Polish (Towards First Place)
-- **Multi-Payment Protocol:** Implementation of `mpp-service` to support MPP (Machine Payments Protocol / Stripe) in addition to x402.
-- **Economic Guardrails (Soroban):** Creation of the `spending_limit` contract to establish daily spending policies for agents.
-- **Advanced MCP Tools:** Updated the MCP server with sponsored onboarding and account status check tools.
-- **100% Alignment:** Verified compliance with all delivery requirements (Repo, Video Script, Stellar Interaction).
+| Fase | Nombre | Estado en repo | Responsable típico | Siguiente acción |
+|------|--------|----------------|----------------------|------------------|
+| **0** | Aterrizaje (wallet + x402 end-to-end local) | **Guía + `npm run fase0:check`** — wallet y 402 real siguen siendo **por desarrollador** | Cada dev | [`setup-fase-0.md`](./setup-fase-0.md) + fila en tabla Fase 0 + opcional `X402_SMOKE_URL` |
+| **1** | Cimientos del hub (catálogo + API + UI) | **Completa** | Core hub | Añadir entradas en `catalog/services.json` si hace falta |
+| **2** | Cliente x402 (CLI) | **Completa** (código + docs); prueba 402 real = Fase 0 | Integración Stellar | Cada dev: `STELLAR_SECRET_KEY` + `npm run cli -- fetch "<url 402>"` |
+| **3** | MCP / skill para agentes | **MCP stdio + guión demo** [`mcp-demo.md`](./mcp-demo.md) | Agent UX | Grabar vídeo; registrar servidor MCP en Cursor; 402 real = Fase 0 |
+| **4** | Demo + deploy + pitch | **Docker + [`deploy.md`](./deploy.md)**; hub Railway activo | Todo el equipo | Vídeo + pitch; URL: `https://agenticx402-production.up.railway.app/` |
+
+**Leyenda de estado:** *Completa* = criterios de hecho del README cubiertos en código o docs del repo. *Guía lista* = el equipo debe ejecutar pasos fuera del repo (wallet, clone de x402-stellar).
+
+---
+
+## Fase 0 — Seguimiento local (obligatorio antes de integrar pagos reales)
+
+Cada persona **añade una fila** cuando termine el checklist de [`setup-fase-0.md`](./setup-fase-0.md) y ejecute `npm run fase0:check` sin errores (más un `fetch`/`call` manual con testnet si quieres validar 402 fuera del script).
+
+| Persona / alias | Fecha cierre Fase 0 | Nota (sin secretos) |
+|-----------------|---------------------|----------------------|
+| edgadafi | _2026-04-08_ | _dex-signal + geopolitical-risk OK testnet_ |
+
+---
+
+## Fase 1 — Qué hay implementado
+
+| Componente | Ubicación | Cómo probarlo |
+|------------|-----------|----------------|
+| Datos del catálogo | [`catalog/services.json`](../catalog/services.json) | Editar y correr validación |
+| Validación JSON | [`scripts/validate-catalog.mjs`](../scripts/validate-catalog.mjs) | `npm run catalog:validate` |
+| API read-only | [`apps/catalog-api/server.mjs`](../apps/catalog-api/server.mjs) | `npm run catalog:dev` → `GET /services`, `GET /services/:id` |
+| UI del hub | [`apps/catalog-web/index.html`](../apps/catalog-web/index.html) | Local: `npm run catalog:dev` → `http://127.0.0.1:3840/` · producción: [`agenticx402-production.up.railway.app`](https://agenticx402-production.up.railway.app/) |
+| Cómo dar de alta servicios | [`catalog/README.md`](../catalog/README.md) | PR con cambios en `services.json` |
 
 ### [2026-04-13] Stellar Dev Skill Integration
 - **Native Knowledge:** Integrated `./skill/` with guides on Soroban, x402, MPP, Security, Testing, and API (RPC vs Horizon).

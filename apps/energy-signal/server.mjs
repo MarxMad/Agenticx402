@@ -6,7 +6,6 @@
  *      STELLAR_NETWORK=testnet|pubnet (default testnet), PORT (default 3853).
  * Arranque: ENERGY_X402_PAYTO=G... npm run energy-signal
  */
-
 import express from "express";
 import { paymentMiddlewareFromConfig } from "@x402/express";
 import { ExactStellarScheme } from "@x402/stellar/exact/server";

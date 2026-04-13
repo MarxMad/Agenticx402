@@ -57,12 +57,7 @@ const SERVICES = [
   {
     name: "energy    ",
     script: "apps/energy-signal/server.mjs",
-    env: {},           // needs ENERGY_X402_PAYTO; GROQ_API_KEY optional
-  },
-  {
-    name: "mpp       ",
-    script: "apps/mpp-service/server.mjs",
-    env: {},           // needs MPP_X402_PAYTO
+    env: {},           // necesita ENERGY_X402_PAYTO; GROQ_API_KEY opcional
   },
 ];
 

@@ -2,7 +2,7 @@
 /**
  * Genera N llamadas pagadas al servicio energy-signal usando el mismo flujo x402 que el CLI.
  *
- * Env: STELLAR_SECRET_KEY (obligatoria), ENERGY_SIGNAL_URL (default http://localhost:3853), STELLAR_NETWORK=testnet|pubnet
+ * Env: STELLAR_SECRET_KEY (obligatoria), ENERGY_SIGNAL_URL (default http://localhost:3851), STELLAR_NETWORK=testnet|pubnet
  * Uso: node scripts/generate-volume.mjs [CALLS=20] [DELAY_MS=1500]
  */
 import {
@@ -17,7 +17,7 @@ if (!secret) {
 }
 
 const baseUrl = (
-  process.env.ENERGY_SIGNAL_URL?.trim() || "http://localhost:3853"
+  process.env.ENERGY_SIGNAL_URL?.trim() || "http://localhost:3851"
 ).replace(/\/$/, "");
 const isPubnet = process.env.STELLAR_NETWORK?.trim().toLowerCase() === "pubnet";
 const network = isPubnet ? "pubnet" : "testnet";

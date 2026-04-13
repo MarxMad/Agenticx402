@@ -19,13 +19,7 @@
     "geopolitical-risk": "node apps/geopolitical-risk/server.mjs",
     "energy-signal": "node apps/energy-signal/server.mjs",
     "volume:generate": "node scripts/generate-volume.mjs",
-    "dev:all": "node scripts/dev-all.mjs",
-    "soroban:build": "cd soroban/contracts/hello_trustline && stellar contract build",
-    "fase0:check": "node scripts/fase-0-check.mjs && npm run cli -- doctor",
-    "test:e2e": "node scripts/e2e-test.mjs"
-  },
-  "skill": {
-    "path": "./skill/SKILL.md"
+    "dev:all": "node scripts/dev-all.mjs"
   },
   "engines": {
     "node": ">=20"

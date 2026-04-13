@@ -112,45 +112,22 @@
     {
       "id": "pumax402-energy-signal",
       "name": "PumaX402 — Energy Signal",
-      "description": "WTI/Brent/GAS oil prices + AI signal (BUY/SELL/HOLD) + FX impact. Context: 2026 tensions, restricted Ormuz Strait, Brent ~$120.",
+      "description": "Precio petróleo WTI/Brent/GAS + señal IA (BUY/SELL/HOLD) + impacto en tipo de cambio LATAM. Contexto: guerra Irán 2026, Estrecho de Ormuz restringido, Brent ~$120.",
       "baseUrl": "http://127.0.0.1:3853",
       "paths": [
         {
           "path": "/v1/signal",
           "method": "GET",
-          "description": "Energy signal with AI analysis. Query: ?asset=WTI|BRENT|GAS",
+          "description": "Señal energética con análisis IA. Query: ?asset=WTI|BRENT|GAS",
           "price": "0.10",
           "asset": "USDC"
         }
       ],
-      "pricingNote": "$0.10 USDC per query via x402 Exact on Stellar testnet.",
+      "pricingNote": "$0.10 USDC por consulta vía x402 Exact en Stellar testnet.",
       "tags": ["owned", "energy", "ai", "latam", "commodities", "iran"],
       "status": "active",
       "source": "team",
       "docsUrl": "https://github.com/MarxMad/Agenticx402/blob/main/apps/energy-signal/README.md"
-    },
-    {
-      "id": "pumax402-mpp-service",
-      "name": "PumaX402 — MPP (Machine Payments Protocol)",
-      "version": "1.0.0",
-      "description": "MPP reference service for direct M2M payments without a facilitator. Demonstrates the Stripe/Stellar 'Charge' flow.",
-      "baseUrl": "http://127.0.0.1:3854",
-      "paths": [
-        "/v1/data"
-      ],
-      "cost": "0.005",
-      "currency": "USDC",
-      "provider_address": "ENV_MPP_X402_PAYTO",
-      "discovery_tags": [
-        "pumax402",
-        "mpp",
-        "m2m",
-        "direct-payment",
-        "testnet"
-      ],
-      "status": "active",
-      "source": "team",
-      "docsUrl": "https://mpp.dev"
     },
     {
       "id": "stellar-observatory",
