@@ -2,6 +2,18 @@
 
 El hub es **API + UI estática** servidas por [`apps/catalog-api/server.mjs`](../apps/catalog-api/server.mjs). La imagen oficial solo incluye catálogo + ese servidor ([`Dockerfile`](../Dockerfile)).
 
+## Hub público actual (equipo)
+
+| | URL |
+|--|-----|
+| **UI** | [https://agenticx402-production.up.railway.app/](https://agenticx402-production.up.railway.app/) |
+| **Catálogo JSON** | `https://agenticx402-production.up.railway.app/services` |
+| **Salud** | `https://agenticx402-production.up.railway.app/health` |
+
+Variable para CLI / MCP: `AGENTICX402_CATALOG_URL=https://agenticx402-production.up.railway.app/services`
+
+Si migráis de dominio, actualizad esta sección y los ejemplos del README.
+
 ## Variables
 
 | Variable | Uso |
@@ -9,18 +21,14 @@ El hub es **API + UI estática** servidas por [`apps/catalog-api/server.mjs`](..
 | `PORT` | Puerto HTTP (ej. `8080`). Fly/Railway/Render suelen inyectarlo. |
 | `NODE_ENV` | `production` en nube. |
 
-Tras desplegar, la URL pública del catálogo JSON será:
-
-`https://TU-DOMINIO/services`
-
-Los clientes (CLI, MCP) pueden apuntar ahí con:
+Tras desplegar, la URL pública del catálogo JSON incluye el path **`/services`**. Ejemplo (este repo):
 
 ```bash
-export AGENTICX402_CATALOG_URL=https://TU-DOMINIO/services
+export AGENTICX402_CATALOG_URL=https://agenticx402-production.up.railway.app/services
 npm run cli -- list
 ```
 
-Sustituye `TU-DOMINIO` por tu host real (sin path adicional en la variable: el path `/services` va incluido en la URL).
+La variable debe ser la URL **completa** hasta `/services`. En local: `http://127.0.0.1:3840/services` (tras `npm run catalog:dev`).
 
 ## Opción A — Docker (Fly.io, Railway, Render, etc.)
 

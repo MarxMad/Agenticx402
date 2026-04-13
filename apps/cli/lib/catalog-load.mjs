@@ -20,7 +20,19 @@ export async function loadCatalog() {
   const file =
     process.env.AGENTICX402_CATALOG_FILE?.trim() ||
     path.join(REPO_ROOT, "catalog", "services.json");
-  const raw = fs.readFileSync(file, "utf8");
+  let raw;
+  try {
+    raw = fs.readFileSync(file, "utf8");
+  } catch (e) {
+    if (e && typeof e === "object" && "code" in e && e.code === "ENOENT") {
+      throw new Error(
+        `No se encontró el catálogo en "${file}". Opciones: define AGENTICX402_CATALOG_URL ` +
+          `(p. ej. URL de tu hub /services), o AGENTICX402_CATALOG_FILE con la ruta a services.json, ` +
+          `o ejecuta el CLI desde el repositorio clonado donde exista catalog/services.json.`
+      );
+    }
+    throw e;
+  }
   return JSON.parse(raw);
 }
 

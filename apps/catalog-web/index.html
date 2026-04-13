@@ -3,221 +3,653 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PumaX402 — Catálogo</title>
+  <meta name="theme-color" content="#06070b" />
+  <meta name="description" content="PumaX402 — hub de servicios x402 en Stellar para agentes de IA: catálogo, CLI, MCP y pagos por petición." />
+  <link rel="icon" href="assets/pumax402-logo.png" type="image/png" />
+  <title>PumaX402 — Servicios x402 para agentes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0c0d12;
-      --surface: #14161f;
-      --border: #2a2e3d;
-      --text: #e8eaef;
-      --muted: #8b92a8;
-      --accent: #7c3aed;
-      --accent-dim: #5b21b6;
-      --tag: #1e293b;
+      --bg: #06070b;
+      --bg-elevated: #0c0e14;
+      --surface: #12151e;
+      --surface-hover: #1a1f2e;
+      --border: #2a3144;
+      --text: #f1f3f7;
+      --muted: #8b93a8;
+      --accent: #8b5cf6;
+      --accent-soft: rgba(139, 92, 246, 0.14);
+      --cyan: #22d3ee;
+      --cyan-dim: rgba(34, 211, 238, 0.12);
+      --gold: #d4a574;
+      --gold-dim: rgba(212, 165, 116, 0.12);
+      --tag-bg: #1a2332;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      --shadow-sm: 0 4px 24px rgba(0, 0, 0, 0.35);
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
       font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-      background: var(--bg);
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(ellipse 100% 80% at 50% -30%, rgba(139, 92, 246, 0.14), transparent 55%),
+        radial-gradient(ellipse 70% 50% at 100% 20%, rgba(34, 211, 238, 0.06), transparent 50%),
+        radial-gradient(ellipse 50% 40% at 0% 80%, rgba(212, 165, 116, 0.05), transparent 45%);
       color: var(--text);
-      line-height: 1.5;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
     }
-    header {
+    html {
+      scroll-behavior: smooth;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .live-badge .dot { animation: none !important; }
+    }
+    a { color: var(--cyan); }
+    a:hover { color: #67e8f9; }
+    a:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    button:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
+    .shell {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 0 1.25rem 2.5rem;
+    }
+
+    header.site-header {
       border-bottom: 1px solid var(--border);
-      padding: 1.25rem 1.5rem;
-      background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+      background: linear-gradient(180deg, rgba(12, 14, 20, 0.92) 0%, rgba(6, 7, 11, 0.88) 100%);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(14px) saturate(1.2);
+      -webkit-backdrop-filter: blur(14px) saturate(1.2);
     }
-    header h1 {
+    header .inner {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 1rem 1.25rem 0.85rem;
+    }
+    .brand-lockup {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.85rem 1rem;
+    }
+    .brand-lockup .logo-wrap {
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.35),
+        0 8px 28px rgba(0, 0, 0, 0.45);
+      background: #0a1628;
+      display: grid;
+      place-items: center;
+    }
+    .brand-lockup .logo {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+      object-position: center;
+    }
+    .brand-row {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.15rem;
+      min-width: 0;
+    }
+    .brand-row h1 {
       margin: 0;
       font-size: 1.35rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
+      font-weight: 700;
+      letter-spacing: -0.03em;
     }
-    header p {
-      margin: 0.35rem 0 0;
+    .brand-row h1 span.sub {
+      font-weight: 500;
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
     }
-    header a { color: var(--accent); }
+    .header-links {
+      margin: 0.45rem 0 0;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .header-links code {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.82em;
+      background: var(--surface);
+      padding: 0.12rem 0.4rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
     .nav-main {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem 1.25rem;
+      gap: 0.35rem 0.75rem;
       margin-top: 0.85rem;
-      padding-top: 0.85rem;
+      padding: 0.65rem 0 0.25rem;
       border-top: 1px solid var(--border);
     }
     .nav-main a {
       color: var(--muted);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.86rem;
       font-weight: 500;
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
     }
-    .nav-main a:hover { color: var(--text); }
-    .nav-main a.active {
-      color: var(--accent);
-    }
-    main { max-width: 56rem; margin: 0 auto; padding: 1.5rem; }
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
-      margin-bottom: 1.25rem;
-    }
-    .toolbar label { color: var(--muted); font-size: 0.85rem; }
-    input[type="search"] {
-      flex: 1;
-      min-width: 12rem;
-      padding: 0.5rem 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: var(--surface);
+    .nav-main a:hover {
       color: var(--text);
+      background: var(--surface);
+      border-color: var(--border);
+    }
+    .nav-main a.is-current {
+      color: var(--text);
+      background: linear-gradient(135deg, var(--accent-soft), var(--gold-dim));
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.08);
+    }
+
+    .hero {
+      margin-top: 1.75rem;
+      padding: 1.65rem 1.45rem 1.4rem;
+      border-radius: var(--radius);
+      background:
+        radial-gradient(1200px 400px at 10% -20%, var(--accent-soft), transparent 55%),
+        radial-gradient(800px 320px at 90% 0%, var(--cyan-dim), transparent 50%),
+        radial-gradient(400px 200px at 100% 100%, var(--gold-dim), transparent 60%),
+        var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.35), transparent);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      margin: 0 0 0.5rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      opacity: 0.95;
+    }
+    .hero h2 {
+      margin: 0 0 0.55rem;
+      font-size: clamp(1.25rem, 2.8vw, 1.65rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+    .hero p.lead {
+      margin: 0;
+      max-width: 46rem;
+      color: #c4c9da;
       font-size: 0.95rem;
     }
-    input[type="search"]:focus {
-      outline: 2px solid var(--accent-dim);
-      border-color: var(--accent);
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
     }
-    .meta {
-      font-size: 0.8rem;
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.35rem 0.65rem;
+      border-radius: 999px;
+      background: var(--bg);
+      border: 1px solid var(--border);
       color: var(--muted);
     }
-    .error {
-      padding: 1rem;
-      border-radius: 8px;
-      background: #3f1d1d;
-      border: 1px solid #7f1d1d;
-      color: #fecaca;
+    .pill strong { color: var(--cyan); font-weight: 600; letter-spacing: 0; text-transform: none; }
+    .pill.network strong { color: #a7f3d0; }
+
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.5rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
     }
-    ul.services {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+    .stats-bar b { color: var(--text); font-weight: 600; }
+
+    .panel {
+      margin-top: 1.5rem;
+      padding: 1.15rem 1.2rem;
+      border-radius: var(--radius-sm);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1rem;
+      align-items: flex-end;
+    }
+    .field {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.3rem;
+      min-width: 10rem;
+      flex: 1 1 12rem;
     }
-    .card {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.1rem 1.25rem;
-      background: var(--surface);
-      transition: border-color 0.15s ease;
-    }
-    .card:hover { border-color: #3d4458; }
-    .card h2 {
-      margin: 0 0 0.35rem;
-      font-size: 1.05rem;
+    .field label {
+      font-size: 0.72rem;
       font-weight: 600;
-    }
-    .card .id {
-      font-family: ui-monospace, monospace;
-      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
       color: var(--muted);
-      margin-bottom: 0.5rem;
     }
-    .card p.desc {
-      margin: 0 0 0.75rem;
-      color: #b8bfd4;
+    input[type="search"],
+    select {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-family: inherit;
+    }
+    input[type="search"]:focus,
+    select:focus {
+      outline: 2px solid rgba(139, 92, 246, 0.45);
+      border-color: var(--accent);
+    }
+    select { cursor: pointer; }
+
+    .tag-strip-wrap {
+      margin-top: 0.85rem;
+    }
+    .tag-strip-wrap .label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 0.45rem;
+    }
+    .tag-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .tag-chip {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: #9ca8c4;
+      cursor: pointer;
+      font-family: inherit;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+    .tag-chip:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+    .tag-chip.active {
+      background: var(--accent-soft);
+      border-color: rgba(139, 92, 246, 0.5);
+      color: #e9d5ff;
+    }
+
+    .count-line {
+      margin: 1rem 0 0.75rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .count-line strong { color: var(--text); }
+
+    .error {
+      padding: 1rem 1.1rem;
+      border-radius: var(--radius-sm);
+      background: #3a1518;
+      border: 1px solid #7f1d1d;
+      color: #fecaca;
       font-size: 0.9rem;
     }
+
+    .grid-services {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.15rem 1.2rem;
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      min-height: 100%;
+      position: relative;
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 1rem;
+      right: 1rem;
+      height: 2px;
+      border-radius: 0 0 4px 4px;
+      background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.35), transparent);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .card.card--team::before {
+      background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.45), rgba(212, 165, 116, 0.35), transparent);
+    }
+    .card:hover,
+    .card:focus-within {
+      border-color: #3d4a63;
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    }
+    .card:hover::before,
+    .card:focus-within::before {
+      opacity: 1;
+    }
+    .card-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .card-header h3 {
+      margin: 0;
+      font-size: 1.02rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      flex: 1 1 8rem;
+    }
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      justify-content: flex-end;
+    }
+    .badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+    }
+    .badge-status-active { background: #14532d; color: #bbf7d0; }
+    .badge-status-draft { background: #422006; color: #fde68a; }
+    .badge-status-deprecated { background: #450a0a; color: #fecaca; }
+    .badge-src-team {
+      background: rgba(34, 211, 238, 0.15);
+      color: #67e8f9;
+      border: 1px solid rgba(34, 211, 238, 0.35);
+    }
+    .badge-src-external {
+      background: rgba(139, 92, 246, 0.12);
+      color: #c4b5fd;
+      border: 1px solid rgba(139, 92, 246, 0.35);
+    }
+
+    .card .id-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .card .id {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.76rem;
+      color: var(--muted);
+      word-break: break-all;
+      flex: 1 1 auto;
+    }
+    .btn-icon {
+      font-size: 0.72rem;
+      padding: 0.25rem 0.45rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .btn-icon:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .price-block {
+      font-size: 0.82rem;
+      color: #b8bfd4;
+      line-height: 1.45;
+      padding: 0.55rem 0.65rem;
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      border: 1px dashed var(--border);
+    }
+    .price-block strong {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .paths {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .path-code {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      background: #0a0c12;
+      border: 1px solid var(--border);
+      color: #a5b4c9;
+    }
+
+    .card p.desc {
+      margin: 0;
+      color: #b8bfd4;
+      font-size: 0.88rem;
+      flex: 1 1 auto;
+    }
+
+    .prereq-note {
+      font-size: 0.78rem;
+      color: #fcd34d;
+      background: rgba(252, 211, 77, 0.08);
+      border: 1px solid rgba(252, 211, 77, 0.25);
+      padding: 0.45rem 0.55rem;
+      border-radius: var(--radius-sm);
+      line-height: 1.4;
+    }
+
     .tags {
       display: flex;
       flex-wrap: wrap;
       gap: 0.35rem;
-      margin-bottom: 0.65rem;
     }
     .tag {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      padding: 0.2rem 0.5rem;
+      padding: 0.2rem 0.45rem;
       border-radius: 4px;
-      background: var(--tag);
+      background: var(--tag-bg);
       color: #94a3b8;
       cursor: pointer;
       border: none;
       font-family: inherit;
     }
-    .tag:hover, .tag:focus { color: var(--text); outline: none; }
-    .tag.active {
-      background: var(--accent-dim);
-      color: #ede9fe;
+    .tag:hover { color: var(--text); }
+    .tag:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
     }
-    .links {
+    .tag.active {
+      background: var(--accent-soft);
+      color: #e9d5ff;
+      outline: 1px solid rgba(139, 92, 246, 0.4);
+    }
+
+    .actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
-      font-size: 0.88rem;
+      gap: 0.45rem;
+      margin-top: 0.15rem;
+      padding-top: 0.65rem;
+      border-top: 1px solid var(--border);
     }
-    .links a {
-      color: var(--accent);
+    .actions a,
+    .actions button.linkish {
+      font-size: 0.82rem;
+      font-weight: 500;
       text-decoration: none;
+      padding: 0.4rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--cyan);
+      cursor: pointer;
+      font-family: inherit;
+      transition: border-color 0.15s, background 0.15s;
     }
-    .links a:hover { text-decoration: underline; }
-    .status {
-      display: inline-block;
-      font-size: 0.72rem;
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
-      margin-left: 0.5rem;
-      vertical-align: middle;
+    .actions a:hover,
+    .actions button.linkish:hover {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+      color: #a5f3fc;
     }
-    .status-active { background: #14532d; color: #bbf7d0; }
-    .status-draft { background: #422006; color: #fde68a; }
-    .status-deprecated { background: #450a0a; color: #fecaca; }
-    .view-hidden { display: none !important; }
+    .actions a.secondary {
+      color: var(--muted);
+    }
+    .actions a.secondary:hover {
+      color: var(--text);
+      border-color: var(--muted);
+    }
+
     .docs-panel {
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.25rem 1.35rem;
+      border-radius: var(--radius);
+      padding: 1.35rem 1.4rem;
       background: var(--surface);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow);
     }
     .docs-panel h2 {
-      margin: 0 0 0.65rem;
-      font-size: 1.1rem;
+      margin: 0 0 0.5rem;
+      font-size: 1.2rem;
       font-weight: 600;
     }
     .docs-panel > p.lead {
-      margin: 0 0 1rem;
+      margin: 0 0 1.1rem;
       color: #b8bfd4;
-      font-size: 0.92rem;
+      font-size: 0.94rem;
     }
-    .docs-panel h3 {
-      margin: 1.25rem 0 0.5rem;
-      font-size: 0.95rem;
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+      gap: 0.65rem;
+      margin: 1rem 0 0;
+    }
+    .doc-card {
+      display: block;
+      padding: 0.85rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .doc-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .doc-card .t {
       font-weight: 600;
+      font-size: 0.9rem;
+      margin: 0 0 0.25rem;
       color: var(--text);
     }
-    .docs-panel h3:first-of-type { margin-top: 0; }
-    ul.doc-list {
+    .doc-card .d {
       margin: 0;
-      padding-left: 1.15rem;
-      color: #b8bfd4;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.4;
     }
-    ul.doc-list li { margin: 0.35rem 0; }
-    ul.doc-list a { color: var(--accent); }
+
     .snippet {
       position: relative;
-      margin-top: 0.5rem;
+      margin-top: 0.6rem;
     }
     .snippet pre {
       margin: 0;
       padding: 0.85rem 1rem;
       padding-right: 5rem;
-      border-radius: 8px;
+      border-radius: var(--radius-sm);
       background: #0a0b10;
       border: 1px solid var(--border);
       overflow-x: auto;
-      font-size: 0.78rem;
-      line-height: 1.45;
+      font-size: 0.76rem;
+      line-height: 1.5;
       color: #c4c9d4;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
     }
     .snippet button.copy {
       position: absolute;
@@ -234,73 +666,498 @@
     }
     .snippet button.copy:hover {
       color: var(--text);
-      border-color: var(--accent-dim);
+      border-color: var(--accent);
     }
     .snippet .hint {
-      margin: 0.4rem 0 0;
+      margin: 0.45rem 0 0;
       font-size: 0.78rem;
       color: var(--muted);
     }
-    footer {
+
+    .toast {
+      position: fixed;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      padding: 0.65rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* —— Flujo x402 + actividad (misma página) —— */
+    .flow-intro {
+      margin-top: 1.5rem;
+      padding: 1.35rem 1.4rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, var(--surface) 45%, var(--bg-elevated) 100%);
+      box-shadow: var(--shadow);
+    }
+    .flow-intro h2 {
+      margin: 0 0 0.45rem;
+      font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .flow-intro p {
+      margin: 0;
+      color: #b8bfd4;
+      font-size: 0.95rem;
+      max-width: 40rem;
+    }
+    .flow-status-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.65rem 1rem;
+      margin-top: 1rem;
+    }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.35rem 0.65rem;
+      border-radius: 999px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .live-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #64748b;
+      animation: pulse-dot 1.8s ease-in-out infinite;
+    }
+    .live-badge.ok .dot {
+      background: #34d399;
+      box-shadow: 0 0 10px rgba(52, 211, 153, 0.6);
+    }
+    .live-badge.warn .dot {
+      background: #fbbf24;
+      animation: none;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(0.92); }
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+    }
+    @media (min-width: 960px) {
+      .flow-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+        align-items: start;
+      }
+    }
+
+    .flow-panel {
+      padding: 1.1rem 1.15rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+    }
+    .flow-panel h3 {
+      margin: 0 0 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+    }
+    .flow-diagram {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 0.5rem;
+      justify-content: flex-start;
+    }
+    .flow-node {
+      flex: 1 1 7.5rem;
+      min-width: min(100%, 7.5rem);
+      padding: 0.65rem 0.75rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 0.78rem;
+      line-height: 1.35;
+      color: var(--muted);
+      transition:
+        border-color 0.35s ease,
+        box-shadow 0.35s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+    }
+    .flow-node strong {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+    .flow-node.is-active {
+      border-color: rgba(34, 211, 238, 0.55);
+      color: #c4c9da;
+      box-shadow:
+        0 0 0 1px rgba(34, 211, 238, 0.15),
+        0 8px 28px rgba(0, 0, 0, 0.35);
+      transform: translateY(-1px);
+    }
+    .flow-node.is-active strong {
+      color: var(--cyan);
+    }
+    .flow-arrow {
+      align-self: center;
+      color: var(--muted);
+      font-size: 1rem;
+      opacity: 0.65;
+      user-select: none;
+    }
+    @media (max-width: 600px) {
+      .flow-arrow { display: none; }
+    }
+
+    .agent-terminal {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: #05060a;
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+    .agent-terminal .term-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.85rem;
+      background: linear-gradient(180deg, #12151f 0%, #0a0b10 100%);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+    .agent-terminal .term-head b {
+      color: #a5f3fc;
+      font-weight: 600;
+    }
+    .agent-terminal .term-head .status-live {
+      color: #6ee7b7;
+      font-weight: 600;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .term-body {
+      min-height: 17rem;
+      max-height: 24rem;
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+      padding: 0.85rem 1rem 1rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.74rem;
+      line-height: 1.55;
+    }
+    .term-body::-webkit-scrollbar {
+      width: 8px;
+    }
+    .term-body::-webkit-scrollbar-track {
+      background: #0a0b10;
+    }
+    .term-body::-webkit-scrollbar-thumb {
+      background: #2a3144;
+      border-radius: 4px;
+    }
+    .term-body::-webkit-scrollbar-thumb:hover {
+      background: #3d4a63;
+    }
+    .term-line {
+      margin: 0 0 0.45rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .term-line.dim { color: #64748b; }
+    .term-line.cmd { color: #a5b4fc; }
+    .term-line.out { color: #94a3b8; }
+    .term-line.h402 { color: #fcd34d; }
+    .term-line.ok { color: #6ee7b7; }
+    .term-line.meta { color: #22d3ee; }
+    .term-cursor {
+      display: inline-block;
+      width: 0.55em;
+      height: 1.1em;
+      background: #22d3ee;
+      margin-left: 2px;
+      vertical-align: text-bottom;
+      animation: cursor-blink 1s step-end infinite;
+    }
+    @keyframes cursor-blink {
+      50% { opacity: 0; }
+    }
+    .section-anchor {
+      scroll-margin-top: 5.5rem;
+    }
+
+    .flow-section {
+      padding-bottom: 0.25rem;
+    }
+
+    .docs-wrap {
       margin-top: 2.5rem;
-      padding-top: 1rem;
+    }
+
+    footer.site-footer {
+      margin-top: 2.75rem;
+      padding-top: 1.25rem;
       border-top: 1px solid var(--border);
       color: var(--muted);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 1rem;
+    }
+    footer.site-footer .sep {
+      opacity: 0.45;
+      user-select: none;
+    }
+
+    @media (max-width: 520px) {
+      .brand-row h1 { font-size: 1.15rem; }
+      .hero { padding: 1.15rem 1rem; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>PumaX402 <span class="meta">catálogo</span></h1>
-    <p>
-      Servicios x402 en Stellar (descubrimiento). API:
-      <a href="/services"><code>/services</code></a>
-      · <a href="https://github.com/MarxMad/Agenticx402">GitHub</a>
-    </p>
-    <nav class="nav-main" aria-label="Secciones">
-      <a href="#catalog" id="nav-catalog" class="active">Catálogo</a>
-      <a href="#docs" id="nav-docs">Documentación</a>
-    </nav>
-  </header>
-  <main>
-    <section id="view-catalog" class="view-catalog">
-    <div class="toolbar">
-      <label for="q">Filtrar</label>
-      <input type="search" id="q" placeholder="Nombre, id, descripción o tag…" autocomplete="off" />
-      <span class="meta" id="count"></span>
+  <header class="site-header">
+    <div class="inner">
+      <div class="brand-lockup">
+        <span class="logo-wrap" aria-hidden="true">
+          <img
+            class="logo"
+            src="assets/pumax402-logo.png"
+            width="52"
+            height="52"
+            alt=""
+            decoding="async"
+            fetchpriority="high"
+          />
+        </span>
+        <div class="brand-row">
+          <h1>PumaX402 <span class="sub">hub x402 · Stellar</span></h1>
+        </div>
+      </div>
+      <p class="header-links">
+        API JSON <a href="/services"><code>/services</code></a>
+        · <a href="https://github.com/MarxMad/Agenticx402" target="_blank" rel="noopener">GitHub</a>
+        · <a href="https://www.x402.org/" target="_blank" rel="noopener">x402</a>
+      </p>
+      <nav class="nav-main" aria-label="En esta página" id="site-nav">
+        <a href="#top" data-nav="top">Inicio</a>
+        <a href="#flujo" data-nav="flujo">Flujo x402</a>
+        <a href="#servicios" data-nav="servicios">Servicios</a>
+        <a href="#documentacion" data-nav="documentacion">Documentación</a>
+      </nav>
     </div>
-    <div id="banner"></div>
-    <ul class="services" id="list"></ul>
-    </section>
+  </header>
 
-    <section id="view-docs" class="view-docs view-hidden" aria-label="Documentación">
-      <div class="docs-panel">
-        <h2>Para desarrolladores y agentes</h2>
-        <p class="lead">
-          <strong>PumaX402</strong> es un hub de descubrimiento para APIs con pago por petición vía
-          <strong>x402</strong> en <strong>Stellar</strong>. Esta web lista el catálogo; el flujo de pago (402 → firma → reintento)
-          lo hacen el <strong>CLI</strong> o el <strong>MCP</strong> con tu wallet testnet.
-        </p>
-        <h3>Guías en el repositorio</h3>
-        <ul class="doc-list">
-          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/README.md" target="_blank" rel="noopener">README</a> — visión, fases y plan</li>
-          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/cli.md" target="_blank" rel="noopener">CLI</a> — <code>list</code>, <code>fetch</code>, <code>call</code>, variables de entorno</li>
-          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/mcp.md" target="_blank" rel="noopener">MCP</a> — servidor para Cursor / clientes MCP (<code>list_services</code>, <code>call_service</code>)</li>
-          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/setup-fase-0.md" target="_blank" rel="noopener">Setup Fase 0</a> — wallet testnet y primer 402 real</li>
-          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/PROGRESS.md" target="_blank" rel="noopener">PROGRESS</a> — avance del equipo</li>
-          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/hackathon-jurado.md" target="_blank" rel="noopener"><strong>Hackathon / jurado</strong></a> — qué resolvemos, Stellar y x402, deploy sin Docker, guion del vídeo</li>
-          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/x402-stellar-panorama.md" target="_blank" rel="noopener">Panorama x402 en Stellar</a> — servicios que ya existen + ideas nuevas</li>
-          <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contribuir</a></li>
-        </ul>
-        <h3>Cursor — ejemplo MCP (<code>mcp.json</code>)</h3>
-        <p class="lead" style="margin-bottom: 0.35rem">
-          Sustituye <code>/ruta/a/tu/clon</code> por la ruta absoluta donde clonaste el repo. Para pagar 402, define
-          <code>STELLAR_SECRET_KEY</code> en el entorno del proceso MCP (no solo en el terminal).
-        </p>
-        <div class="snippet">
-          <button type="button" class="copy" id="copy-mcp" aria-label="Copiar JSON">Copiar</button>
-          <pre id="mcp-snippet">{
+  <div class="shell">
+    <main>
+      <section id="catalog">
+        <div class="hero section-anchor" id="top">
+          <p class="hero-eyebrow">Stellar · x402 · agentes</p>
+          <h2>Servicios con pago por petición para tus agentes</h2>
+          <p class="lead">
+            Directorio unificado de APIs protegidas con <strong>x402</strong> en <strong>Stellar</strong>.
+            Descubre endpoints, integra con el <strong>CLI</strong> o <strong>MCP</strong>, y completa el ciclo
+            de pago (402 → firma → reintento) con tu cartera en la red configurada.
+          </p>
+          <div class="hero-pills" aria-live="polite">
+            <span class="pill">Red: <strong id="network-pill">—</strong></span>
+            <span class="pill network">Endpoints: <strong id="total-pill">—</strong></span>
+            <span class="pill">PumaX402: <strong id="team-pill">—</strong></span>
+          </div>
+          <div class="stats-bar">
+            <span><b id="stat-active">0</b> activos</span>
+            <span><b id="stat-external">0</b> integraciones externas</span>
+            <span>Índice sincronizado al cargar la página</span>
+          </div>
+        </div>
+
+        <div id="flujo" class="section-anchor flow-section" style="margin-top: 2rem">
+          <div class="flow-intro">
+            <h2>Flujo de una solicitud</h2>
+            <p>
+              Así opera un agente conectado por MCP: consulta el catálogo, elige un servicio y atraviesa el
+              protocolo <strong>x402</strong> hasta obtener la respuesta pagada. El panel derecho muestra
+              el registro de actividad típico del conector.
+            </p>
+            <div class="flow-status-row">
+              <span class="live-badge" id="hub-status-badge">
+                <span class="dot" aria-hidden="true"></span>
+                <span id="hub-status-label">Estado del servicio</span>
+              </span>
+              <span class="meta" id="catalog-index-hint"></span>
+            </div>
+          </div>
+
+          <div class="flow-grid">
+            <div class="flow-panel">
+              <h3>Pipeline</h3>
+              <div class="flow-diagram" id="flow-diagram" aria-hidden="true">
+                <div class="flow-node" data-phase="0">
+                  <strong>1 · Agente</strong>
+                  LLM + MCP
+                </div>
+                <span class="flow-arrow" aria-hidden="true">→</span>
+                <div class="flow-node" data-phase="1">
+                  <strong>2 · Hub</strong>
+                  Catálogo /services
+                </div>
+                <span class="flow-arrow" aria-hidden="true">→</span>
+                <div class="flow-node" data-phase="2">
+                  <strong>3 · API</strong>
+                  Recurso protegido
+                </div>
+                <span class="flow-arrow" aria-hidden="true">→</span>
+                <div class="flow-node" data-phase="3">
+                  <strong>4 · x402</strong>
+                  402 · firma · facilitator
+                </div>
+                <span class="flow-arrow" aria-hidden="true">→</span>
+                <div class="flow-node" data-phase="4">
+                  <strong>5 · Respuesta</strong>
+                  Datos al agente
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="agent-terminal" role="region" aria-label="Registro de actividad del conector MCP">
+                <div class="term-head">
+                  <span><b>pumax402-mcp</b> · stdio · <span id="activity-net-label">stellar:testnet</span></span>
+                  <span class="status-live" id="activity-status-label">En línea</span>
+                </div>
+                <div class="term-body" id="activity-terminal-body"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="servicios" class="panel section-anchor" style="margin-top: 1.75rem">
+          <div class="filters">
+            <div class="field" style="flex: 2 1 18rem">
+              <label for="q">Buscar</label>
+              <input type="search" id="q" placeholder="Nombre, id, descripción, URL, precio o tag…" autocomplete="off" />
+            </div>
+            <div class="field" style="flex: 0 1 11rem">
+              <label for="src">Origen</label>
+              <select id="src" aria-label="Filtrar por origen">
+                <option value="">Todos</option>
+                <option value="team">Equipo PumaX402</option>
+                <option value="external">Externos</option>
+              </select>
+            </div>
+            <div class="field" style="flex: 0 1 13rem">
+              <label for="sort">Orden</label>
+              <select id="sort" aria-label="Ordenar servicios">
+                <option value="featured">Destacados primero</option>
+                <option value="name-asc">Nombre A → Z</option>
+                <option value="name-desc">Nombre Z → A</option>
+              </select>
+            </div>
+          </div>
+          <div class="tag-strip-wrap">
+            <div class="label">Tags rápidos</div>
+            <div class="tag-strip" id="tag-strip"></div>
+          </div>
+        </div>
+
+        <div id="banner" style="margin-top: 1rem"></div>
+        <p class="count-line" id="count-line" aria-live="polite"></p>
+        <div class="grid-services" id="list" role="list"></div>
+
+        <div id="live-activity" class="panel section-anchor" style="margin-top: 2rem">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <h2 style="margin: 0; font-size: 1.25rem;">Live Network Activity </h2>
+            <span class="live-badge ok" style="font-size: 0.65rem;"><span class="dot" aria-hidden="true"></span>ON-CHAIN</span>
+          </div>
+          <div id="live-activity-feed" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; color: #a5b4fc;">
+            Esperando transacciones de la red...
+          </div>
+        </div>
+
+        <div id="documentacion" class="section-anchor docs-wrap">
+        <div class="docs-panel">
+          <h2>Documentación e integración</h2>
+          <p class="lead">
+            Conecta el <strong>CLI</strong> o el servidor <strong>MCP</strong> con las variables de entorno adecuadas
+            (incl. <code>STELLAR_SECRET_KEY</code> en la red que uses). Si el pago falla por activo, revisa la
+            trustline USDC en la documentación enlazada.
+          </p>
+
+          <h3 style="margin: 0 0 0.5rem; font-size: 1rem">Recursos principales</h3>
+          <div class="doc-grid">
+            <a class="doc-card" href="https://github.com/MarxMad/Agenticx402/blob/main/README.md" target="_blank" rel="noopener">
+              <p class="t">README</p>
+              <p class="d">Visión del producto, arquitectura y puesta en marcha del hub.</p>
+            </a>
+            <a class="doc-card" href="https://github.com/MarxMad/Agenticx402/blob/main/docs/cli.md" target="_blank" rel="noopener">
+              <p class="t">CLI</p>
+              <p class="d"><code>list</code>, <code>fetch</code>, <code>call</code> y variables de entorno.</p>
+            </a>
+            <a class="doc-card" href="https://github.com/MarxMad/Agenticx402/blob/main/docs/mcp.md" target="_blank" rel="noopener">
+              <p class="t">MCP</p>
+              <p class="d">Servidor stdio para Cursor y clientes MCP.</p>
+            </a>
+            <a class="doc-card" href="https://github.com/MarxMad/Agenticx402/blob/main/docs/mcp-demo.md" target="_blank" rel="noopener">
+              <p class="t">MCP en Cursor</p>
+              <p class="d">Configuración del servidor en el IDE.</p>
+            </a>
+            <a class="doc-card" href="https://github.com/MarxMad/Agenticx402/blob/main/docs/agents-stellar-trustline.md" target="_blank" rel="noopener">
+              <p class="t">Trustline USDC</p>
+              <p class="d">Evita fallos al pagar x402 en testnet por trustline.</p>
+            </a>
+            <a class="doc-card" href="https://github.com/MarxMad/Agenticx402/blob/main/docs/deploy.md" target="_blank" rel="noopener">
+              <p class="t">Deploy</p>
+              <p class="d">Publicar el hub (Docker / hosting).</p>
+            </a>
+            <a class="doc-card" href="https://github.com/MarxMad/Agenticx402/blob/main/docs/hackathon-jurado.md" target="_blank" rel="noopener">
+              <p class="t">Presentación del producto</p>
+              <p class="d">Mensaje clave, Stellar y x402, despliegue.</p>
+            </a>
+            <a class="doc-card" href="https://github.com/MarxMad/Agenticx402/blob/main/docs/x402-stellar-panorama.md" target="_blank" rel="noopener">
+              <p class="t">Panorama x402</p>
+              <p class="d">Referencia del ecosistema x402 en Stellar.</p>
+            </a>
+          </div>
+
+          <h3 style="margin: 1.35rem 0 0.35rem; font-size: 1rem">Cursor — ejemplo <code>mcp.json</code></h3>
+          <p class="lead" style="margin-bottom: 0.35rem">
+            Sustituye <code>/ruta/a/tu/clon</code> por la ruta absoluta de tu repo. Para 402, define
+            <code>STELLAR_SECRET_KEY</code> en el entorno del proceso MCP.
+          </p>
+          <div class="snippet">
+            <button type="button" class="copy" id="copy-mcp" aria-label="Copiar JSON">Copiar</button>
+            <pre id="mcp-snippet">{
   "mcpServers": {
     "pumax402": {
       "command": "node",
@@ -309,100 +1166,398 @@
     }
   }
 }</pre>
-          <p class="hint">Comprueba la ruta exacta de tu carpeta (p. ej. <code>Agentix402</code> vs <code>Agenticx402</code>).</p>
-        </div>
-      </div>
-    </section>
+            <p class="hint">Comprueba el nombre de carpeta (<code>Agentix402</code> vs <code>Agenticx402</code>).</p>
+          </div>
 
-    <footer>
-      Red por defecto del catálogo: <code id="network">—</code>.
-      <a href="#docs">Documentación en esta web</a>
-      · avance: <a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/PROGRESS.md">docs/PROGRESS.md</a>
-    </footer>
-  </main>
+          <h3 style="margin: 1.25rem 0 0.35rem; font-size: 1rem">Más enlaces</h3>
+          <ul style="margin: 0; padding-left: 1.2rem; color: #b8bfd4; font-size: 0.9rem">
+            <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/setup-fase-0.md" target="_blank" rel="noopener">Setup Fase 0</a> — wallet testnet y primer 402 real</li>
+            <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/PROGRESS.md" target="_blank" rel="noopener">PROGRESS</a> — roadmap y estado</li>
+            <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contribuir</a></li>
+            <li><a href="https://github.com/MarxMad/Agenticx402/blob/main/docs/docs.md" target="_blank" rel="noopener">docs.md</a> — índice Stellar / APIs</li>
+          </ul>
+        </div>
+        </div>
+
+      </section>
+
+      <footer class="site-footer">
+        <span>Red: <code id="network">—</code></span>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="#documentacion">Documentación</a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="https://github.com/MarxMad/Agenticx402" target="_blank" rel="noopener">GitHub</a>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
   <script>
     const listEl = document.getElementById("list");
     const bannerEl = document.getElementById("banner");
-    const countEl = document.getElementById("count");
+    const countLineEl = document.getElementById("count-line");
     const networkEl = document.getElementById("network");
+    const networkPill = document.getElementById("network-pill");
+    const totalPill = document.getElementById("total-pill");
+    const teamPill = document.getElementById("team-pill");
+    const statActive = document.getElementById("stat-active");
+    const statExternal = document.getElementById("stat-external");
     const input = document.getElementById("q");
-    const viewCatalog = document.getElementById("view-catalog");
-    const viewDocs = document.getElementById("view-docs");
-    const navCatalog = document.getElementById("nav-catalog");
-    const navDocs = document.getElementById("nav-docs");
+    const srcSelect = document.getElementById("src");
+    const sortSelect = document.getElementById("sort");
+    const tagStripEl = document.getElementById("tag-strip");
+    const activityTerminalBody = document.getElementById("activity-terminal-body");
+    const hubStatusBadge = document.getElementById("hub-status-badge");
+    const hubStatusLabel = document.getElementById("hub-status-label");
+    const catalogIndexHint = document.getElementById("catalog-index-hint");
+    const activityNetLabel = document.getElementById("activity-net-label");
+    const flowDiagram = document.getElementById("flow-diagram");
     const mcpSnippet = document.getElementById("mcp-snippet");
+    const toastEl = document.getElementById("toast");
+    const activityFeedEl = document.getElementById("live-activity-feed");
+
     let catalog = { services: [], networkDefault: "" };
     let tagFilter = "";
+    let allTags = [];
 
-    function setView(which) {
-      const docs = which === "docs";
-      viewCatalog.classList.toggle("view-hidden", docs);
-      viewDocs.classList.toggle("view-hidden", !docs);
-      navCatalog.classList.toggle("active", !docs);
-      navDocs.classList.toggle("active", docs);
-      document.title = docs ? "PumaX402 — Documentación" : "PumaX402 — Catálogo";
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toastEl.classList.remove("show"), 2200);
     }
 
-    function routeFromHash() {
-      setView(window.location.hash === "#docs" ? "docs" : "catalog");
-    }
-
-    window.addEventListener("hashchange", routeFromHash);
-    routeFromHash();
-
-    document.getElementById("copy-mcp").addEventListener("click", async () => {
-      const t = mcpSnippet.textContent;
+    async function copyText(text, okMsg) {
       try {
-        await navigator.clipboard.writeText(t);
-        const b = document.getElementById("copy-mcp");
-        const prev = b.textContent;
-        b.textContent = "Listo";
-        setTimeout(() => { b.textContent = prev; }, 1600);
-      } catch (_) {}
+        await navigator.clipboard.writeText(text);
+        showToast(okMsg || "Copiado al portapapeles");
+      } catch (_) {
+        showToast("No se pudo copiar (permiso del navegador)");
+      }
+    }
+
+    const activityRun = { timer: null, cancelled: false };
+
+    function setFlowPhase(phase) {
+      if (!flowDiagram) return;
+      flowDiagram.querySelectorAll(".flow-node").forEach((node) => {
+        const p = Number(node.getAttribute("data-phase"));
+        node.classList.toggle("is-active", p === phase);
+      });
+    }
+
+    function stopActivitySequence() {
+      activityRun.cancelled = true;
+      if (activityRun.timer) {
+        clearTimeout(activityRun.timer);
+        activityRun.timer = null;
+      }
+    }
+
+    function scheduleLine(delay, fn) {
+      return new Promise((resolve) => {
+        activityRun.timer = setTimeout(() => {
+          if (activityRun.cancelled) return resolve();
+          fn();
+          resolve();
+        }, delay);
+      });
+    }
+
+    function appendTermLine(className, text) {
+      if (!activityTerminalBody) return;
+      const p = document.createElement("p");
+      p.className = "term-line " + (className || "");
+      p.textContent = text;
+      activityTerminalBody.appendChild(p);
+      activityTerminalBody.scrollTop = activityTerminalBody.scrollHeight;
+    }
+
+    async function runActivityLog() {
+      if (!activityTerminalBody) return;
+      activityRun.cancelled = false;
+      activityTerminalBody.innerHTML = "";
+      const n = catalog.services?.length ?? 0;
+      const net = catalog.networkDefault || "stellar:testnet";
+      if (activityNetLabel) activityNetLabel.textContent = net;
+
+      const apiBase =
+        typeof location !== "undefined" && location.protocol.startsWith("http")
+          ? location.origin
+          : "";
+      const servicesUrl = apiBase ? apiBase + "/services" : "/services";
+
+      const lines = [
+        { delay: 200, phase: 0, cls: "meta", text: "[MCP] list_services · tag=pumax402" },
+        { delay: 450, phase: 0, cls: "cmd", text: '> list_services  { "tag": "pumax402" }' },
+        { delay: 500, phase: 1, cls: "out", text: "→ GET " + servicesUrl },
+        { delay: 400, phase: 1, cls: "ok", text: "← 200  application/json" },
+        {
+          delay: 450,
+          phase: 1,
+          cls: "dim",
+          text:
+            '{ "networkDefault": "' +
+            net +
+            '", "services": [ … ' +
+            n +
+            " … ] }",
+        },
+        { delay: 550, phase: 2, cls: "meta", text: "[MCP] call_service · pumax402-agent-pulse /v1/pulse" },
+        { delay: 400, phase: 2, cls: "cmd", text: '> call_service  { "service_id": "pumax402-agent-pulse", "path": "/v1/pulse" }' },
+        { delay: 500, phase: 2, cls: "out", text: "→ GET https://…/v1/pulse" },
+        { delay: 550, phase: 3, cls: "h402", text: "← 402 Payment Required" },
+        { delay: 400, phase: 3, cls: "dim", text: "    x402 challenge · Exact · USDC" },
+        { delay: 500, phase: 3, cls: "meta", text: "→ sign auth entry · Stellar" },
+        { delay: 450, phase: 3, cls: "dim", text: "→ facilitator verify · settle" },
+        { delay: 600, phase: 4, cls: "ok", text: "← 200  OK" },
+        {
+          delay: 450,
+          phase: 4,
+          cls: "out",
+          text: '{ "pulse": { "ledger": 50123456, "fee_hint": "100", "network": "testnet" } }',
+        },
+        { delay: 400, phase: 4, cls: "meta", text: "[MCP] response attached to agent context" },
+      ];
+
+      for (const step of lines) {
+        await scheduleLine(step.delay, () => {
+          setFlowPhase(step.phase);
+          appendTermLine(step.cls, step.text);
+        });
+        if (activityRun.cancelled) return;
+      }
+      const repeatMs = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 45000 : 18000;
+      activityRun.timer = setTimeout(() => {
+        if (activityRun.cancelled) return;
+        if (document.visibilityState !== "visible") return;
+        runActivityLog();
+      }, repeatMs);
+    }
+
+    function startActivityLog() {
+      stopActivitySequence();
+      activityRun.cancelled = false;
+      runActivityLog();
+    }
+
+    async function refreshHubStatus() {
+      if (!hubStatusBadge || !hubStatusLabel) return;
+      hubStatusBadge.classList.remove("ok", "warn");
+      try {
+        const r = await fetch("/health", { cache: "no-store" });
+        if (r.ok) {
+          hubStatusLabel.textContent = "Operativo";
+          hubStatusBadge.classList.add("ok");
+        } else {
+          hubStatusLabel.textContent = "Servicio limitado";
+          hubStatusBadge.classList.add("warn");
+        }
+      } catch (_) {
+        hubStatusLabel.textContent = "Sin conexión al backend";
+        hubStatusBadge.classList.add("warn");
+      }
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        refreshHubStatus();
+      }
     });
 
-    function statusClass(s) {
-      if (s === "active") return "status-active";
-      if (s === "deprecated") return "status-deprecated";
-      return "status-draft";
+    const recentTxs = [];
+    function setupLiveActivity(accountId) {
+      if(!accountId || accountId === "null" || accountId.startsWith("ENV_")) return; // fallback
+      const sse = new EventSource("https://horizon-testnet.stellar.org/accounts/" + accountId + "/transactions?cursor=now");
+      sse.onmessage = (msg) => {
+        try {
+          const tx = JSON.parse(msg.data);
+          recentTxs.unshift(tx);
+          if(recentTxs.length > 5) recentTxs.pop();
+          activityFeedEl.innerHTML = recentTxs.map(t => {
+            return "<div style='margin-bottom:0.5rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border);'>" +
+               "<a href='https://stellar.expert/explorer/testnet/tx/" + t.hash + "' target='_blank' style='color:var(--cyan); text-decoration:none;'>Tx: " + t.hash.substring(0,24) + "...</a> " +
+               "<span style='color:var(--muted); margin-left:0.5rem'>" + new Date(t.created_at).toLocaleTimeString() + "</span>" +
+               "<div style='font-size:0.7rem; margin-top:0.2rem; color:#6ee7b7;'>Source: " + t.source_account + "</div></div>";
+          }).join("");
+        } catch(e) {}
+      };
+    }
+    // Hardcoded testnet address for activity demo (DEX Signal wallet)
+    setTimeout(() => setupLiveActivity("GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5"), 2000);
+
+    const copyMcpBtn = document.getElementById("copy-mcp");
+    if (copyMcpBtn && mcpSnippet) {
+      copyMcpBtn.addEventListener("click", () => {
+        copyText(mcpSnippet.textContent, "JSON copiado");
+        const prev = copyMcpBtn.textContent;
+        copyMcpBtn.textContent = "Listo";
+        setTimeout(() => { copyMcpBtn.textContent = prev; }, 1600);
+      });
+    }
+
+    function statusBadgeClass(s) {
+      if (s === "active") return "badge-status-active";
+      if (s === "deprecated") return "badge-status-deprecated";
+      return "badge-status-draft";
+    }
+
+    function sourceBadge(s) {
+      const src = s.source || "external";
+      if (src === "team") {
+        return '<span class="badge badge-src-team">PumaX402</span>';
+      }
+      return '<span class="badge badge-src-external">Externo</span>';
+    }
+
+    function cliCommand(s) {
+      const path =
+        Array.isArray(s.paths) && s.paths.length ? s.paths[0] : "/";
+      return "npm run cli -- call " + s.id + " --path " + path;
     }
 
     function matches(s, q) {
-      if (!q && !tagFilter) return true;
       const hay = [
-        s.id, s.name, s.description || "", (s.tags || []).join(" "),
-        s.baseUrl || "", s.pricingNote || ""
-      ].join(" ").toLowerCase();
+        s.id,
+        s.name,
+        s.description || "",
+        (s.tags || []).join(" "),
+        s.baseUrl || "",
+        s.pricingNote || "",
+        s.source || "",
+      ]
+        .join(" ")
+        .toLowerCase();
       const words = q.toLowerCase().trim().split(/\s+/).filter(Boolean);
+      const src = srcSelect.value;
+      const srcOk =
+        !src || (s.source || "external") === src || (src === "external" && s.source !== "team");
       const tagOk = !tagFilter || (s.tags || []).includes(tagFilter);
       const textOk = words.length === 0 || words.every((w) => hay.includes(w));
-      return tagOk && textOk;
+      return srcOk && tagOk && textOk;
+    }
+
+    function sortServices(arr) {
+      const mode = sortSelect.value;
+      const copy = [...arr];
+      if (mode === "name-asc") copy.sort((a, b) => a.name.localeCompare(b.name, "es"));
+      else if (mode === "name-desc") copy.sort((a, b) => b.name.localeCompare(a.name, "es"));
+      else {
+        copy.sort((a, b) => {
+          const team = (x) => (x.source === "team" ? 0 : 1);
+          const active = (x) => (x.status === "active" ? 0 : 1);
+          return team(a) - team(b) || active(a) - active(b) || a.name.localeCompare(b.name, "es");
+        });
+      }
+      return copy;
+    }
+
+    function renderTagStrip() {
+      tagStripEl.innerHTML = "";
+      const quick = allTags.slice(0, 24);
+      const clear = document.createElement("button");
+      clear.type = "button";
+      clear.className = "tag-chip" + (!tagFilter ? " active" : "");
+      clear.textContent = "Todos";
+      clear.addEventListener("click", () => {
+        tagFilter = "";
+        render();
+      });
+      tagStripEl.appendChild(clear);
+      for (const t of quick) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "tag-chip" + (tagFilter === t ? " active" : "");
+        b.textContent = t;
+        b.addEventListener("click", () => {
+          tagFilter = tagFilter === t ? "" : t;
+          render();
+        });
+        tagStripEl.appendChild(b);
+      }
     }
 
     function render() {
       const q = input.value;
-      const filtered = catalog.services.filter((s) => matches(s, q));
-      countEl.textContent = filtered.length + " / " + catalog.services.length + " servicios";
+      const filtered = sortServices(catalog.services.filter((s) => matches(s, q)));
+      countLineEl.innerHTML =
+        "Mostrando <strong>" +
+        filtered.length +
+        "</strong> de <strong>" +
+        catalog.services.length +
+        "</strong> servicios";
+
       listEl.innerHTML = "";
       for (const s of filtered) {
-        const li = document.createElement("li");
-        li.className = "card";
+        const article = document.createElement("article");
+        article.className = "card" + (s.source === "team" ? " card--team" : "");
+        article.setAttribute("role", "listitem");
+
         const st = s.status || "draft";
-        li.innerHTML =
-          "<h2>" +
+        const header = document.createElement("div");
+        header.className = "card-header";
+        header.innerHTML =
+          "<h3>" +
           escapeHtml(s.name) +
-          '<span class="status ' +
-          statusClass(st) +
+          "</h3><div class=\"badges\">" +
+          sourceBadge(s) +
+          '<span class="badge ' +
+          statusBadgeClass(st) +
           '">' +
           escapeHtml(st) +
-          "</span></h2>" +
-          '<div class="id">' +
-          escapeHtml(s.id) +
-          "</div>" +
-          (s.description ? '<p class="desc">' + escapeHtml(s.description) + "</p>" : "") +
-          '<div class="tags"></div>' +
-          '<div class="links"></div>';
-        const tagsWrap = li.querySelector(".tags");
+          "</span></div>";
+        article.appendChild(header);
+
+        const idRow = document.createElement("div");
+        idRow.className = "id-row";
+        const idSpan = document.createElement("span");
+        idSpan.className = "id";
+        idSpan.textContent = s.id;
+        const copyId = document.createElement("button");
+        copyId.type = "button";
+        copyId.className = "btn-icon";
+        copyId.textContent = "Copiar id";
+        copyId.addEventListener("click", () => copyText(s.id, "Id copiado"));
+        idRow.appendChild(idSpan);
+        idRow.appendChild(copyId);
+        article.appendChild(idRow);
+
+        if (s.pricingNote) {
+          const pb = document.createElement("div");
+          pb.className = "price-block";
+          pb.innerHTML = "<strong>Precio / notas</strong>" + escapeHtml(s.pricingNote);
+          article.appendChild(pb);
+        }
+
+        if (s.paths && s.paths.length) {
+          const pathsWrap = document.createElement("div");
+          pathsWrap.className = "paths";
+          for (const p of s.paths) {
+            const span = document.createElement("span");
+            span.className = "path-code";
+            span.textContent = p;
+            pathsWrap.appendChild(span);
+          }
+          article.appendChild(pathsWrap);
+        }
+
+        if (s.stellarPrerequisites && s.stellarPrerequisites.summary) {
+          const pr = document.createElement("div");
+          pr.className = "prereq-note";
+          pr.textContent = "Stellar: " + s.stellarPrerequisites.summary;
+          article.appendChild(pr);
+        }
+
+        if (s.description) {
+          const p = document.createElement("p");
+          p.className = "desc";
+          p.textContent = s.description;
+          article.appendChild(p);
+        }
+
+        const tagsWrap = document.createElement("div");
+        tagsWrap.className = "tags";
         for (const t of s.tags || []) {
           const b = document.createElement("button");
           b.type = "button";
@@ -414,29 +1569,47 @@
           });
           tagsWrap.appendChild(b);
         }
-        const links = li.querySelector(".links");
+        article.appendChild(tagsWrap);
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+        const cmd = cliCommand(s);
+
+        const copyCli = document.createElement("button");
+        copyCli.type = "button";
+        copyCli.className = "linkish";
+        copyCli.textContent = "Copiar comando CLI";
+        copyCli.addEventListener("click", () => copyText(cmd, "Comando CLI copiado"));
+        actions.appendChild(copyCli);
+
         if (s.baseUrl) {
           const a = document.createElement("a");
           a.href = s.baseUrl;
           a.target = "_blank";
           a.rel = "noopener noreferrer";
-          a.textContent = "Sitio / API";
-          links.appendChild(a);
+          a.textContent = "Abrir base URL";
+          actions.appendChild(a);
         }
         if (s.docsUrl) {
           const a = document.createElement("a");
           a.href = s.docsUrl;
           a.target = "_blank";
           a.rel = "noopener noreferrer";
+          a.className = "secondary";
           a.textContent = "Documentación";
-          links.appendChild(a);
+          actions.appendChild(a);
         }
         const jsonA = document.createElement("a");
         jsonA.href = "/services/" + encodeURIComponent(s.id);
-        jsonA.textContent = "JSON";
-        links.appendChild(jsonA);
-        listEl.appendChild(li);
+        jsonA.className = "secondary";
+        jsonA.textContent = "Ver JSON";
+        actions.appendChild(jsonA);
+
+        article.appendChild(actions);
+        listEl.appendChild(article);
       }
+
+      renderTagStrip();
     }
 
     function escapeHtml(str) {
@@ -447,25 +1620,99 @@
         .replace(/"/g, "&quot;");
     }
 
+    function collectTags(services) {
+      const set = new Set();
+      for (const s of services) {
+        for (const t of s.tags || []) set.add(t);
+      }
+      return Array.from(set).sort((a, b) => a.localeCompare(b, "es"));
+    }
+
+    function updateHeroStats() {
+      const services = catalog.services || [];
+      const team = services.filter((s) => s.source === "team").length;
+      const active = services.filter((s) => s.status === "active").length;
+      const ext = services.filter((s) => s.source !== "team").length;
+      totalPill.textContent = String(services.length);
+      teamPill.textContent = String(team);
+      statActive.textContent = String(active);
+      statExternal.textContent = String(ext);
+    }
+
     async function load() {
       try {
         const r = await fetch("/services");
         if (!r.ok) throw new Error("HTTP " + r.status);
         catalog = await r.json();
         if (!Array.isArray(catalog.services)) throw new Error("Formato inválido");
-        networkEl.textContent = catalog.networkDefault || "no definida";
+        const net = catalog.networkDefault || "no definida";
+        networkEl.textContent = net;
+        networkPill.textContent = net;
+        allTags = collectTags(catalog.services);
+        updateHeroStats();
+        if (catalogIndexHint) {
+          catalogIndexHint.textContent =
+            catalog.services.length > 0
+              ? "Catálogo indexado: " + catalog.services.length + " servicios."
+              : "";
+        }
         bannerEl.innerHTML = "";
         render();
         input.addEventListener("input", render);
+        srcSelect.addEventListener("change", render);
+        sortSelect.addEventListener("change", render);
+        refreshHubStatus();
+        startActivityLog();
       } catch (e) {
         bannerEl.innerHTML =
-          '<div class="error">No se pudo cargar el catálogo. ¿Corre <code>npm run catalog:dev</code>?<br/>' +
+          '<div class="error">No se pudo cargar el catálogo. Comprueba la conexión con el servidor del hub.<br/>' +
           escapeHtml(String(e.message)) +
           "</div>";
+        refreshHubStatus();
+        startActivityLog();
       }
     }
 
+    function initNavScrollSpy() {
+      const nav = document.getElementById("site-nav");
+      if (!nav) return;
+      const links = [...nav.querySelectorAll("a[data-nav]")];
+      function setCurrent(id) {
+        links.forEach((a) => {
+          a.classList.toggle("is-current", a.getAttribute("data-nav") === id);
+        });
+      }
+      const ids = ["top", "flujo", "servicios", "documentacion"];
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+          if (visible[0]?.target?.id) {
+            setCurrent(visible[0].target.id);
+          }
+        },
+        {
+          root: null,
+          rootMargin: "-70px 0px -48% 0px",
+          threshold: [0, 0.08, 0.15, 0.25, 0.4, 0.6],
+        }
+      );
+      ids.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+      window.addEventListener("hashchange", () => {
+        const id = window.location.hash.replace(/^#/, "");
+        if (ids.includes(id)) setCurrent(id);
+      });
+      const initial = window.location.hash.replace(/^#/, "");
+      if (initial && ids.includes(initial)) setCurrent(initial);
+      else setCurrent("top");
+    }
+
     load();
+    initNavScrollSpy();
   </script>
 </body>
 </html>

@@ -6,13 +6,19 @@
  * - Opcional: si existen STELLAR_SECRET_KEY y X402_SMOKE_URL, un fetch con pago 402
  *
  * Uso: npm run fase0:check
+ *
+ * Carga el mismo .env que el CLI (raíz del repo) para que STELLAR_SECRET_KEY
+ * no tenga que estar exportada en la shell.
  */
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadRepoEnv } from "../apps/lib/load-repo-env.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
+
+loadRepoEnv();
 
 function runNode(relScript, args, extraEnv = {}) {
   const scriptPath = path.join(root, relScript);
@@ -74,7 +80,7 @@ if (secret && smokeUrl) {
   );
 } else {
   console.log(
-    "\n  ℹ Sin STELLAR_SECRET_KEY + X402_SMOKE_URL: la prueba de pago 402 no se ejecuta aquí. Sigue setup-fase-0.md y un fetch manual."
+    "\n  ℹ Define STELLAR_SECRET_KEY (p. ej. en .env) y X402_SMOKE_URL para ejecutar aquí la prueba automática de pago 402; si no, haz un fetch manual. Ver docs/setup-fase-0.md."
   );
 }
 

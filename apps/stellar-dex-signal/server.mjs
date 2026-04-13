@@ -6,6 +6,8 @@ import express from "express";
 import { paymentMiddlewareFromConfig } from "@x402/express";
 import { ExactStellarScheme } from "@x402/stellar/exact/server";
 import { HTTPFacilitatorClient } from "@x402/core/server";
+import { checkTrustline } from "../shared/trustline.mjs";
+import * as StellarSdk from "stellar-sdk";
 
 const payTo = process.env.DEX_X402_PAYTO?.trim();
 if (!payTo) {
@@ -69,6 +71,8 @@ const routes = {
     description: "Snapshot corto de pools de liquidez recientes (Horizon AMM).",
   },
 };
+
+app.use(checkTrustline);
 
 app.use(
   paymentMiddlewareFromConfig(
@@ -203,22 +207,68 @@ function summarizeBook(bids, asks) {
   };
 }
 
+const liveOrderbooks = new Map(); // cacheKey -> { bids, asks, lastUpdated }
+
+function ensureOrderbookStream(selling, buying, cacheKey) {
+  if (liveOrderbooks.has(cacheKey)) return;
+  liveOrderbooks.set(cacheKey, { bids: [], asks: [], lastUpdated: 0 });
+
+  const stellarServer = new StellarSdk.Server(horizonBase);
+  const sAsset = selling.type === "native" ? StellarSdk.Asset.native() : new StellarSdk.Asset(selling.code, selling.issuer);
+  const bAsset = buying.type === "native" ? StellarSdk.Asset.native() : new StellarSdk.Asset(buying.code, buying.issuer);
+
+  function startStream() {
+    stellarServer.orderbook(sAsset, bAsset).stream({
+      onmessage: (res) => {
+        console.log("[PUMAX402] Stream activo: Actualizando RAM Cache...");
+        const current = liveOrderbooks.get(cacheKey) || {};
+        liveOrderbooks.set(cacheKey, {
+          bids: res.bids || [],
+          asks: res.asks || [],
+          lastUpdated: Date.now()
+        });
+      },
+      onerror: (err) => {
+        console.error("[PUMAX402] Orderbook stream error for", cacheKey, "Reconnecting in 5s...");
+        setTimeout(startStream, 5000);
+      }
+    });
+  }
+  
+  startStream();
+}
+
 app.get("/v1/signal", async (req, res) => {
   try {
     const { selling, buying } = parseAssetPair(req);
     const obQ = orderBookQs(selling, buying).toString();
     const cacheKey = `signal:${obQ}`;
+    const tradesCacheKey = `trades:${obQ}`;
 
-    const payload = await cached(cacheKey, async () => {
+    ensureOrderbookStream(selling, buying, cacheKey);
+    const liveData = liveOrderbooks.get(cacheKey);
+
+    let bookBids = liveData?.bids || [];
+    let bookAsks = liveData?.asks || [];
+
+    if (!liveData || liveData.lastUpdated === 0 || (Date.now() - liveData.lastUpdated > 120_000)) {
+      // Fallback
       const obUrl = `${horizonBase}/order_book?${obQ}`;
       const r = await fetch(obUrl);
       if (!r.ok) {
         throw new Error(`Horizon order_book HTTP ${r.status}`);
       }
       const book = await r.json();
-      const bids = book.bids || [];
-      const asks = book.asks || [];
+      bookBids = book.bids || [];
+      bookAsks = book.asks || [];
+      if (liveData) {
+        liveData.bids = bookBids;
+        liveData.asks = bookAsks;
+        liveData.lastUpdated = Date.now();
+      }
+    }
 
+    const tPayload = await cached(tradesCacheKey, async () => {
       const tQ = tradesQs(selling, buying).toString();
       const trUrl = `${horizonBase}/trades?${tQ}`;
       const tr = await fetch(trUrl);
@@ -234,24 +284,25 @@ app.get("/v1/signal", async (req, res) => {
           lastTradePrice = Number(recs[0].price);
         }
       }
-
-      return {
-        schemaVersion: 1,
-        product: "pumax402-stellar-dex-signal",
-        network,
-        horizon: horizonBase,
-        pair: {
-          selling,
-          buying,
-        },
-        orderBook: summarizeBook(bids, asks),
-        recentTrades: {
-          sampleSize: recentTradeCount,
-          lastTradePrice,
-        },
-        generatedAt: new Date().toISOString(),
-      };
+      return { recentTradeCount, lastTradePrice };
     });
+
+    const payload = {
+      schemaVersion: 1,
+      product: "pumax402-stellar-dex-signal",
+      network,
+      horizon: horizonBase,
+      pair: {
+        selling,
+        buying,
+      },
+      orderBook: summarizeBook(bookBids, bookAsks),
+      recentTrades: {
+        sampleSize: tPayload.recentTradeCount,
+        lastTradePrice: tPayload.lastTradePrice,
+      },
+      generatedAt: new Date().toISOString(),
+    };
 
     res.json(payload);
   } catch (e) {

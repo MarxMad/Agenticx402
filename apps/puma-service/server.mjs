@@ -3,10 +3,14 @@
  * PumaX402 **Agent Pulse** — API x402 (Exact, Stellar testnet) que devuelve
  * contexto de red empaquetado para prompts de agentes (ledger, fees, hints).
  */
+import { loadRepoEnv } from "../lib/load-repo-env.mjs";
+loadRepoEnv();
+
 import express from "express";
 import { paymentMiddlewareFromConfig } from "@x402/express";
 import { ExactStellarScheme } from "@x402/stellar/exact/server";
 import { HTTPFacilitatorClient } from "@x402/core/server";
+import { agentTrustlineOnboarding } from "../lib/stellar-usdc-testnet.mjs";
 
 const payTo = process.env.PUMA_X402_PAYTO?.trim();
 if (!payTo) {
@@ -55,6 +59,8 @@ app.get("/", (_req, res) => {
       "Contexto Stellar testnet empaquetado para LLMs: paga vía x402 y obtén JSON estable para system prompts.",
     innovation:
       "No es un catálogo ni otro endpoint genérico: un solo contrato mental — 'pulse' de cadena para que el agente no alucine red/ledger.",
+    /** Metadatos para que agentes configuren trustline USDC testnet sin buscar el emisor a mano. */
+    trustlineOnboardingForAgents: agentTrustlineOnboarding({ payToHint: payTo }),
     endpoints: {
       meta: { method: "GET", path: "/", payment: false },
       health: { method: "GET", path: "/health", payment: false },
@@ -109,6 +115,7 @@ async function buildPulsePayload(horizon) {
       `Último ledger cerrado: **${rec.sequence}** (${rec.closed_at}).`,
       `Fee base por operación (referencia): **${rec.base_fee_in_stroops}** stroops.`,
       "Para x402 en testnet usar USDC Soroban y facilitator compatible; nunca incluir claves secretas (S...) en prompts ni logs públicos.",
+      "Trustline USDC testnet: pedir GET / (este servicio) y usar el bloque trustlineOnboardingForAgents o el catálogo stellarPrerequisites del id pumax402-agent-pulse.",
     ],
     generatedAt: new Date().toISOString(),
   };

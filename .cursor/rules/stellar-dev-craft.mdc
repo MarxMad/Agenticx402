@@ -1,0 +1,23 @@
+---
+description: Stellar/x402 alineado a stellar-dev-skill y docs del proyecto PumaX402
+globs: "apps/**/*.{mjs,js},catalog/**/*.{json,md},docs/**/*.md,scripts/**/*.mjs,.github/**/*"
+alwaysApply: false
+---
+
+# Desarrollo Stellar y x402 en este repo
+
+## Referencia externa (mentor SDF)
+
+Cuando trabajes en **Stellar** (red, cuentas, trustlines, RPC/Horizon, seguridad, patrones Soroban/SDK), usa el skill del proyecto **`@stellar-dev`** (`.cursor/skills/stellar-dev/SKILL.md`, vendoreado de [stellar/stellar-dev-skill](https://github.com/stellar/stellar-dev-skill)) y [developers.stellar.org](https://developers.stellar.org/) como **referencia prioritaria**. El usuario puede **mencionar `@stellar-dev`** en el chat para cargar el playbook completo. El skill enriquece criterio; **no sustituye** el flujo concreto de este hub (CLI/MCP/catálogo).
+
+## Qué es específico de PumaX402 (este repositorio)
+
+- **Descubrimiento y pago x402**: catálogo `catalog/services.json`, API `/services`, CLI (`apps/cli/`), MCP (`apps/mcp/`), guías `docs/cli.md`, `docs/mcp.md`, `docs/agents-stellar-trustline.md`.
+- **Secretos**: nunca commitear claves; `STELLAR_SECRET_KEY` y similares solo por entorno o `.env` ignorado.
+- **Testnet por defecto** salvo documentación explícita en servicio.
+
+## Orden sugerido al resolver dudas
+
+1. Docs y código **en este repo** para el comportamiento del hub y herramientas.
+2. [x402 en Stellar (Stellar Docs)](https://developers.stellar.org/docs/build/agentic-payments/x402) para el protocolo.
+3. Contenido / mindset del **stellar-dev-skill** para detalle Stellar (SDK, RPC, pitfalls).

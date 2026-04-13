@@ -12,7 +12,8 @@ El archivo fuente es **`services.json`**. Cada entrada representa un proveedor o
    - `status`: `active` | `draft` | `deprecated`
    - `source`: `external` | `internal` | `community`
 3. Si el precio varía por ruta, usa `pricingNote` o documenta en `docsUrl`.
-4. Abre un PR; mantén **testnet** en el MVP salvo acuerdo explícito.
+4. Opcional: `stellarPrerequisites` (objeto) con `trustlines[]` (`asset`, `issuer`, `line`), plantilla `stellarCliChangeTrustTemplate` y enlaces a faucet/quickstart — para que agentes (MCP / `list`) configuren trustlines USDC testnet sin adivinar el emisor.
+5. Abre un PR; mantén **testnet** en el MVP salvo acuerdo explícito.
 
 No incluyas claves ni secretos en este directorio.
 

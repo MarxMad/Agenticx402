@@ -29,9 +29,9 @@ En **Cursor Settings → MCP** puedes añadir un servidor. Ejemplo usando ruta *
 
 - **Importante:** no commitees claves. En la práctica, deja `STELLAR_SECRET_KEY` vacío en el JSON y exporta la variable en el shell desde el que lanzas Cursor, o usa la UI de Cursor para variables sensibles si tu versión lo permite.
 - **`cwd`:** debe ser la raíz del repo (donde está [`package.json`](../package.json)).
-- **Catálogo remoto:** si el hub está desplegado, añade en `env`:
+- **Catálogo remoto:** si usas el hub desplegado, añade en `env`:
 
-  `"AGENTICX402_CATALOG_URL": "https://TU-DOMINIO/services"`
+  `"AGENTICX402_CATALOG_URL": "https://agenticx402-production.up.railway.app/services"`
 
 ## Flujo de demo (guion para vídeo o jurado)
 

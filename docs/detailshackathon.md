@@ -40,6 +40,12 @@ Note: Please beware of scams via DM on both platforms.
 
 ---
 
+# PumaX402 y el hackathon — lectura del brief
+
+El bloque siguiente resume texto oficial del reto. Más abajo, [**Valor para competir**](#valor-competir) responde concretamente a *qué valor mostrar para ganar*: APIs propias + cliente + hub + demo con Stellar real.
+
+---
+
 ## Qué buscan exactamente (resumen para el equipo)
 
 | Lo que dicen | Traducción práctica |
@@ -54,16 +60,40 @@ Note: Please beware of scams via DM on both platforms.
 
 ---
 
+<a id="valor-competir"></a>
+
+## Valor para **competir** (qué premian y qué aportamos)
+
+El brief no premia “otro chat”: premia **software que transacciona** en Stellar y una historia **obvia después de verla**. PumaX402 compite bien si comunicáis **tres capas** en este orden (de la más diferencial al soporte):
+
+| Capa | Qué valora el jurado | Qué mostráis en repo/demo |
+|------|----------------------|---------------------------|
+| **1. Servicios x402 propios** | “Construyen **producto** que cobra por llamada en la red.” | **Stellar DEX Signal** (Horizon → señal útil para agentes), **Geopolitical Risk** (orquestación + agregación con pago upstream), **Agent Pulse** (contexto testnet barato para prompts). Cada uno: 402 → firma → JSON útil. |
+| **2. Cliente agente-first** | “El agente **no** reimplementa el flujo 402 a mano.” | **MCP** (`list_services`, `call_service`) + **CLI** (`doctor`, `call`, `fetch`) con `@x402/stellar`: 402 → pago → reintento según el estándar. |
+| **3. Descubrimiento** | “Hay **mercado** / directorio, no solo un script suelto.” | **Hub** público + `catalog/services.json` + `GET /services`: ver qué existe antes de pagar. |
+
+**Frase ganadora (~30 s):** *“Tres APIs nuestras cobran en Stellar por petición; el agente las **descubre** en el hub y las **paga** con un solo cliente (MCP/CLI) — misma lógica de pago para todas.”*
+
+**Qué no debe ser el único argumento:** una lista bonita de enlaces a terceros. Eso es **complemento** del catálogo (`source: external`), no el núcleo para puntos altos.
+
+**Checklist antes de enviar:**
+
+1. **Vídeo:** al menos un `call` (CLI o MCP) donde se **cierre** un 402 contra un servicio **propio** y se vea 200 + cuerpo (ideal: hash o explorer testnet en pantalla o mencionado).  
+2. **README:** deja claro al inicio **APIs propias** vs plataforma (el repo en inglés ya acentúa *first-party APIs*).  
+3. **Una historia:** elegid un hilo (p. ej. agente de trading → DEX Signal *o* agente de riesgo → Geopolitical Risk) y ceñíos a esa demo; el jurado suele recordar **una** narrativa, no diez features sueltas.
+
+---
+
 ## Cómo encaja **PumaX402**
 
 | Expectativa del hackathon | Dónde lo cubre PumaX402 |
 |---------------------------|-------------------------|
-| Agentes / herramientas que pagan | **CLI** y **MCP** (`call_service`, `fetch`) usando `@x402/stellar` + `STELLAR_SECRET_KEY`: ante **402**, firman y reintentan → **transacciones Stellar reales** en testnet cuando el endpoint lo exige. |
-| Descubrimiento + economía | **Hub** (catálogo + API + web + `#docs`): “qué APIs monetizables existen” y cómo llamarlas con un **contrato mental único**. |
-| APIs que monetizan por llamada | No sois el proveedor de cada API externa, pero **orquestáis** el acceso unificado a servicios **ya** x402 (p. ej. referencias del catálogo). |
-| Open + README | Repo + documentación (`hackathon-jurado.md`, `x402-stellar-panorama.md`, PROGRESS). |
+| Agentes / herramientas que pagan | **CLI** y **MCP** (`call_service`, `fetch`) con `@x402/stellar` + `STELLAR_SECRET_KEY` → **transacciones Stellar** en testnet cuando el endpoint exige 402. |
+| Descubrimiento + economía | **Hub** (catálogo + API + web + `#docs`): qué APIs existen y cómo llamarlas con **un** contrato mental. |
+| APIs que monetizan por llamada | **Servicios propios:** DEX Signal, Geopolitical Risk, Agent Pulse (x402 Exact). Referencias externas en catálogo para contexto/benchmark. |
+| Open + README | Repo + docs (`hackathon-jurado.md`, `detailshackathon.md`, `x402-stellar-panorama.md`, PROGRESS). |
 
-**Encaje narrativo fuerte:** *“Los agentes dejan de atascarse en el pago: primero **descubren** en PumaX402, luego **pagan en Stellar** con el mismo cliente (CLI/MCP) sin integración distinta por proveedor.”*
+**Encaje narrativo fuerte:** *“**APIs que monetizamos nosotros** en Stellar; el agente las **encuentra** en el hub y **paga** igual con CLI/MCP.”*
 
 ---
 
@@ -78,8 +108,8 @@ Note: Please beware of scams via DM on both platforms.
 
 ## Conclusión
 
-- **No hace falta tirar el producto:** el encaje con “agentes + x402 + Stellar” es **correcto** si el **cliente** demuestra **transacciones reales** en testnet/mainnet.  
-- **Sí hace falta afinar el mensaje y la demo:** el jurado debe ver **Stellar en acción**, no solo HTML.  
-- **Implementado en repo:** **Agent Pulse** (`npm run puma-service`) — API x402 propia que devuelve contexto testnet para prompts de agentes; ver `apps/puma-service/README.md` y catálogo `pumax402-agent-pulse`.
+- **El valor competitivo** no es “ahorramos un paso” genérico: es **APIs propias pagadas en Stellar** + **cliente unificado para agentes** + **hub** que hace creíble la historia de “mercado de capacidades”.  
+- **Sin vídeo con 402 → éxito testnet**, el requisito de interacción real queda débil aunque el resto esté pulido.  
+- **Servicios propios listos para demo:** **Agent Pulse** (`npm run puma-service`), **DEX Signal** (`npm run dex-signal`), **Geopolitical Risk** (`npm run geopolitical-risk`) — entradas `pumax402-*` en [`catalog/services.json`](../catalog/services.json).
 
 *Fechas del doc: apertura 30 mar 2026, entrega **13 abr 2026** — comprobad en la web oficial por si hay cambios.*

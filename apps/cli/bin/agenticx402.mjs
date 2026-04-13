@@ -1,9 +1,13 @@
 #!/usr/bin/env node
+import { loadRepoEnv } from "../../lib/load-repo-env.mjs";
+loadRepoEnv();
+
 import { parseArgs } from "node:util";
 import { loadCatalog, findService, resolveServiceUrl } from "../lib/catalog-load.mjs";
 import { createPaywallHttpClient, paywallFetch } from "../lib/x402-fetch.mjs";
 import { printBannerFull, printBannerMini } from "../lib/banner.mjs";
 import { runSplash } from "../lib/splash-chrome.mjs";
+import { runDoctor, readCliVersionLine } from "../lib/doctor.mjs";
 
 /**
  * Clave secreta Stellar estándar (strkey): S + 55 caracteres = 56 en total.
@@ -36,6 +40,9 @@ function explainStellarSecretError(err) {
 function printHelp() {
   printBannerFull();
   console.log(`Uso:
+  agenticx402 doctor
+      Comprueba Node, variables, catálogo y recuerda trustline / testnet. Recomendado la primera vez.
+
   agenticx402 splash [--animate]
       Pantalla de bienvenida (cartel PUMAX402 + comandos). Sin cambiar el fondo del terminal.
       --animate (TTY, con color): el cartel pixel se anima unos segundos (onda azul/blanco) y un indicador «listo».
@@ -49,15 +56,25 @@ function printHelp() {
   agenticx402 call <service-id> --path <ruta> [--method GET]
       Igual que fetch pero arma la URL con baseUrl del catálogo + --path.
 
+Qué necesitas (resumen):
+  · Node.js 20+
+  · Para pagar un 402: STELLAR_SECRET_KEY (cuenta con fondos en la red del servicio; suele ser testnet)
+  · En testnet con USDC: trustline al emisor — ver docs/agents-stellar-trustline.md
+  · Catálogo: por defecto catalog/services.json del repo; o AGENTICX402_CATALOG_URL / AGENTICX402_CATALOG_FILE
+
 Variables de entorno:
-  STELLAR_SECRET_KEY     Clave secreta S... (obligatoria para 402)
+  AGENTICX402_ENV_FILE   Ruta a un .env concreto (opcional; si no, se busca .env en la raíz del repo)
+  STELLAR_SECRET_KEY     Clave secreta S... (obligatoria para firmar 402)
   STELLAR_NETWORK        testnet | pubnet (default: testnet)
   STELLAR_SOROBAN_RPC_URL  Opcional; RPC Soroban personalizado
-  AGENTICX402_CATALOG_URL  Opcional; p. ej. http://127.0.0.1:3840/services
+  AGENTICX402_CATALOG_URL  Opcional; p. ej. https://agenticx402-production.up.railway.app/services
   AGENTICX402_CATALOG_FILE Ruta absoluta a services.json si no usas URL
   AGENTICX402_NO_BANNER   1 = sin arte ASCII al inicio (útil en CI / logs)
 
+  --version              Versión del paquete (lee package.json del repo)
+
 Ejemplos:
+  npm run cli -- doctor
   npm run cli -- splash
   npm run cli -- splash --animate
   npm run cli -- list
@@ -119,8 +136,9 @@ async function cmdFetch(positionals, values) {
     res = await fetch(url, init);
     if (res.status === 402) {
       console.error(
-        "402 Payment Required — exporta STELLAR_SECRET_KEY (testnet) y vuelve a ejecutar para firmar el pago."
+        "402 Payment Required — define STELLAR_SECRET_KEY (cuenta con fondos en la red del servicio) y vuelve a ejecutar."
       );
+      console.error("  Si la clave ya está en .env en la raíz del repo, comprueba la ruta. Prueba: npm run cli -- doctor");
       process.exit(1);
     }
   }
@@ -157,19 +175,27 @@ async function main() {
       path: { type: "string", short: "p" },
       help: { type: "boolean", short: "h" },
       animate: { type: "boolean", short: "a", default: false },
+      version: { type: "boolean" },
     },
   });
 
+  if (values.version) {
+    console.log(readCliVersionLine());
+    process.exit(0);
+  }
+
   if (values.help || positionals.length === 0) {
     printHelp();
-    process.exit(positionals.length === 0 ? 0 : 0);
+    process.exit(0);
   }
 
   const cmd = positionals[0];
   const rest = positionals.slice(1);
 
   try {
-    if (cmd === "splash") {
+    if (cmd === "doctor") {
+      await runDoctor();
+    } else if (cmd === "splash") {
       await cmdSplash(values);
     } else if (cmd === "list") {
       await cmdList();

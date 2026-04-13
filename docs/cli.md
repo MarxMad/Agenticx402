@@ -2,6 +2,20 @@
 
 Cliente de línea de comandos que resuelve el flujo **HTTP 402 → firma Stellar (Exact) → reintento** usando [`@x402/core`](https://www.npmjs.com/package/@x402/core) y [`@x402/stellar`](https://www.npmjs.com/package/@x402/stellar).
 
+## Qué necesitas para usarlo bien
+
+| Requisito | Detalle |
+|-----------|---------|
+| **Node.js** | **20 o superior** (`node -v`). El repo declara `engines.node >=20`. |
+| **Dependencias** | En la raíz del repo: `npm install`. |
+| **Catálogo** | Por defecto: `catalog/services.json` en el clon. Sin repo: **`AGENTICX402_CATALOG_URL`** — hub público del equipo: `https://agenticx402-production.up.railway.app/services` — o **`AGENTICX402_CATALOG_FILE`**. |
+| **Variables** | Opcional: archivo **`.env`** en la raíz del repo (se carga solo al arrancar el CLI/MCP), o **`AGENTICX402_ENV_FILE`** apuntando a un `.env` concreto. |
+| **Pagar un 402** | **`STELLAR_SECRET_KEY`**: clave secreta `S…` de una cuenta con **XLM** (fees) en la red que use el servicio (**testnet** por defecto). Sin ella, `fetch`/`call` hacen una petición normal y, si hay 402, el CLI indica que falta la clave. |
+| **USDC en testnet** | Suele hacer falta **trustline** al emisor de USDC antes de que el pago Exact funcione. Guía: [`agents-stellar-trustline.md`](./agents-stellar-trustline.md). |
+| **Red** | **`STELLAR_NETWORK`**: `testnet` (por defecto) o `pubnet` si el servicio es mainnet. |
+
+**Primera vez:** ejecuta **`npm run cli -- doctor`** (o `agenticx402 doctor` si tienes el bin enlazado) para comprobar Node, variables, acceso al catálogo y ver recordatorios de trustline.
+
 ## Instalación local
 
 Desde la raíz del repo (tras `npm install`):
@@ -47,14 +61,19 @@ Ver [`.env.example`](../.env.example). Mínimo para pagar un 402:
 
 Sin `STELLAR_SECRET_KEY`, `fetch` y `call` solo hacen una petición normal; si la respuesta es **402**, el CLI indica que falta la clave.
 
+En **testnet con USDC**, la cuenta suele necesitar **trustline** al emisor antes de que el pago funcione. Guía orientada a agentes: [`agents-stellar-trustline.md`](./agents-stellar-trustline.md).
+
 ## Comandos
 
 | Comando | Descripción |
 |---------|-------------|
+| `doctor` | Comprueba Node, `STELLAR_SECRET_KEY`, catálogo y muestra recordatorios (trustline, testnet). |
 | `splash` | Resumen de comandos; `--animate` / `-a` indicador breve (TTY). |
 | `list` | Imprime servicios del catálogo (archivo local o `AGENTICX402_CATALOG_URL`). |
 | `fetch <url>` | GET (o `--method`) a una URL completa. |
 | `call <id> --path /ruta` | Construye URL con `baseUrl` del servicio `id` en el catálogo + `path`. |
+
+`-h` / `--help` muestra la ayuda completa; `--version` imprime el nombre y versión del paquete (`package.json`).
 
 ## Probar un 402 real
 

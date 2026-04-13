@@ -9,7 +9,7 @@ No compite con catálogos genéricos tipo xlm402: es **un solo producto** — *c
 1. Cuenta Stellar **G…** que **reciba** el pago (`PUMA_X402_PAYTO`): trustline **USDC** testnet + algo de USDC (p. ej. [Circle Faucet](https://faucet.circle.com/)).
 2. El **cliente** que llama (`npm run cli -- fetch` o MCP) usa `STELLAR_SECRET_KEY` con la cuenta que **paga**.
 
-Ver también [README de @x402/stellar](https://www.npmjs.com/package/@x402/stellar) (sección testnet / trustline).
+Ver también [README de @x402/stellar](https://www.npmjs.com/package/@x402/stellar) (sección testnet / trustline). Guía para **agentes** (trustline + MCP + catálogo): [`docs/agents-stellar-trustline.md`](../../docs/agents-stellar-trustline.md).
 
 ## Variables
 
@@ -27,7 +27,7 @@ export PUMA_X402_PAYTO=G...
 npm run puma-service
 ```
 
-- `GET /` — metadatos (sin pago).
+- `GET /` — metadatos (sin pago), incluye **`trustlineOnboardingForAgents`**: emisor USDC testnet, línea `CODE:ISSUER`, comando Stellar CLI y enlaces (faucet / quickstart) para que un LLM guíe al usuario.
 - `GET /health` — salud (sin pago).
 - `GET /v1/pulse` — **402** sin pago; tras pago x402, JSON **pulse**.
 
