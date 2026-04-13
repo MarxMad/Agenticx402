@@ -1,22 +1,22 @@
-# Catálogo de servicios
+# Service Catalog
 
-El archivo fuente es **`services.json`**. Cada entrada representa un proveedor o agrupación accesible vía x402 (Stellar).
+The source data is **`services.json`**. Each entry represents a provider or grouping accessible via x402 or MPP on Stellar.
 
-## Añadir un servicio
+## Adding a Service
 
-1. Haz fork o rama de este repo.
-2. Añade un objeto en el array `services` con al menos:
-   - `id` (slug único, kebab-case)
+1. Fork or branch this repository.
+2. Add an object to the `services` array with at least the following:
+   - `id` (unique slug, kebab-case)
    - `name`, `description`, `baseUrl`
-   - `tags` (p. ej. `weather`, `data`, `defi`)
+   - `tags` (e.g., `weather`, `data`, `defi`)
    - `status`: `active` | `draft` | `deprecated`
    - `source`: `external` | `internal` | `community`
-3. Si el precio varía por ruta, usa `pricingNote` o documenta en `docsUrl`.
-4. Opcional: `stellarPrerequisites` (objeto) con `trustlines[]` (`asset`, `issuer`, `line`), plantilla `stellarCliChangeTrustTemplate` y enlaces a faucet/quickstart — para que agentes (MCP / `list`) configuren trustlines USDC testnet sin adivinar el emisor.
-5. Abre un PR; mantén **testnet** en el MVP salvo acuerdo explícito.
+3. If the price varies by path, use `pricingNote` or document it in `docsUrl`.
+4. Optional: `stellarPrerequisites` object with necessary trustlines to ensure smooth agent onboarding.
+5. Open a PR; maintain **testnet** during the hacking phase unless otherwise agreed.
 
-No incluyas claves ni secretos en este directorio.
+Do not include keys or secrets in this directory.
 
-## Esquema relajado (MVP)
+## Schema Policy
 
-Algunos campos son opcionales hasta que la Fase 2 fije contratos de `call`. El array `paths` puede ir vacío si el hub solo enlaza al sitio del proveedor.
+Fields like `paths` and `cost` are recommended for better CLI/MCP tool integration. The `source: team` tag is reserved for services maintained within this repository.

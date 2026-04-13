@@ -102,6 +102,21 @@ const server = http.createServer((req, res) => {
       return;
     }
 
+    if (req.method === "GET" && p === "/activity") {
+      res.writeHead(200, {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive"
+      });
+      const client = { res };
+      clients.push(client);
+      req.on("close", () => {
+        const idx = clients.indexOf(client);
+        if (idx !== -1) clients.splice(idx, 1);
+      });
+      return;
+    }
+
     res.writeHead(404, { "Content-Type": "application/json; charset=utf-8" });
     res.end(JSON.stringify({ error: "not_found" }));
   } catch (e) {
@@ -109,6 +124,19 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify({ error: "internal", message: String(e.message) }));
   }
 });
+
+const clients = [];
+function broadcast(data) {
+  const payload = `data: ${JSON.stringify(data)}\n\n`;
+  for (const c of clients) c.res.write(payload);
+}
+
+// Simple interceptor for logging simulation if needed
+setInterval(() => {
+  if (clients.length > 0) {
+    broadcast({ method: "PING", url: "/pulse", status: 200, time: new Date().toISOString() });
+  }
+}, 30000);
 
 const port = Number(process.env.PORT) || 3840;
 

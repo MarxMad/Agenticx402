@@ -9,6 +9,34 @@ import { printBannerFull, printBannerMini } from "../lib/banner.mjs";
 import { runSplash } from "../lib/splash-chrome.mjs";
 import { runDoctor, readCliVersionLine } from "../lib/doctor.mjs";
 
+/**
+ * Clave secreta Stellar estándar (strkey): S + 55 caracteres = 56 en total.
+ * @param {string} secret
+ */
+function looksLikeStellarSecret(secret) {
+  return (
+    typeof secret === "string" &&
+    secret.startsWith("S") &&
+    secret.length === 56
+  );
+}
+
+/**
+ * @param {unknown} err
+ * @returns {boolean} true si ya se imprimió ayuda
+ */
+function explainStellarSecretError(err) {
+  const m = err instanceof Error ? err.message : String(err);
+  if (!/invalid encoded|strkey|decode|secret key/i.test(m)) {
+    return false;
+  }
+  console.error("STELLAR_SECRET_KEY no es decodificable como clave Stellar.");
+  console.error("  • Debe ser la clave del **pagador** (empieza por S, 56 caracteres), no la pública G...");
+  console.error("  • No uses la misma G que ENERGY_X402_PAYTO / PUMA_X402_PAYTO en el CLI.");
+  console.error("  • Revisa export / .env: sin comillas dentro del valor ni saltos de línea.");
+  return true;
+}
+
 function printHelp() {
   printBannerFull();
   console.log(`Uso:
@@ -88,9 +116,22 @@ async function cmdFetch(positionals, values) {
 
   let res;
   if (secret) {
+    if (!looksLikeStellarSecret(secret)) {
+      console.error(
+        `STELLAR_SECRET_KEY inválida (longitud ${secret.length}, debe ser S + 55 chars = 56). ¿Pegaste G... en lugar de S...?`,
+      );
+      process.exit(1);
+    }
     const network = process.env.STELLAR_NETWORK === "pubnet" ? "pubnet" : "testnet";
-    const httpClient = createPaywallHttpClient(secret, { network });
-    res = await paywallFetch(url, init, { httpClient });
+    try {
+      const httpClient = createPaywallHttpClient(secret, { network });
+      res = await paywallFetch(url, init, { httpClient });
+    } catch (e) {
+      if (explainStellarSecretError(e)) {
+        process.exit(1);
+      }
+      throw e;
+    }
   } else {
     res = await fetch(url, init);
     if (res.status === 402) {
