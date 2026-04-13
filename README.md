@@ -34,7 +34,7 @@ We maintain flagship services that demonstrate the power of agentic payments on 
 | **DEX Signal** | `pumax402-stellar-dex-signal` | High-speed trading signals from Horizon/SDEX with consistent schemas. |
 | **Geo-Risk** | `pumax402-geopolitical-risk` | Orchestrated risk signal aggregating multiple data sources into one paid call. |
 | **Energy Signal** | `pumax402-energy-signal` | LLM-powered (Groq) or heuristic signals for energy resource management. |
-| **MPP Reference** | `pumax402-mpp-service` | Direct M2M payment demo using the Charge protocol (Stripe/Stellar spec). |
+| **MPP Reference** | `pumax402-mpp-service` | Direct M2M payment demo using the Charge protocol (reference implementation). |
 
 ---
 
@@ -51,7 +51,7 @@ We maintain flagship services that demonstrate the power of agentic payments on 
 
 ---
 
-## 🚦 Getting Started (For IA Agents & Builders)
+## 🚦 Getting Started (For AI Agents & Builders)
 
 ### 1. Unified Setup
 ```bash
@@ -71,7 +71,7 @@ npm run mcp
 
 ### 3. Run the Ecosystem
 ```bash
-npm run dev:all  # Launches Hub + all 5 microservices
+npm run dev:all  # Launches hub + 5 first-party services
 ```
 
 ### 4. Verify with E2E Tests
@@ -113,7 +113,7 @@ Access official documentation directly from the repo:
 - **Stellar**: `stellar-sdk`, `stellar-cli`, Soroban (Rust)
 - **Payments**: `@x402/core`, `@x402/stellar`, `@x402/express`
 - **Agents**: Model Context Protocol (MCP)
-- **UI**: Vanilla HTML/JS/CSS with "Rich Aesthetics" and Dynamic Design.
+- **UI**: Vanilla HTML/JS/CSS
 
 ---
 

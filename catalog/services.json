@@ -112,8 +112,13 @@
     {
       "id": "pumax402-energy-signal",
       "name": "PumaX402 — Energy Signal",
+      "version": "1.0.0",
       "description": "Precio petróleo WTI/Brent/GAS + señal IA (BUY/SELL/HOLD) + impacto en tipo de cambio LATAM. Contexto: guerra Irán 2026, Estrecho de Ormuz restringido, Brent ~$120.",
       "baseUrl": "http://127.0.0.1:3853",
+      "cost": "0.10",
+      "currency": "USDC",
+      "provider_address": "ENV_ENERGY_X402_PAYTO",
+      "discovery_tags": ["pumax402", "energy", "ai", "latam", "commodities", "iran", "x402"],
       "paths": [
         {
           "path": "/v1/signal",

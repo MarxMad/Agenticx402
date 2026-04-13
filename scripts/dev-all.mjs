@@ -59,6 +59,11 @@ const SERVICES = [
     script: "apps/energy-signal/server.mjs",
     env: {},           // necesita ENERGY_X402_PAYTO; GROQ_API_KEY opcional
   },
+  {
+    name: "mpp       ",
+    script: "apps/mpp-service/server.mjs",
+    env: {},           // opcional MPP_X402_PAYTO / MPP_X402_PRICE
+  },
 ];
 
 // ─── spawn ────────────────────────────────────────────────────────────────────

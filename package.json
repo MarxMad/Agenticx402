@@ -12,12 +12,14 @@
   "scripts": {
     "catalog:dev": "node apps/catalog-api/server.mjs",
     "catalog:validate": "node scripts/validate-catalog.mjs",
+    "test:e2e": "node scripts/e2e-test.mjs",
     "cli": "node apps/cli/bin/agenticx402.mjs",
     "mcp": "node apps/mcp/server.mjs",
     "puma-service": "node apps/puma-service/server.mjs",
     "dex-signal": "node apps/stellar-dex-signal/server.mjs",
     "geopolitical-risk": "node apps/geopolitical-risk/server.mjs",
     "energy-signal": "node apps/energy-signal/server.mjs",
+    "mpp": "node apps/mpp-service/server.mjs",
     "volume:generate": "node scripts/generate-volume.mjs",
     "dev:all": "node scripts/dev-all.mjs"
   },
