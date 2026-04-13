@@ -1,119 +1,90 @@
-# Modelo de negocio — PumaX402
+# Business Model — PumaX402
 
-Documento de referencia para alinear visión de producto, monetización y narrativa frente a inversores, jurados de hackathon o socios.
+Reference document to align product vision, monetization, and narrative for investors, hackathon judges, or partners.
 
-## Posicionamiento
+## Positioning
 
-PumaX402 no es solo un directorio de endpoints: es la capa que permite a **agentes y equipos** descubrir, pagar y orquestar servicios **pay-per-request** sobre Stellar mediante **x402**, con integración única, observabilidad y control de gasto.
+PumaX402 is not just an endpoint directory: it is the layer that allows **agents and teams** to discover, pay for, and orchestrate **pay-per-request** services on Stellar via **x402** and **MPP**, with unified integration, observability, and spending control.
 
-Analogía útil: *infraestructura de routing + pagos para el consumo de herramientas por máquinas*, no una lista de enlaces.
+Useful analogy: *routing + payments infrastructure for machine tool consumption*, not just a list of links.
 
-## Fuentes de ingresos
+## Revenue Streams
 
-### 1. Take rate sobre el GMV (principal)
+### 1. GMV Take Rate (Main)
 
-Se cobra un porcentaje (y/o fee mínimo) sobre el volumen bruto de micropagos que pasan por el hub cuando el cliente usa el cliente oficial, el router o el gateway MCP.
+A percentage (and/or minimum fee) is charged on the gross volume of micropayments passing through the hub when the client uses the official CLI, router, or MCP gateway.
 
-| Parámetro | Rango orientativo | Notas |
+| Parameter | Guideline Range | Notes |
 |-----------|-------------------|--------|
-| Take rate | 5% – 12% | Ajustar según ticket medio y competencia; en tickets muy bajos conviene fee mínimo simbólico |
-| Fee mínimo | Opcional (p. ej. equivalente a fracciones de céntimo) | Evita operaciones no rentables sin ahogar adopción |
+| Take rate | 5% – 12% | Adjust based on average ticket and competition; for very low tickets, a symbolic minimum fee is recommended |
+| Minimum fee | Optional (e.g., equivalent to fractions of a cent) | Prevents unprofitable operations without stifling adoption |
 
-**Quién paga la comisión** (política comercial, a negociar por integración):
+**Who pays the commission** (commercial policy, to be negotiated per integration):
 
-- **Pagador final** (consumidor del servicio, vía markup transparente).
-- **Proveedor** (absorbe el fee a cambio de distribución y fiabilidad).
-- **Split** (por defecto suele ser lo más equilibrado para escalar).
+- **End payer** (service consumer, via transparent markup).
+- **Provider** (absorbs the fee in exchange for distribution and reliability).
+- **Split** (default is usually the most balanced for scaling).
 
-### 2. Suscripción SaaS para proveedores (B2B)
+### 2. SaaS Subscription for Providers (B2B)
 
-Ingreso recurrente por mantener y promover servicios en el catálogo, con herramientas operativas.
+Recurring revenue for maintaining and promoting services in the catalog, with operational tools.
 
-| Plan | Propuesta de valor | Precio orientativo (USD/mes) |
+| Plan | Value Proposition | Guideline Price (USD/mo) |
 |------|-------------------|------------------------------|
-| **Free** | Listado básico, visibilidad en red de prueba, límites de analítica | $0 |
-| **Pro** | Analítica (llamadas, ingresos, latencia), health checks, badges de verificación básica, prioridad en resultados de búsqueda dentro del hub | $79 – $149 |
-| **Scale** | Límites altos, SLAs de soporte, catálogo privado para un cliente o equipo, integraciones personalizadas | $499 – $2.000+ (custom quote) |
+| **Free** | Basic listing, testnet visibility, analytics limits | $0 |
+| **Pro** | Analytics (calls, revenue, latency), health checks, basic verification badges, search priority within the hub | $79 – $149 |
+| **Scale** | High limits, support SLAs, private catalog for a client or team, custom integrations | $499 – $2,000+ (custom quote) |
 
-Los rangos son **orientativos**; se calibran tras primeros pilotos y coste real de infraestructura y soporte.
+Ranges are **guidelines**; they are calibrated after initial pilots and real infrastructure/support costs.
 
-### 3. Capa premium para equipos que operan agentes (B2B)
+### 3. Premium Layer for Agent Teams (B2B)
 
-Funciones dirigidas a empresas y builders que necesitan producción, no solo demos:
+Features aimed at companies and builders needing production-grade tools, not just demos:
 
-- Routing por costo y latencia, fallback entre proveedores equivalentes.
-- **Presupuestos por agente** (spend caps) y alertas.
-- **Audit logs** y exportación para contabilidad o compliance interna.
-- Políticas por entorno (testnet vs mainnet) y claves gestionadas.
+- Routing by cost and latency, fallback between equivalent providers.
+- **Spending Caps** per agent and alerts.
+- **Audit logs** and export for accounting or internal compliance.
+- Environment-specific policies (testnet vs mainnet) and managed keys.
 
-| Oferta | Modelo | Precio orientativo |
+| Offering | Model | Guideline Price |
 |--------|--------|-------------------|
-| **Team** | Suscripción mensual + posible fee reducido en GMV | $199 – $499/mes |
-| **Enterprise** | Contrato anual, SSO, VPC/región, SLA | Negociado |
+| **Team** | Monthly subscription + potential reduced GMV fee | $199 – $499/mo |
+| **Enterprise** | Annual contract, SSO, VPC/region, SLA | Negotiated |
 
-### 4. Revenue share con servicios verticales
+### 4. Revenue Share with Vertical Services
 
-Acuerdos con proveedores de alto valor (datos financieros, cumplimiento, analítica especializada) donde PumaX402 aporta **descubrimiento y volumen agentic** y recibe un **porcentaje acordado** sobre el GMV generado por esas integraciones, además o en lugar del take rate estándar.
+Agreements with high-value providers (financial data, compliance, specialized analytics) where PumaX402 provides **discovery and agentic volume** and receives an **agreed percentage** of the GMV generated by those integrations.
 
-## Fórmula resumida de ingresos
+## Summary Revenue Formula
 
 ```
-Ingresos ≈ (GMV × take rate promedio) + MRR proveedores + MRR equipos agente + acuerdos de revenue share
+Revenue ≈ (GMV × average take rate) + Provider MRR + Team MRR + Revenue share agreements
 ```
 
-**GMV** (Gross Merchandise Value): suma del valor de los micropagos procesados a través del hub (antes de comisiones de red o terceros).
+**GMV** (Gross Merchandise Value): Sum of the value of micropayments processed through the hub (before network or third-party fees).
 
-## Ejemplo numérico ilustrativo (no proyección formal)
+## Competitive Advantage (Why they pay)
 
-Supuestos solo para comunicar magnitud de orden:
+- **One integration** vs. N ad-hoc x402/MPP integrations per provider.
+- **Higher success rate** in production thanks to routing, retries, and fallback.
+- **Governance**: Spending limits and traceability per agent or project.
+- **Multi-source discovery**: The hub indexes existing public and proprietary services.
 
-| Concepto | Valor ejemplo |
-|----------|----------------|
-| GMV mensual vía hub | $100.000 |
-| Take rate promedio | 8% |
-| … Ingreso por transacciones | **$8.000** |
-| 25 cuentas Pro proveedor × ~$99 | **~$2.475** |
-| 5 cuentas Team × ~$299 | **~$1.495** |
-| **Total orientativo** | **~$11.970/mes** |
+## Go-to-market (Suggested order)
 
-Este escenario sirve para pitch interno; la financiera formal requiere supuestos de retención, churn y coste marginal por request.
+1. **Supply side**: Onboard 10–20 "agent-friendly" or easy-to-wrap APIs (including Stellar/x402 community examples).
+2. **Demand side**: Teams building agents in Cursor, Claude Code, or custom stacks wanting to avoid paying for N integrations.
+3. **Core message**: *"A single client/MCP to pay and orchestrate many tools on Stellar, with cost control."*
 
-## Ventaja competitiva defendible (por qué pagan)
+## Monetization Phases (Timeline)
 
-- **Una integración** frente a N integraciones x402 ad hoc por proveedor.
-- **Mayor tasa de éxito** en producción gracias a routing, reintentos y fallback.
-- **Gobernanza**: límites de gasto y trazabilidad por agente o por proyecto.
-- **Descubrimiento multi-fuente**: el hub puede indexar servicios públicos existentes y propios, sin depender de un solo listado.
-
-## Go-to-market (orden sugerido)
-
-1. **Lado supply**: incorporar 10–20 APIs ya “agent-friendly” o fáciles de envolver (incluyendo ejemplos de la comunidad Stellar/x402).
-2. **Lado demand**: equipos que construyen agentes en Cursor, Claude Code o stacks propios y evitan pagar N integraciones.
-3. **Mensaje central**: *“Un solo cliente/MCP para pagar y orquestar muchas herramientas sobre Stellar, con control de costes.”*
-
-## Fases de monetización (cronología)
-
-| Fase | Enfoque | Objetivo |
+| Phase | Focus | Goal |
 |------|---------|----------|
-| **0 – Hackathon / MVP** | Demostrar flujo end-to-end; take rate opcional o “0% en testnet” para adopción | Validez técnica y narrativa |
-| **1 – Primeros pilotos** | Take rate bajo + plan Pro simple para proveedores que quieren métricas | Primeros ingresos y feedback |
-| **2 – Producto equipo** | Presupuestos, logs, routing avanzado como MRR | Bloquear uso B2B serio |
-| **3 – Enterprise** | Catálogos privados, compliance, contratos anuales | Margen y retención altos |
-
-## Riesgos y mitigación (resumen)
-
-| Riesgo | Mitigación |
-|--------|------------|
-| Tickets muy bajos hacen que el % no cubra costes | Fee mínimo, volumen por cluster de requests, o foco inicial en servicios con precio por request suficiente |
-| Competencia con listados gratuitos | Diferenciar por orquestación, MCP, analítica y control de gasto, no por “más links” |
-| Dependencia del facilitator / red | Transparencia en costes on-chain, diseño multi-red solo si aporta valor (p. ej. rutas de coste vía proyectos tipo economic routing) |
-
-## Próximos pasos de documentación interna
-
-- Definir **política de fees** por red (testnet vs mainnet) y si el hackathon opera siempre a 0% para facilitar demos.
-- Acordar **un único modelo de split** por defecto en contratos tipo proveedor.
-- Tras el MVP, añadir **hoja de unidades económicas** (coste por 1M requests enrutados vs ingreso esperado).
+| **0 – Hackathon / MVP** | Demonstrate end-to-end flow; optional or "0% on testnet" take rate for adoption | Technical and narrative validity |
+| **1 – Initial Pilots** | Low take rate + simple Pro plan for providers wanting metrics | Initial revenue and feedback |
+| **2 – Team Product** | Budgets, logs, advanced routing as MRR | Lock in serious B2B usage |
+| **3 – Enterprise** | Private catalogs, compliance, annual contracts | High margin and retention |
 
 ---
 
-*Este documento es una definición viva: ajústalo cuando tengas datos reales de uso y costes de infraestructura.*
+*This document is a living definition: adjust it as you have real usage data and infrastructure costs.*

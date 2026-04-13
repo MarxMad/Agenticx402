@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "license": "MIT",
   "private": true,
-  "description": "PumaX402 — hub de servicios x402 para agentes (Stellar)",
+  "description": "PumaX402 — Agentic services hub for x402 and MPP on Stellar",
   "type": "module",
   "bin": {
     "agenticx402": "apps/cli/bin/agenticx402.mjs",
@@ -12,7 +12,6 @@
   "scripts": {
     "catalog:dev": "node apps/catalog-api/server.mjs",
     "catalog:validate": "node scripts/validate-catalog.mjs",
-    "fase0:check": "node scripts/fase-0-check.mjs",
     "cli": "node apps/cli/bin/agenticx402.mjs",
     "mcp": "node apps/mcp/server.mjs",
     "puma-service": "node apps/puma-service/server.mjs",
@@ -32,7 +31,6 @@
     "@x402/stellar": "2.9.0",
     "dotenv": "^17.4.1",
     "express": "^4.22.1",
-    "stellar-sdk": "^13.3.0",
-    "zod": "^4.3.6"
+    "stellar-sdk": "^13.3.0"
   }
 }

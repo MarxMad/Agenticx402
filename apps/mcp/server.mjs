@@ -18,6 +18,8 @@ import {
   createPaywallHttpClient,
   paywallFetch,
 } from "../cli/lib/x402-fetch.mjs";
+import { sponsorAgentAccount } from "../shared/trustline.mjs";
+import { STELLAR_TESTNET_USDC } from "../lib/stellar-usdc-testnet.mjs";
 
 /**
  * @param {string} url
@@ -189,6 +191,64 @@ server.registerTool(
       content: [{ 
         type: "text", 
         text: `Para construir el auth_entry de un error 402 con header '${www_authenticate}':\n1. Parsea el header para extraer 'pay_to' y 'amount'.\n2. Construye una transacción enviando ese amount en el asset acordado hacia 'pay_to' y expide el tx_hash.\n3. Tu auth_entry es el base64 de '{"tx_hash":"tu_hash"}'\n4. Envialo como 'Authorization: L402 <tu_base64>'.`
+      }]
+    };
+  }
+);
+
+server.registerTool(
+  "check_agent_status",
+  {
+    description: "Verifica si una cuenta Stellar (G...) existe y si tiene el trustline de USDC testnet habilitado.",
+    inputSchema: {
+      public_key: z.string().describe("Dirección pública Stellar del agente (G...).")
+    }
+  },
+  async ({ public_key }) => {
+    const horizon = process.env.STELLAR_HORIZON_URL || "https://horizon-testnet.stellar.org";
+    try {
+      const res = await fetch(`${horizon}/accounts/${public_key}`);
+      if (res.status === 404) {
+        return {
+          content: [{ type: "text", text: JSON.stringify({ exists: false, status: "UNFUNDED", recommendation: "Usa sponsor_agent_account para crearla sin XLM." }, null, 2) }]
+        };
+      }
+      const account = await res.json();
+      const hasUsdc = (account.balances || []).some(b => b.asset_code === "USDC");
+      return {
+        content: [{ type: "text", text: JSON.stringify({ exists: true, trustline_usdc: hasUsdc, balances: account.balances }, null, 2) }]
+      };
+    } catch (e) {
+      return { content: [{ type: "text", text: `Error checking account: ${e.message}` }] };
+    }
+  }
+);
+
+server.registerTool(
+  "sponsor_agent_account",
+  {
+    description: "Genera una transacción XDR pre-firmada por el hub PumaX402 que crea tu cuenta y patrocina tus reservas (sponsored onboarding). Útil para agentes sin XLM en testnet.",
+    inputSchema: {
+      public_key: z.string().describe("Dirección pública Stellar del agente (G...).")
+    }
+  },
+  async ({ public_key }) => {
+    const horizon = process.env.STELLAR_HORIZON_URL || "https://horizon-testnet.stellar.org";
+    const xdr = await sponsorAgentAccount(public_key, "USDC", horizon);
+    if (!xdr) {
+      return {
+        content: [{ type: "text", text: "Error: El hub no tiene configurada SPONSOR_SECRET_KEY o falló la creación del XDR." }]
+      };
+    }
+    return {
+      content: [{ 
+        type: "text", 
+        text: JSON.stringify({
+          instruction: "Transacción de patrocinio generada. Debes añadir la operación 'changeTrust' para USDC y 'endSponsoringFutureReserves', firmarla y enviarla.",
+          sponsored_xdr: xdr,
+          network: process.env.STELLAR_NETWORK || "testnet",
+          asset: STELLAR_TESTNET_USDC
+        }, null, 2)
       }]
     };
   }

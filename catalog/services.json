@@ -4,9 +4,9 @@
   "services": [
     {
       "id": "xlm402-ecosystem",
-      "name": "Servicios de referencia (xlm402.com)",
+      "name": "Reference Services (xlm402.com)",
       "version": "1.0.0",
-      "description": "Catálogo público de prueba con varios endpoints x402 en testnet. Usar como fuente de integración y benchmark.",
+      "description": "Public test catalog with various x402 endpoints on testnet. Use as an integration benchmark and source.",
       "baseUrl": "https://xlm402.com",
       "paths": [],
       "cost": "Varies",
@@ -25,7 +25,7 @@
       "id": "pumax402-agent-pulse",
       "name": "PumaX402 Agent Pulse",
       "version": "1.0.0",
-      "description": "Servicio propio del hub: JSON de contexto Stellar testnet (último ledger, fees, hints) optimizado para system prompts de agentes. Paywall x402 Exact USDC testnet. Ejecutar local o desplegar con npm run puma-service.",
+      "description": "First-party hub service: Stellar testnet context JSON (latest ledger, fees, hints) optimized for agent system prompts. x402 Exact USDC testnet paywall.",
       "baseUrl": "http://127.0.0.1:3850",
       "paths": [
         "/v1/pulse"
@@ -45,7 +45,7 @@
       "docsUrl": "https://github.com/MarxMad/Agenticx402/blob/main/apps/puma-service/README.md",
       "stellarPrerequisites": {
         "network": "stellar:testnet",
-        "summary": "Trustline USDC testnet (Circle) en pagador y receptora antes de x402 Exact; luego USDC de prueba vía quickstart / faucet.",
+        "summary": "USDC testnet trustline required for both sender and receiver before x402 Exact payment.",
         "trustlines": [
           {
             "asset": "USDC",
@@ -64,7 +64,7 @@
       "id": "pumax402-stellar-dex-signal",
       "name": "PumaX402 Stellar DEX Signal",
       "version": "1.0.0",
-      "description": "Señales order book + trades (Horizon) y snapshot de pools AMM; x402 Exact USDC. Pensado para agentes de trading y arbitraje en Stellar.",
+      "description": "Order book signals + trades (Horizon) and AMM pool snapshots; x402 Exact USDC. Designed for trading and arbitrage agents on Stellar.",
       "baseUrl": "http://127.0.0.1:3851",
       "paths": [
         "/v1/signal",
@@ -89,7 +89,7 @@
       "id": "pumax402-geopolitical-risk",
       "name": "PumaX402 Geopolitical Risk",
       "version": "1.0.0",
-      "description": "Orquestador: paga news en xlm402.com y devuelve señal de riesgo agregada por región (heurística). Demuestra el modelo hub PumaX402.",
+      "description": "Orchestrator: pays for news on xlm402.com and returns an aggregated risk signal by region. Demonstrates the PumaX402 hub model.",
       "baseUrl": "http://127.0.0.1:3852",
       "paths": [
         "/v1/risk"
@@ -133,7 +133,7 @@
       "id": "stellar-observatory",
       "name": "Stellar Observatory",
       "version": "1.0.0",
-      "description": "Condiciones espaciales y datos expuestos con x402 en Stellar; el repositorio incluye servidor MCP.",
+      "description": "Space weather conditions and data exposed via x402 on Stellar; repository includes MCP server support.",
       "baseUrl": "https://stellar-observatory.vercel.app",
       "paths": [],
       "cost": "Varies",
